@@ -1,0 +1,30 @@
+---   Chapter 1 Raspberry Pi OS   ---
+
+Now I am assuming you have yourself the Following:
+
+- A Raspberry Pi
+- An SD Card with enough storage to write the OS too
+- The approperiate Power adapter
+- Keyboard
+- Monitor
+- The Holy Grail
+- A Computer/device which can write to an SD Card and download things from
+- The Internet
+- Time
+
+So lets start by downloading our Raspberry Pi OS from [raspberrypi.org].(https://www.raspberrypi.org/downloads/raspberry-pi-os/) I'll be downloading the lite image but it will work with a Desktop image too.
+ 
+raspberrypi.org has a wonderful guide for [how to install](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) the image.
+ 
+So from the Guide figgure out how to unzip and burn the image to your Micro SD card and once done, put it into your Pi and plug in the power.
+
+default user is: pi
+default password is: raspberry
+
+I'll highly recomend changing the password on your Pi. But it's not necessary.
+
+To change the password in a terminal type:
+
+:$ sudo raspi-conf
+
+Then select '1 Change User Password Change password for the 'pi' user', select 'Yes' and type in your new password twice. When done select 'Finish' by pressing Right twice.

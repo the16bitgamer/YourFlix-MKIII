@@ -1,0 +1,35 @@
+.NavBarImgSize 
+{
+    height : 3em;
+}
+
+.NavBarHamSize 
+{
+    height : 2em;
+}
+
+.NavBar
+{
+    width: 100%;
+    background-color: #272727;
+    height:4em;
+}
+
+.RowFixed
+{
+    width:10%;
+}
+
+.VCenter
+{
+    vertical-align: middle;
+}
+
+.FloatRight
+{
+    float: right;
+}
+.FloatLeft
+{
+    float: left;
+}

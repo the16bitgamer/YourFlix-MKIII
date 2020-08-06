@@ -1,0 +1,128 @@
+---   Chapter 3 Setting up Pi's Network or as Wireless Access Point ---
+
+This step is optinal however a feature which I wanted in my YourFlix server is the ability to work even when I have access to only a USB Power Bank. And since a Raspberry Pi can run off of a Powerbank (5v 3a), there is no reason you can't use your YourFlix server on the Go, while travelling or even during a blackout.
+
+So how is it done? Well raspberrypi.org delivers again with another guide (I remembered this being harder), (so we'll follow that guide)[https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md], and yes and no we can't use a bridged network since if we loose power or on the road we'll need the Pi to resolve it. If you want a bridged network instead follow this guide from (raspberrypi.org)[https://www.raspberrypi.org/documentation/configuration/wireless/access-point-bridged.md]
+
+Before we begin ensure your pi is up to date with
+
+:$ sudo apt update
+:$ sudo apt upgrade
+
+It might take a bit
+
+--  Chapter 3.1 Installing Access Point Software Hostapd  --
+
+Now we can begin installing hostapd your acess point software and enabling the service at boot by running:
+
+:$ sudo apt install hostapd
+:$ sudo systemctl unmask hostapd
+:$ sudo systemctl enable hostapd
+
+Next we need to install our DNS DHCP client with dnsmasq:
+
+:$ sudo apt install dnsmasq
+
+And finally we need to install the netfilter software and the iptables plugin with the command:
+
+:$ sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
+
+--  Chapter 3.2 Configuring the WiFi --
+
+Next we need to configure the wifi almost like we did with our ethernet:
+
+:$ sudo nano /etc/dhcpcd.conf
+
+And we are going to add to the end of the document:
+
+interface wlan0
+    static ip_address=192.168.4.1/24
+    nohook wpa_supplicant
+    
+We are using 192.168.4.1 since it is most likly unused. But this IP can be anything, just as long as it's unused, so you won't get any conflicks.
+
+Next we need to allow wirless clients to access the ethernet's network when it's plugged in.
+
+:$ sudo nano /etc/sysctl.d/routed-ap.conf
+
+And add the following:
+
+# https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md
+# Enable IPv4 routing
+net.ipv4.ip_forward=1
+
+Then we add it to our firewall rules and save it:
+
+:$ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+:$ sudo netfilter-persistent save
+
+If you want your Pi to use a internet connetion using a usb tether, add the following line and save it again you save:
+
+:$ sudo iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE
+
+--  Chapter 3.2 Configuring DNSMasq and Hostapd --
+
+Now we are configuring the DNSMasq service. DNSMasq will be both our DNS Service and our DHCP service. So to configure it run:
+
+:$ sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+:$ sudo nano /etc/dnsmasq.conf
+
+And add the following lines:
+
+interface=wlan0 # Listening interface
+dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+                # Pool of IP addresses served via DHCP
+domain=wlan     # Local wireless DNS domain
+address=/yourflix.tv/192.168.4.1
+                # Alias for this router
+
+Now this will create a problem if you want to have an easily useable domain name to resolve YourFlix on a web browser, since on the Pi's Access Point YourFlix is 192.168.4.1 while on your main router it will the static IP you created in Chapter 2, in my case 192.168.0.155. So how do you resolve both IP's to one Domain name? Well why not Alias the IP of your Pi to the static IP from your network.
+
+So in your /etc/dnsmasq.conf file replace it with this if you want both IP's resolving to the same Donaim Name:
+
+interface=wlan0 # Listening interface
+dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+                # Pool of IP addresses served via DHCP
+domain=wlan     # Local wireless DNS domain
+alias=192.168.4.1,192.168.0.155
+address=/yourflix.tv/192.168.0.155
+                
+And don't forget to save and exit with 'ctrl'+'x'
+
+Next we need to unblock the wlan with:
+
+:$ sudo rfkill unblock wlan
+
+Now lets configure hostapd with:
+
+:$ sudo nano /etc/hostapd/hostapd.conf
+
+And add the following lines:
+
+country_code=XX
+interface=wlan0
+ssid=NameOfNetwork
+hw_mode=g
+channel=7
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=AardvarkBadgerHedgehog
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+
+You will need to change a few of the settings:
+
+country_code need to be set to your region which you will find here: https://en.wikipedia.org/wiki/ISO_3166-1#Coding
+
+ssid can be left alone, but this is what your device will see as the network. Change it to whatever you want I made my YourFlix.
+
+wpa_passphrase should be changed to something secure or easy to remember since anyone can try to connect to it.
+
+And finally to apply all your new settings just reboot your device with:
+
+:$ sudo systemctl reboot
+
+When you reboot you can connect to your device with anything that has WiFi and you should get internet.

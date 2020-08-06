@@ -1,0 +1,66 @@
+.ImageBox
+{
+    border-radius: 0.5em 0.5em 0px 0px;
+    border: 2px solid black;
+    height:100%;
+    position:relative
+}
+
+.ImageBox img
+{
+    display: block;
+    object-fit: contain;
+    width: 100%;
+}
+
+.TextCentered
+{  
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-Size: 7vmin;
+    color: white; 
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.ProgramName
+{
+    background-color: white;
+    color: black;
+    margin: 0; 
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 0px 0px 0.5em 0.5em;
+    text-align: left;    
+    border: 2px solid black;
+}
+
+body
+{
+    background-color: gray;
+}
+
+.ProgramTable a
+{    
+    padding: 0; 
+    margin: 0; 
+    text-decoration: none;
+}
+
+.ProgramTable th
+{
+    padding: 0; 
+    margin: 0; 
+    height:100%;
+}
+.ProgramTable
+{
+    padding: 0; 
+    margin: 0;
+    border-collapse:collapse;
+}

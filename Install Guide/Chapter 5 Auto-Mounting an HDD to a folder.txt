@@ -1,0 +1,28 @@
+---   Chapter 5 Auto-Mounting an HDD to a folder   ---
+
+Now as a requirement for YourFlix I wanted the Pi to be able to handle teribytes of data, and what a better way to do this than with an external HDD. Now the reason you want to mount it is much like why you would want a static IP, so thing don't move. raspberrypi.org has a guide for this: https://www.raspberrypi.org/documentation/configuration/external-storage.md
+
+Plug in your HDD to your Pi and run the Command:
+
+:$ sudo lsblk -o UUID,NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL,MODEL
+
+We are looking for your devices UUID for the file partition which you want mounted, in my case my HDD is sda, and the partitionI wanted mounted is sda2 with the UUID of 74D2B2F0D2B2B5A8, and keep note of the 
+
+Next we are going to edit in nano:
+
+:$ sudo nano /etc/fstab
+
+and we are going to add a line and replace your info with the new info:
+UUID=**YOU UUID** **YOUR FILE LOCATION** **THE DRIVES FILE FORMATE** defaults,auto,nofail,umask=000,user0,users,Susers,rw,0,0
+
+**YOU UUID** is the UUID you gathered earlier
+
+**YOUR FILE LOCATION** is a file location on your Pi you want to mount your drive to. I made a folder called Videos in the /home/pi/ with the command
+
+:$ sudo mkdir /home/pi/Videos
+
+**THE DRIVES FILE FORMATE** is the file format for the external drive. i.e. NTFS, EXFAT, FAT32, ETC.
+
+Now that your folder is mounted we are good to go, reboot your Pi with
+
+:$ sudo reboot

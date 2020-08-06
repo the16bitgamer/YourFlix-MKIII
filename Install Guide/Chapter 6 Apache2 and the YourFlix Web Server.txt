@@ -1,0 +1,27 @@
+---   Chapter 6 Apache2 and the YourFlix Web Server   ---
+
+Now that the Pi is setup with everything that is needed to run YourFlix, all that's left to do is get the webhost working. We'll be using Apache2 as the web server and it's installed as easily as
+
+:$ sudo apt-get install apache2
+
+Next we need to take ownership of the html folder since by default it's given to root:
+
+:$ sudo chown -R pi: /var/www/html
+
+And for ease of convience I like to create a symlink of the html folder in my user directory
+
+:$ ln -s /var/www/html ./html
+
+And you will need to symlink our Videos directory to the html folder:
+
+:$ ln -s /home/pi/Videos /var/www/html
+
+This will allow us to access the external HDD on our server. In earlier implentations YourFlix streamed from source, however now YourFlix streams from the Gerbera server.
+
+PHP
+
+:$ sudo apt-get install php
+
+sqlite
+
+:$ sudo apt-get intsall sqlite
