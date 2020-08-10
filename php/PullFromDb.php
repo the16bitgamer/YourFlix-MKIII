@@ -1,7 +1,7 @@
 <?php
 
 $db = new SQLite3('/usr/share/yourflix/yourflix.db');
-$result = $db->query('SELECT * FROM Program_Db');
+$result = $db->query('SELECT * FROM Program_Db ORDER BY Name');
 
 $listOfPrograms = [];
 while($content = $result->fetchArray()) 

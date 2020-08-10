@@ -1,6 +1,6 @@
 import React from 'react';
 import Nav from './Nav';
-import Program from './Program';
+import ProgramTable from './ProgramTable';
 
 class HomePage extends React.Component
 {
@@ -10,7 +10,7 @@ class HomePage extends React.Component
         return(
             <div>
                 <Nav/>
-                <Program program={testProg}/>
+                <ProgramTable programs={testProg}/>
             </div>
         )
     }
