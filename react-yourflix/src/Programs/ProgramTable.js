@@ -1,7 +1,7 @@
 import React from 'react';
 import Program from "./Program";
-import './css/yf-program.css'
-import testData from "./testdata.json"
+import './css/yf-programTable.css'
+import testData from "../testdata.json"
 
 class ProgramTable extends React.Component
 {

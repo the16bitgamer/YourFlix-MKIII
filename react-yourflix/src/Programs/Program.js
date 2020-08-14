@@ -59,9 +59,10 @@ class Program extends React.Component
     render()
     {
         const progName = this.state.name;
+        const progId = this.state.id;
         const img = this.state.img;
         return(
-        <a href="/show">
+        <a href={"/show?id="+progId}>
             <div className="Program">
                 <this.ProgramImg name={progName} img={img}/>
                 <h4 className="ProgramName">{progName}</h4>

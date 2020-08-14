@@ -9,6 +9,7 @@ import {
   Route
 } from "react-router-dom";
 import HomePage from './HomePage';
+import ShowPage from './Show/ShowPage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,6 +17,9 @@ ReactDOM.render(
         <Switch>
           <Route path="/home">
             <HomePage />
+          </Route>
+          <Route path="/show">
+            <ShowPage />
           </Route>
           <Route path="/">
             <HomePage />

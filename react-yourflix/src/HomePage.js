@@ -1,6 +1,6 @@
 import React from 'react';
-import Nav from './Nav';
-import ProgramTable from './ProgramTable';
+import Nav from './Nav/Nav';
+import ProgramTable from './Programs/ProgramTable';
 
 class HomePage extends React.Component
 {

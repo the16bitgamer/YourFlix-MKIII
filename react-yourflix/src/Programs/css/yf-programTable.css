@@ -1,0 +1,25 @@
+.ProgramTable a
+{    
+    padding: 0; 
+    margin: 0; 
+    text-decoration: none;
+}
+
+.ProgramTable h1
+{
+    color: white;
+    padding-left: 0.5em;
+    margin: 0; 
+}
+
+.ProgramTable th
+{
+    padding: 0; 
+    margin: 0;
+}
+.ProgramTable
+{
+    padding: 0; 
+    margin: 0;
+    border-collapse:collapse;
+}
