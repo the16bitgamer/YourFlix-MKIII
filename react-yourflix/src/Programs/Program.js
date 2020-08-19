@@ -13,8 +13,8 @@ class Program extends React.Component
         this.state =
         {
             name: program.Name,
-            id: program.Id,
             img: "",
+            link: props.link,
             width: width
         }
         this.ProgramImg = this.ProgramImg.bind(this);
@@ -59,10 +59,10 @@ class Program extends React.Component
     render()
     {
         const progName = this.state.name;
-        const progId = this.state.id;
+        const link = this.state.link;
         const img = this.state.img;
         return(
-        <a href={"/show?id="+progId}>
+        <a href={link}>
             <div className="Program">
                 <this.ProgramImg name={progName} img={img}/>
                 <h4 className="ProgramName">{progName}</h4>
