@@ -13,7 +13,7 @@ class ProgramTable extends React.Component
         {
             programs: testData[0],
             links: testData[1],
-            lastWidth: 0
+            lastWidth: 1
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.ShowPrograms = this.ShowPrograms.bind(this);
@@ -22,8 +22,8 @@ class ProgramTable extends React.Component
 
     componentDidMount()
     {
-      this.updateWindowDimensions();
-      window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
     }
     
     componentWillUnmount()
@@ -53,7 +53,7 @@ class ProgramTable extends React.Component
         else
             currWidth = 2;
         
-        if(this.state.lastWidth != currWidth)
+        if(this.state.lastWidth !== currWidth)
         {
             this.setState(
             { 
@@ -88,11 +88,7 @@ class ProgramTable extends React.Component
                     returnPage.push(
                     <table key={"table-"+i} className="ProgramTable">
                         <thead key={"head-"+i}>
-                            <tr>
-                                <th>
-                                    <h1 key={"Name-"+i}>{lastChar}</h1>
-                                </th>
-                            </tr>
+                            <h1 key={"Name-"+i}>{lastChar}</h1>
                         </thead>
                         <tbody key={"body-"+i}>{currentTable}</tbody>
                     </table>);

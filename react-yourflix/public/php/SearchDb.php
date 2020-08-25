@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $search = stripos($content['Name'], $_POST['query']);
         if($search !== false)
         {
-            $progLink = GetProgramLink($db,$content['Folder_Id']);
+            $progId = $content['Id'];
+            $folderId = $content['Folder_Id'];
+            $progLink = GetProgramLink($db,$progId,$folderId);
             array_push($listOfProgLink,json_encode($progLink));
             array_push($listOfPrograms,json_encode($content));
             $counter--;

@@ -18,6 +18,30 @@ And you will need to symlink our Videos directory to the html folder:
 
 This will allow us to access the external HDD on our server. In earlier implentations YourFlix streamed from source, however now YourFlix streams from the Gerbera server.
 
+Next we need to enable the rewrite engine so we can run the entire website off of one html file.
+
+:$ sudo a2enmod rewrite
+
+next we need to update the default configuration to use rewriting so edit the following document:
+
+:$ sudo nano /etc/apache2/sites-enabled/000-default.conf
+
+and add the following:
+
+<Directory "/var/www/html">
+    RewriteEngine on
+    # Don't rewrite files or directories
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    # Rewrite everything else to index.html to allow html5 state links
+    RewriteRule ^ index.html [L]
+</Directory>
+
+finally restart apache2 with:
+
+:$ sudo systemctl restart apache2
+
 PHP
 
 :$ sudo apt-get install php

@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import HomePage from './HomePage';
 import ShowPage from './Show/ShowPage';
+import VideoPage from './Video/VideoPage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,8 +19,11 @@ ReactDOM.render(
           <Route path="/home">
             <HomePage />
           </Route>
-          <Route path="/show">
+          <Route path="/Show">
             <ShowPage />
+          </Route>
+          <Route path="/Video">
+            <VideoPage />
           </Route>
           <Route path="/">
             <HomePage />

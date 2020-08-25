@@ -1,34 +1,43 @@
 <?php
-    function GetProgramLink($DB_CONN, $FOLDER_ID)
+    function GetVideoLink($DB_CONN, $FOLDER_ID)
     {
-        $result = $DB_CONN->query('SELECT Id, File_Type FROM Content_Db WHERE Parent_Id == '.$FOLDER_ID.' ORDER BY Name');
-        $returnId = -1;
-        $otherFiles = 0;
-        $returnLink = "/Video?id=";
-        while($content = $result->fetchArray()) 
+        $result = $DB_CONN->query('SELECT Content_Db.Id  FROM Content_Db LEFT JOIN FileType_Db ON FileType_Db.Id == Content_Db.File_Type WHERE Parent_Id =='.$FOLDER_ID.' AND FileType_Db.Name=="MP4" ORDER BY Content_Db.Name');
+        
+        $returnLink = FALSE;
+        $numVideos = 0;
+        //Using this since the sqlite_count_row is broken and count always returns 1
+        while($row = $result->fetchArray())
         {
-            //Checks for folder and sets the return id to itself as a show
-            if($content['File_Type'] == 'Folder' && $returnId == -1)
+            if($numVideos == 0)
             {
-                $returnLink = "/Show?id=";
-                $returnId = (int)$content['Id'];
+                $numVideos++;
+                $returnLink = "/Video?id=".$row['Id'];
             }
-            //Checks for a Non-Folder and returns the parent folder as a show, it also breaks
-            else if($otherFiles >= 1 || $returnId != -1)
-            {
-                $returnLink = "/Show?id=";
-                $otherFiles++;
-                $returnId = (int)$FOLDER_ID;
-                break; 
-            }
-            //Checks for a Non-Folder and returns itself, assuming it's a Video
             else
             {
-                $otherFiles++;
-                $returnId = (int)$content['Id'];
+                $returnLink = "/Show?id=".$FOLDER_ID;
             }
+            break;
+        }
+        return $returnLink;
+    }
+
+    function GetFolderLink($DB_CONN, $FOLDER_ID)
+    {
+        $result = $DB_CONN->query('SELECT Id FROM Content_Db WHERE Parent_Id == '.$FOLDER_ID.' ORDER BY Name');
+        $content = $result->fetchArray();
+        return "/Show?id=".$content['Id'];
+    }
+
+    function GetProgramLink($DB_CONN, $PROG_ID, $FOLDER_ID)
+    {
+        $progData = "&prog=".$PROG_ID;
+        $returnLink = GetVideoLink($DB_CONN, $FOLDER_ID);
+        if($returnLink === FALSE)
+        {
+            $returnLink = GetFolderLink($DB_CONN, $FOLDER_ID);
         }
 
-        return $returnLink . $returnId;
+        return $returnLink . $progData;
     }
 ?>

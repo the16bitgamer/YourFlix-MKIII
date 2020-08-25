@@ -1,22 +1,24 @@
-import React from 'react'
-import './css/yf-search.css'
+import React from 'react';
+import './css/yf-search.css';
 
 class SearchBar extends React.Component
 {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = 
         {
             search: "",
-            items: []
+            program: [],
+            link: []
         }
-        this.searchInput = this.searchInput.bind(this)
-        this.searchSubmit = this.searchSubmit.bind(this)
+        this.searchInput = this.searchInput.bind(this);
+        this.searchSubmit = this.searchSubmit.bind(this);
+        this.SearchResults = this.SearchResults.bind(this);
     }
 
     searchInput(event)
     {
-        this.setState({search: event.target.value})
+        this.setState({search: event.target.value});
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -32,7 +34,8 @@ class SearchBar extends React.Component
         .then(data => {
             this.setState(
                 {
-                    items: data
+                    program: data[0],
+                    link: data[1]
                 }
             );
             //console.log('Success:', data);
@@ -56,7 +59,8 @@ class SearchBar extends React.Component
         .then(data => {
             this.setState(
                 {
-                    items: data
+                    program: data[0],
+                    link: data[1]
                 }
             );
             //console.log('Success:', data);
@@ -66,18 +70,23 @@ class SearchBar extends React.Component
         });
     }
 
-    SearchResults(props)
+    SearchResults()
     {
-        const items = props.searched.data;
-        const hasResults = items.length > 0;
-        const searchItems = items.map((item) =>
-        {
-            const obj = JSON.parse(item);
-            return <a href={"/program?id="+obj.Id}>{obj.Name}</a>; 
-        });
+        const progs = this.state.program;
+        const links = this.state.link;
+        const len = progs.length;
+        const hasResults = len > 0;
+        var searchItems = [];
             
         if(hasResults)
         {
+            for(var i = 0; i < len; i++)
+            {
+                const obj = JSON.parse(progs[i]);
+                const link = JSON.parse(links[i]);
+                searchItems.push(<a key={link} href={link}>{obj.Name}</a>);
+            }
+
             return(
                 <div className="dropdown-content">
                     {searchItems}
@@ -89,12 +98,11 @@ class SearchBar extends React.Component
 
     render()
     {
-        const data = this.state.items;
         return(
             <div className="dropdown">
                 <input className="SearchInput" type="text" value={this.state.search}  onChange={this.searchInput} placeholder="Search Program"/>
                 <button onClick={this.searchSubmit} className="SearchButton" value="Submit">Search</button>
-                <this.SearchResults searched={{data:data}}/>
+                <this.SearchResults/>
             </div>
         );
     }
