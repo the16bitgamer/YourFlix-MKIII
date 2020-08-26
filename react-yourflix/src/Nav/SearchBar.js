@@ -1,4 +1,5 @@
 import React from 'react';
+import searchIcon from './img/SearchIcon.svg';
 import './css/yf-search.css';
 
 class SearchBar extends React.Component
@@ -101,7 +102,9 @@ class SearchBar extends React.Component
         return(
             <div className="dropdown">
                 <input className="SearchInput" type="text" value={this.state.search}  onChange={this.searchInput} placeholder="Search Program"/>
-                <button onClick={this.searchSubmit} className="SearchButton" value="Submit">Search</button>
+                <button onClick={this.searchSubmit} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className="SearchButton" value="Submit">
+                    <img alt="search" src={searchIcon}/>
+                </button>
                 <this.SearchResults/>
             </div>
         );

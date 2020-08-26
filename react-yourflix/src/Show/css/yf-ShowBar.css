@@ -11,8 +11,15 @@
     background-color: #ff2222;
     color: white;
     border: none;
-    padding: 10px 24px;
     cursor: pointer;
+    height: 3em;
+    width: 6em;
+}
+
+.ButtonBack img
+{
+    vertical-align: middle;
+    height: 1.5em;
 }
 
 .ShowBar
@@ -24,22 +31,39 @@
 }
 
 .showBtn {
+    vertical-align: middle;
     width: 100%;  
     background-color: #8057e9;
     border: none;
     border-left-style: solid;
     border-right-style: solid;
     color: white;
-    padding: 10px 24px;
     cursor: pointer;
+    height: 3em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.showBtn img
+{
+    vertical-align: middle;
+    height: 1.5em;
 }
 
 .toggleBtn {  
     background-color: #8057e9;
     border: none;
     color: white;
-    padding: 10px 24px;
+    padding-left: 1em;
+    padding-right: 1em;
     cursor: pointer;
+    height: 3em;
+}
+
+.toggleBtn img
+{
+    vertical-align: middle;
+    height: 1.5em;
 }
   
 .showDropDown {

@@ -31,13 +31,13 @@
 
     function GetProgramLink($DB_CONN, $PROG_ID, $FOLDER_ID)
     {
-        $progData = "&prog=".$PROG_ID;
+        //$progData = "&prog=".$PROG_ID;
         $returnLink = GetVideoLink($DB_CONN, $FOLDER_ID);
         if($returnLink === FALSE)
         {
             $returnLink = GetFolderLink($DB_CONN, $FOLDER_ID);
         }
 
-        return $returnLink . $progData;
+        return $returnLink;
     }
 ?>

@@ -1,0 +1,62 @@
+.VideoController
+{
+    position: relative;
+    width: 100%;
+    padding: 0px;
+}
+
+.VideoController button
+{
+    vertical-align: middle;
+    height: 3.5em;  
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.VideoController img
+{
+    vertical-align: middle;
+    height: 2.75em;
+}
+
+.BackButton
+{
+    float: left;
+    background-color: #ff2222;
+    border: none;  
+}
+
+.FullScreen
+{
+    float: right;
+    background-color: #8057e9;
+    border: none;  
+}
+
+.MiddleBar
+{
+    margin: auto;
+    width: 100%;
+    text-align: center; 
+}
+
+.MiddleBar button
+{
+    background-color: #8057e9;
+}
+
+.Skip
+{
+    color:white;
+    size: 3em;
+    border: none;  
+}
+
+.PlayButton
+{
+    border: 3px;
+    box-sizing: border-box;
+    border-color: black;
+    border-left-style: solid;
+    border-right-style: solid;
+}

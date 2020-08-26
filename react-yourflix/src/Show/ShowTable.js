@@ -10,7 +10,6 @@ class ShowTable extends React.Component
         this.state = 
         {
             currId: props.currentId,
-            progId: props.programId,
             width: 0,
             lastWidth: 1
         }
@@ -84,7 +83,6 @@ class ShowTable extends React.Component
         const width = props.Width;
         const numRows = props.Row;
         const padding = props.Padding;
-        var progId = props.ProgramId;
 
         var contentArray = [];
         var tableRowArray = [];
@@ -108,7 +106,7 @@ class ShowTable extends React.Component
             currIndex++;
             contentArray.push(
                 <th key={"element-"+currentContent.Id} style={{minWidth:width, maxWidth:width, padding:padding/2}}>
-                    <ShowTile Name={currentContent.Name} Id={currentContent.Id} ProgId={progId}/>
+                    <ShowTile Name={currentContent.Name} Id={currentContent.Id}/>
                 </th>
             );
         }
@@ -129,7 +127,7 @@ class ShowTable extends React.Component
     render()
     {
         var showData = testShowData;
-        var progId = this.state.progId;
+        var progId = this.state.currId;
         
         var width = this.state.width ?? 360;
         const numCols = this.state.lastWidth;

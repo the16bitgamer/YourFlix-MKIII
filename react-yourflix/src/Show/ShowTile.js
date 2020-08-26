@@ -11,7 +11,6 @@ class ShowTile extends React.Component
         {
             showName: props.Name,
             showId: props.Id,
-            progId: props.ProgId
         }
     }
 
@@ -20,12 +19,11 @@ class ShowTile extends React.Component
         var name = this.state.showName;
         name = name.substring(0, name.length - 4);
         const id = this.state.showId;
-        const prog = this.state.progId;
 
         return(
             <div>
                 <div className="ShowTile">
-                    <a href={"/Video?id="+id+"&prog="+prog}>
+                    <a href={"/Video?id="+id}>
                         <img className="PlayContent" src={playButton} alt="PlayButton"/>
                     </a>
                     <h2 className="ContentName">{name}</h2>

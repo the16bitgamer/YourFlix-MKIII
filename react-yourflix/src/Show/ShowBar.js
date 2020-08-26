@@ -1,5 +1,8 @@
 import React from 'react';
-import './css/yf-ShowBar.css'
+import BackArrow from '../img/Left-Point Arrow.svg';
+import leftArrow from '../img/LeftArrow.svg';
+import rightArrow from '../img/RightArrow.svg';
+import './css/yf-ShowBar.css';
 
 class ShowBar extends React.Component
 {
@@ -60,14 +63,18 @@ class ShowBar extends React.Component
 
         return (
             <div className="FolderBar">
-                <button key={prevId} className="toggleBtn" onClick={() => this.state.func(prevId)}>{"<"}</button>
+                <button key={prevId} className="toggleBtn" onClick={() => this.state.func(prevId)}>
+                    <img alt="<" src={leftArrow}/>
+                </button>
                 <div className="showDropDown">
                     <button key={currentFolder} className="showBtn">{currentFolder}</button>
                     <div className="show-content">
                         {dropDown}
                     </div>
                 </div>
-                <button key={nextId} className="toggleBtn" onClick={() => this.state.func(nextId)}>{">"}</button>
+                <button key={nextId} className="toggleBtn" onClick={() => this.state.func(nextId)}>
+                    <img alt=">" src={rightArrow}/>
+                </button>
             </div>
         );
     }
@@ -80,7 +87,9 @@ class ShowBar extends React.Component
         return(
             <div className="ShowBar">
                 <a href={"/"}>
-                    <button  className="ButtonBack" onClick={this.BackToMenu}>Back</button>
+                    <button className="ButtonBack" onClick={this.BackToMenu}>
+                        <img alt="Back" src={BackArrow}/>
+                    </button>
                 </a>
                 <this.FolderBar currentId={currentId} folders={folders}/>
             </div>

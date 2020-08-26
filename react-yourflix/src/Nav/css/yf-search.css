@@ -1,6 +1,7 @@
 
 .SearchInput
 {
+    vertical-align: middle;
     font-size: 100%;
     border-radius: 10px 0px 0px 10px;
     border: 3px solid;
@@ -8,10 +9,12 @@
     border-color: #8057e9;
     width: 100%;
     margin-left: -2.5em;
+    height: 1.75em;
 }
 
 .SearchButton
 {
+    vertical-align: middle;
     font-size: 100%;
     border-color: #8057e9;
     color: #8057e9;
@@ -20,6 +23,15 @@
     border: 3px solid;
     padding: 3px;
     margin:0;
+}
+
+.SearchButton img
+{
+    vertical-align: middle;
+    filter: #8057e9;
+    height: 1.75em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 
 .SearchButton:hover
