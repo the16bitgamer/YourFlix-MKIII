@@ -3,25 +3,24 @@
     box-sizing: border-box;
     position: relative;
     width: 100%;
+    display: inline-block;
 }
 
 .PrevContent
 {    
     vertical-align: middle;
-    height: 5em;
     float: left;
 }
 
 .NextContent
 {
     vertical-align: middle;
-    height: 5em;
     float: right;
 }
 
 .CurrentName
 {
-    margin-top: 0px;
+    margin: 0px;
     vertical-align: middle;
     text-align: center; 
     color:white;
@@ -30,6 +29,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    padding-bottom: 0%;
 }
 
 .Arrow

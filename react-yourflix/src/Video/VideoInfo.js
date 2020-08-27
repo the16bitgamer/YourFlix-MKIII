@@ -24,32 +24,42 @@ class VideoInfo extends React.Component
 
         var prevId = "/Show?id="+currentVideo.Parent_Id;
         var nextId = prevId;
-
-        for(var i = 0; i < otherVideos.length; i++)
+        if(otherVideos)
         {
-            const selectedVideo = JSON.parse(otherVideos[i])
-            if(selectedVideo.Id === currentVideo.Id && i+1 < otherVideos.length)
+            for(var i = 0; i < otherVideos.length; i++)
             {
-                nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Id;
-                break;
+                const selectedVideo = JSON.parse(otherVideos[i])
+                if(selectedVideo.Id === currentVideo.Id && i+1 < otherVideos.length)
+                {
+                    nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Id;
+                    break;
+                }
+                prevId = "/Video?id="+selectedVideo.Id;
             }
-            prevId = "/Video?id="+selectedVideo.Id;
+            return(
+                <div className="VideoInfoBar">
+                        <a className="PrevContent" href={prevId}>
+                            <button className="IndexButton">
+                                <img className="Arrow" alt="<" src={leftArrow}/>                            
+                            </button>
+                        </a>
+                        <a href={nextId} className="NextContent">
+                            <button className="IndexButton">
+                                <img className="Arrow" alt="Next" src={rightArrow}/>
+                            </button>
+                        </a>
+                        <h1 className="CurrentName">{currentVideo.Name.substring(0,currentVideo.Name.length-4)}</h1>
+                </div>
+            );
         }
-        return(
-            <div className="VideoInfoBar">
-                    <a className="PrevContent" href={prevId}>
-                        <button className="IndexButton">
-                            <img className="Arrow" alt="<" src={leftArrow}/>                            
-                        </button>
-                    </a>
-                    <a href={nextId} className="NextContent">
-                        <button className="IndexButton">
-                            <img className="Arrow" alt="Next" src={rightArrow}/>
-                        </button>
-                    </a>
-                    <h1 className="CurrentName">{currentVideo.Name.substring(0,currentVideo.Name.length-4)}</h1>
-            </div>
-        );
+        else
+        {
+            return(
+                <div className="VideoInfoBar">
+                        <h1 className="CurrentName">{currentVideo.Name.substring(0,currentVideo.Name.length-4)}</h1>
+                </div>
+            );
+        }
     }
 
     render()

@@ -1,6 +1,5 @@
 import React from 'react';
 import NavBar from '../Nav/Nav.js';
-import VideoControls from './VideoControls.js';
 import VideoInfo from './VideoInfo.js';
 import VideoPlayer from './VideoPlayer.js';
 import testData from '../testVideoData.json'
@@ -16,6 +15,16 @@ class VideoPage extends React.Component
         {
             videoId: currentId
         }
+        this.GetHeights = this.GetHeights.bind(this);
+        this.navBarRef = React.createRef();
+        this.videoInfoRef = React.createRef();
+    }
+
+    GetHeights()
+    {
+        var navHeight = this.navBarRef.current.offsetHeight;
+        var infoHeight = this.videoInfoRef.current.offsetHeight;
+        return navHeight + infoHeight;
     }
 
     render()
@@ -25,10 +34,13 @@ class VideoPage extends React.Component
         var siblings = testData[1];
         return(
             <div style={{height:"100%"}}>
-                <NavBar/>
-                <VideoInfo CurrentVideo={videoData} OtherVideos={siblings}/>
-                <VideoPlayer VideoLocation={videoData.Location}/>
-                <VideoControls Parent={videoData.Parent_Id}/>
+                <div ref={this.navBarRef}>
+                    <NavBar/>
+                    </div>
+                <div ref={this.videoInfoRef} >
+                    <VideoInfo CurrentVideo={videoData} OtherVideos={siblings}/>
+                </div>
+                <VideoPlayer VideoData={videoData} Heights={this.GetHeights}/>
             </div>
         );
     }
