@@ -24,14 +24,13 @@
 
     function GetFolderLink($DB_CONN, $FOLDER_ID)
     {
-        $result = $DB_CONN->query('SELECT Id FROM Content_Db WHERE Parent_Id == '.$FOLDER_ID.' ORDER BY Name');
+        $result = $DB_CONN->query('SELECT Id FROM Content_Db WHERE Parent_Id == '.$FOLDER_ID.' ORDER BY Name COLLATE NOCASE ASC');
         $content = $result->fetchArray();
         return "/Show?id=".$content['Id'];
     }
 
-    function GetProgramLink($DB_CONN, $PROG_ID, $FOLDER_ID)
+    function GetProgramLink($DB_CONN, $FOLDER_ID)
     {
-        //$progData = "&prog=".$PROG_ID;
         $returnLink = GetVideoLink($DB_CONN, $FOLDER_ID);
         if($returnLink === FALSE)
         {
@@ -40,4 +39,14 @@
 
         return $returnLink;
     }
+    
+    $rest_json = file_get_contents("php://input");
+    $_POST = json_decode($rest_json, true);
+    $folderId = $_POST['Id'];
+    
+    $db = new SQLite3('/usr/share/yourflix/yourflix.db');
+    $link = GetProgramLink($db, $folderId);
+    echo json_encode($link);
+    $db->close();
+
 ?>

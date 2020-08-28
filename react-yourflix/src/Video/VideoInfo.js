@@ -11,31 +11,18 @@ class VideoInfo extends React.Component
         this.state =
         {
             currentVideo: props.CurrentVideo,
-            otherVideos: props.OtherVideos
+            prevVideo: props.PrevVideo,
+            nextVideo: props.NextVideo
         }
-
-        this.VideoInfoBar = this.VideoInfoBar.bind(this);
     }
 
-    VideoInfoBar(props)
-    {
-        const currentVideo = this.state.currentVideo;
-        const otherVideos = this.state.otherVideos;
-
-        var prevId = "/Show?id="+currentVideo.Parent_Id;
-        var nextId = prevId;
-        if(otherVideos)
+    render()
+    {        
+        var currentVideo = this.state.currentVideo;
+        var prevId = this.state.prevVideo;
+        var nextId = this.state.nextVideo;
+        if(prevId && nextId)
         {
-            for(var i = 0; i < otherVideos.length; i++)
-            {
-                const selectedVideo = JSON.parse(otherVideos[i])
-                if(selectedVideo.Id === currentVideo.Id && i+1 < otherVideos.length)
-                {
-                    nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Id;
-                    break;
-                }
-                prevId = "/Video?id="+selectedVideo.Id;
-            }
             return(
                 <div className="VideoInfoBar">
                         <a className="PrevContent" href={prevId}>
@@ -60,15 +47,6 @@ class VideoInfo extends React.Component
                 </div>
             );
         }
-    }
-
-    render()
-    {
-        return(
-            <div>
-                <this.VideoInfoBar/>
-            </div>
-        );
     }
 }
 

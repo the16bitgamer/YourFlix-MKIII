@@ -1,7 +1,6 @@
 import React from 'react';
 import Program from "./Program";
-import './css/yf-programTable.css'
-import testData from "../testdata.json"
+import './css/yf-programTable.css';
 
 class ProgramTable extends React.Component
 {
@@ -11,8 +10,7 @@ class ProgramTable extends React.Component
 
         this.state =
         {
-            programs: testData[0],
-            links: testData[1],
+            programs: props.Programs,
             lastWidth: 1
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -62,7 +60,6 @@ class ProgramTable extends React.Component
         }
         return currWidth;
     }
-
     
     ShowPrograms(props)
     {
@@ -75,12 +72,12 @@ class ProgramTable extends React.Component
         var padding = props.padding;
         var numCol = props.columns;
         var colIndex = 0;
+        var programs = this.state.programs;
 
-        for(var i = 0; i < this.state.programs.length; i++)
+        for(var i = 0; i < programs.length; i++)
         {
-            var currentProg = JSON.parse(this.state.programs[i]);
-            var progLink = JSON.parse(this.state.links[i]);
-            if(currentProg.Name.substring(0, 1) !== lastChar)
+            var currentProg = JSON.parse(programs[i]);
+            if(currentProg.Name.substring(0, 1).toUpperCase() !== lastChar)
             {
                 if(numTables > 0)
                 {
@@ -97,7 +94,7 @@ class ProgramTable extends React.Component
                 }
                 numTables++;
                 colIndex = 0;
-                lastChar = currentProg.Name.substring(0, 1);
+                lastChar = currentProg.Name.substring(0, 1).toUpperCase();
             }
             if(colIndex >= numCol)
             {
@@ -107,11 +104,20 @@ class ProgramTable extends React.Component
             }
             currentRow.push(
             <th key={"element-"+i} style={{minWidth:width, maxWidth:width, padding:padding/2}}>
-                <Program key={currentProg.Id} width={width} program={currentProg} link={progLink}/>
+                <Program key={currentProg.Id} width={width} program={currentProg} link={currentProg.Folder_Id}/>
             </th>
             );
             colIndex++;
         }
+        currentTable.push(<tr key={"row-"+i}>{currentRow}</tr>);
+        returnPage.push(
+            <table key={"table-"+i} className="ProgramTable">
+                <thead key={"head-"+i}>
+                    <h1 key={"Name-"+i}>{lastChar}</h1>
+                </thead>
+                <tbody key={"body-"+i}>{currentTable}</tbody>
+            </table>);
+
         return returnPage;
     }
 

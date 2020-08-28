@@ -1,5 +1,6 @@
-import React from 'react'
-import './css/yf-program.css'
+import React from 'react';
+import './css/yf-program.css';
+import Fetch from '../Database/Fetch';
 import ProgramImage from './ProgramImage';
 
 class Program extends React.Component
@@ -18,8 +19,29 @@ class Program extends React.Component
             link: props.link,
             width: width
         }
+        this.FetchLink = this.FetchLink.bind(this);
+        this.LinkResults = this.LinkResults.bind(this);
     }
-    
+
+    FetchLink()
+    {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(
+                { 
+                    Id: this.state.link
+                })
+        };
+        
+        Fetch("/php/ProgramLink.php", this.LinkResults, requestOptions);
+    }
+
+    LinkResults(results)
+    {
+        window.open(results,"_self");
+    }
+
 
     render()
     {
@@ -28,12 +50,10 @@ class Program extends React.Component
         const img = this.state.img;
         const programId = this.state.id;
         return(
-        <a href={link}>
-            <div className="Program" id={programId}>
+            <div className="Program" style={{cursor: "pointer"}} onClick={this.FetchLink}>
                 <ProgramImage name={progName} img={img}/>
                 <h4 className="ProgramName">{progName}</h4>
             </div>
-        </a>
         );
     }
 }

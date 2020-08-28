@@ -1,6 +1,5 @@
 import React from 'react';
 import VideoControls from './VideoControls.js';
-import tempVideo from './E01 The Boy in the Iceberg.mp4'
 import './css/yf-VideoPlayer.css';
 
 class VideoPlayer extends React.Component
@@ -12,7 +11,10 @@ class VideoPlayer extends React.Component
         {
             videoData: props.VideoData,
             topHeight: props.Heights,
+            nextVideo: props.NextVideo,
             heightSet: false,
+            videoSet: false,
+            isPaused: true,
             height: 0
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -21,6 +23,34 @@ class VideoPlayer extends React.Component
         this.FullScreenButton = this.FullScreenButton.bind(this);
         this.controlRef = React.createRef();
         this.videoRef = React.createRef();
+    }
+
+    componentDidUpdate(nextProps) 
+    {
+        if(nextProps.heightSet !== this.state.heightSet && this.state.videoSet === false)
+        {
+            var video = this.videoRef.current;
+            if(video)
+            {
+                video.onpause = (event) =>
+                {
+                    this.setState({isPaused:true});
+                };
+                video.onplay = (event) =>
+                {
+                    this.setState({isPaused:false});
+                };
+                video.onended = (event) =>
+                {
+                    var nextVideo = this.state.nextVideo;
+                    if(nextVideo)
+                    {
+                        window.open(nextVideo,"_self");
+                    }
+                }
+                this.setState({videoSet:true});
+            }
+        }
     }
     
     componentDidMount()
@@ -57,7 +87,6 @@ class VideoPlayer extends React.Component
         {
             video.pause();
         }
-        return video.paused;
     }
 
     SeekButton(time)
@@ -101,13 +130,14 @@ class VideoPlayer extends React.Component
         else
         {
             const height = this.state.height;
+            var isPaused = this.state.isPaused;
             return(
                 <div>
-                    <video style={{height: height+"px"}} ref={this.videoRef} className='VideoPlayer' controls>
-                        <source src={tempVideo} type='video/mp4'/>
+                    <video style={{height: height+"px"}} ref={this.videoRef} className='VideoPlayer' controls autoPlay>
+                        <source src={videoData.Location} type='video/mp4'/>
                     </video>
                     <div ref={this.controlRef}>
-                        <VideoControls Parent={videoData.Parent_Id} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton}/>
+                        <VideoControls VideoPaused={isPaused} Parent={videoData.Parent_Id} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton}/>
                     </div>
                 </div>
             );

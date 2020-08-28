@@ -1,5 +1,6 @@
 import React from 'react';
 import searchIcon from './img/SearchIcon.svg';
+import Fetch from '../Database/Fetch';
 import './css/yf-search.css';
 
 class SearchBar extends React.Component
@@ -9,12 +10,58 @@ class SearchBar extends React.Component
         this.state = 
         {
             search: "",
+            link: "",
             program: [],
-            link: []
+            isVisible: false
         }
         this.searchInput = this.searchInput.bind(this);
-        this.searchSubmit = this.searchSubmit.bind(this);
+        this.SearchReturn = this.SearchReturn.bind(this);
         this.SearchResults = this.SearchResults.bind(this);
+        this.FetchLink = this.FetchLink.bind(this);
+        this.LinkResults = this.LinkResults.bind(this);
+        this.EnterSearch = this.EnterSearch.bind(this);
+        this.InputField = React.createRef();
+    }
+
+    componentDidMount()
+    {
+        this.InputField.current.addEventListener("keyup", (event) =>
+        {
+            if (event.keyCode === 13)
+            {
+              event.preventDefault();
+              this.EnterSearch();
+            }
+        }); 
+    }
+
+    EnterSearch()
+    {
+        const search = this.state.search;
+        window.open("/Search?query="+search,"_self");
+    }
+
+    FetchLink(link)
+    {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(
+                { 
+                    Id: link
+                })
+        };
+        
+        Fetch("/php/ProgramLink.php", this.LinkResults, requestOptions);
+    }
+
+    LinkResults(results)
+    {
+        this.setState(
+            {
+                link: results
+            }
+        );
     }
 
     searchInput(event)
@@ -29,52 +76,21 @@ class SearchBar extends React.Component
                     limit: 5
                 })
         };
-
-        fetch('/php/SearchDb.php', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            this.setState(
-                {
-                    program: data[0],
-                    link: data[1]
-                }
-            );
-            //console.log('Success:', data);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-
+        
+        Fetch("/php/SearchDb.php", this.SearchReturn, requestOptions);
     }
 
-    searchSubmit()
+    SearchReturn(results)
     {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: this.state.items })
-        };
-
-        fetch('/php/SearchDb.php', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            this.setState(
-                {
-                    program: data[0],
-                    link: data[1]
-                }
-            );
-            //console.log('Success:', data);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+        this.setState(
+            {
+                program: results
+            });
     }
 
     SearchResults()
     {
         const progs = this.state.program;
-        const links = this.state.link;
         const len = progs.length;
         const hasResults = len > 0;
         var searchItems = [];
@@ -84,8 +100,12 @@ class SearchBar extends React.Component
             for(var i = 0; i < len; i++)
             {
                 const obj = JSON.parse(progs[i]);
-                const link = JSON.parse(links[i]);
-                searchItems.push(<a key={link} href={link}>{obj.Name}</a>);
+                const link = obj.Folder_Id;
+                
+                searchItems.push(
+                    <div onClick={()=> this.FetchLink(link)} key={link}>
+                        {obj.Name}
+                    </div>);
             }
 
             return(
@@ -99,12 +119,15 @@ class SearchBar extends React.Component
 
     render()
     {
+        const search = this.state.search;
         return(
             <div className="dropdown">
-                <input className="SearchInput" type="text" value={this.state.search}  onChange={this.searchInput} placeholder="Search Program"/>
-                <button onClick={this.searchSubmit} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className="SearchButton" value="Submit">
-                    <img alt="search" src={searchIcon}/>
-                </button>
+                <input className="SearchInput" ref={this.InputField} type="text" value={this.state.search} onChange={this.searchInput} placeholder="Search Program"/>
+                <a href={"/Search?query="+search}>
+                    <button className="SearchButton" value="Submit">
+                        <img alt="search" src={searchIcon}/>
+                    </button>
+                </a>
                 <this.SearchResults/>
             </div>
         );

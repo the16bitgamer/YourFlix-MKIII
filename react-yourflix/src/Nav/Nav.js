@@ -14,7 +14,9 @@ class Nav extends React.Component
                 <thead>
                     <tr>
                         <th className="VCenter RowFixed">
-                            <img className="FloatLeft NavBarImgSize" alt="YourFlix" src={logo}/>
+                            <a href="/">
+                                <img className="FloatLeft NavBarImgSize" alt="YourFlix" src={logo}/>
+                            </a>
                         </th>
                         <th className="VCenter">
                             <SearchBar/>

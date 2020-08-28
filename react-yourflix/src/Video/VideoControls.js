@@ -13,33 +13,33 @@ class VideoControls extends React.Component
         this.state = 
         {
             parentId: props.Parent,
-            playImg: PlayButton,
+            isPaused: props.VideoPaused,
             play: props.PlayFunc,
             seek: props.SeekFunc,
             full: props.FulllScreenFunc
         }
-        this.PlayVideo = this.PlayVideo.bind(this);
     }
-
-    PlayVideo()
+    
+    shouldComponentUpdate(nextProps) 
     {
-        const videoPaused = this.state.play();
-        if(videoPaused)
-        {
-            this.setState({playImg: PlayButton});
+        if(this.state.isPaused !== nextProps.VideoPaused)
+        { 
+            this.setState({ isPaused: nextProps.VideoPaused});
         }
-        else
-        {
-            this.setState({playImg: PauseButton});
-        }
+        return true;
     }
 
     render()
     {
         const returnPage = "/Show?id="+this.state.parentId;
-        const playButt = this.state.playImg;
+        const playButt = this.state.play;
         const fullButt = this.state.full;
         const seekButt = this.state.seek;
+        var playImg = PauseButton;
+        if(this.state.isPaused)
+        {
+            playImg = PlayButton;
+        }
 
         return(
             <div className="VideoController">
@@ -55,8 +55,8 @@ class VideoControls extends React.Component
                     <button className="Skip" onClick={() => seekButt(-10)}>
                         <p>-10</p>
                     </button>
-                    <button className="PlayButton" onClick={this.PlayVideo}>
-                        <img alt="Back" src={playButt}/>
+                    <button className="PlayButton" onClick={playButt}>
+                        <img alt="Play" src={playImg}/>
                     </button>
                     <button className="Skip" onClick={() => seekButt(+10)}>
                         +10
