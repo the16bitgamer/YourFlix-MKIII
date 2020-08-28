@@ -1,0 +1,101 @@
+.FolderBar
+{
+    float: right;
+    margin-top: 0;
+}
+
+.ButtonBack
+{
+    float: left;
+    margin-top: 0;
+    background-color: #ff2222;
+    color: white;
+    border: none;
+    cursor: pointer;
+    height: 3em;
+    width: 6em;
+}
+
+.ButtonBack img
+{
+    vertical-align: middle;
+    height: 1.5em;
+}
+
+.ShowBar
+{
+    margin-top: 0.5em;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.showBtn {
+    vertical-align: middle;
+    width: 100%;  
+    background-color: #8057e9;
+    border: none;
+    border-left-style: solid;
+    border-right-style: solid;
+    color: white;
+    cursor: pointer;
+    height: 3em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.showBtn img
+{
+    vertical-align: middle;
+    height: 1.5em;
+}
+
+.toggleBtn {  
+    background-color: #8057e9;
+    border: none;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    cursor: pointer;
+    height: 3em;
+}
+
+.toggleBtn img
+{
+    vertical-align: middle;
+    height: 1.5em;
+}
+  
+.showDropDown {
+    position: relative;
+    display: inline-block;
+}
+  
+.show-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;  
+    border: 2px;
+    border-style: solid;  
+    border-color: #8057e9;
+    right: 0;
+    z-index: 1;
+}
+  
+.show-content div {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+  
+.show-content div:hover {
+    background-color: #cccccc;
+    border: 2px;
+    border-top-style: solid;  
+    border-bottom-style: solid;  
+    border-color: #8057e9;
+}
+  
+.showDropDown:hover .show-content {display: block;}

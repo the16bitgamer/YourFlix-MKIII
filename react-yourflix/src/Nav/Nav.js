@@ -1,6 +1,6 @@
 import React from 'react';
-import logo from './YourFlix.png';
-import menu from './Temp Hamburger Buttons.png';
+import logo from './img/YourFlix.png';
+import menu from './img/Temp Hamburger Buttons.png';
 import SearchBar from './SearchBar';
 import './css/yf-sizing.css'
 
@@ -14,7 +14,9 @@ class Nav extends React.Component
                 <thead>
                     <tr>
                         <th className="VCenter RowFixed">
-                            <img className="FloatLeft NavBarImgSize" alt="YourFlix" src={logo}/>
+                            <a href="/">
+                                <img className="FloatLeft NavBarImgSize" alt="YourFlix" src={logo}/>
+                            </a>
                         </th>
                         <th className="VCenter">
                             <SearchBar/>

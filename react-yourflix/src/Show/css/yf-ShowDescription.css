@@ -1,0 +1,27 @@
+.ShowDescription
+{
+    width: 100%;
+    position: relative;
+    border-bottom-style: solid;
+    border-color: white;
+    overflow: auto;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+.Image .ImageBox
+{
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+}
+
+.Image
+{
+    float: right;
+    width: 20em;
+}
+
+.ShowName
+{
+    color: white;
+    text-decoration: underline;
+    margin-top: 0px;
+}

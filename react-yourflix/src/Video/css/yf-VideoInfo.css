@@ -1,0 +1,46 @@
+.VideoInfoBar
+{
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
+
+.PrevContent
+{    
+    vertical-align: middle;
+    float: left;
+}
+
+.NextContent
+{
+    vertical-align: middle;
+    float: right;
+}
+
+.CurrentName
+{
+    margin: 0px;
+    vertical-align: middle;
+    text-align: center; 
+    color:white;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-bottom: 0%;
+}
+
+.Arrow
+{
+    height: 3em;
+    vertical-align: middle;
+}
+.IndexButton
+{
+    height: 4em;
+    width: 5em;
+    background-color: #8057e9;
+    border: none;
+}
