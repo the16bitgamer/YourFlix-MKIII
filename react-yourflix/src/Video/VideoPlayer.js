@@ -134,7 +134,7 @@ class VideoPlayer extends React.Component
             return(
                 <div>
                     <video style={{height: height+"px"}} ref={this.videoRef} className='VideoPlayer' controls autoPlay>
-                        <source src={videoData.Location} type='video/mp4'/>
+                        <source src={ encodeURI(videoData.Location)} type='video/mp4'/>
                     </video>
                     <div ref={this.controlRef}>
                         <VideoControls VideoPaused={isPaused} Parent={videoData.Parent_Id} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton}/>

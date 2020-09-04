@@ -49,13 +49,17 @@ class VideoPage extends React.Component
             for(var i = 0; i < otherVideos.length; i++)
             {
                 const selectedVideo = JSON.parse(otherVideos[i])
-                if(selectedVideo.Id === currentVideo.Id && i+1 < otherVideos.length)
+                if(selectedVideo.Id === currentVideo.Id)
                 {
-                    nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Id;
+                    if(i+1 < otherVideos.length)
+                    {
+                        nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Id;
+                    }
                     break;
                 }
                 prevId = "/Video?id="+selectedVideo.Id;
             }
+            console.log(prevId);
             this.setState(
                 {
                     prevVideo: prevId,

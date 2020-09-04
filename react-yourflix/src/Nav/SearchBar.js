@@ -10,7 +10,6 @@ class SearchBar extends React.Component
         this.state = 
         {
             search: "",
-            link: "",
             program: [],
             isVisible: false
         }
@@ -57,11 +56,7 @@ class SearchBar extends React.Component
 
     LinkResults(results)
     {
-        this.setState(
-            {
-                link: results
-            }
-        );
+        window.open(results,"_self");
     }
 
     searchInput(event)
