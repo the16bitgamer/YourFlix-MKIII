@@ -4,9 +4,9 @@ Yf_Config = '/etc/yourflix/yourflix2.config'
 
 Yf_DbLoc = '/usr/share/yourflix/yourflix2.db'
 YF_Html = "/var/www/html"
-Yf_Dir = "Videos"
+Yf_Dir = "Test_Videos"
 
-Db_Version = 1.1
+Db_Version = 1.11
 
 Db_Channel = 'Channel'                                                                          #Channel DB is used to Categorize the Programs on YourFlix, by default we have the All Channel, Film Channel, and TV Channel
 Db_ChProgram = 'Channel_Program'                                                                #Channel Program DB is the association between the Channel DB and the Program DB
@@ -22,6 +22,7 @@ Current_Program = None
 Current_ContFolder = None
 Current_Content = None
 
+Current_MetaImages = None
 Current_AllChannel = None
 Current_FilmsChannel = None
 Current_ShowsChannel = None
@@ -29,6 +30,10 @@ Current_ShowsChannel = None
 Db_List = [Db_YourFlix, Db_Channel, Db_ChProgram, Db_Program, Db_Img, Db_ImageType, Db_File, Db_ContFolder, Db_Content]
 
 Db_Old = ['Img_Db', 'Content_Db', 'Program_Db', 'YourFlix_Db', 'FileType_Db']
+
+FolderType = "Folder"
+VideoType = "Video"
+ImageType = "Image"
 
 SupportedVideos = ['MP4', 'WebM', 'Ogg']                                                        #Default Supported Video (limited by the HTML5 Video)
 SupportedImg = ['PNG', 'BMP', 'GIF', 'ICO', 'JPEG', 'JPG']                                      #Default Supported Image Types (limited by web standards, all images should be compatible with all browsers)

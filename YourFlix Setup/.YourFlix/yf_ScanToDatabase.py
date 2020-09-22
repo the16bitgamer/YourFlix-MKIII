@@ -25,17 +25,15 @@ def BuildProgramDb(DB_CONN):
                     WHERE = 'Program_Location == "%s"' % _physicalLoc)
 
                 if(_searchResult):
-                    _programId = _searchResult[0][0]
-                    _programVisibility = _searchResult[0][1]
-                    dbManager.Current_Program.remove(_searchResult[0])
-                    print("Found Program with ID = %i" % _programId)
+                    _programId = _searchResult[0]
+                    _programVisibility = _searchResult[1]
+                    dbManager.Current_Program.remove(_searchResult)
 
                 else:
                     _programId = Database.Insert(DB_CONN,
                         INTO = dbManager.Db_Program,
                         ROW = ['Program_Name', 'Program_Location', 'Program_Web_Location', 'Program_Visible', 'Num_Content'],
                         VALUES = [_item, _physicalLoc, _webLoc, _programVisibility, 0])
-                    print("Created Program with ID = %i" % _programId)
 
                 if(_programId == -1):
                     raise Exception("ERROR: No Program Id Created")
@@ -65,44 +63,46 @@ def RemoveFromDatabase(DB_CONN):
     changed = False
     
     for content in dbManager.Current_Content:
+        print("Content %s Removed from Db" % str(content))
+
         _contentId = content[0]
         _folderId = content[1]
         
         _programId = Database.Select(DB_CONN,
             SELECT = 'Program_Id',
             FROM = dbManager.Db_ContFolder,
-            WHERE = 'Folder_Id = %i' % _folderId)[0][0]
+            WHERE = 'Folder_Id = %i' % _folderId)[0]
 
         Database.Update(DB_CONN, 
             dbManager.Db_Program, 
-            SET = 'Num_Content_Folders = Num_Content_Folders - 1',
+            SET = 'Num_Content = Num_Content - 1',
             WHERE = 'Program_Id = %i' % _programId)
 
         Database.Delete(DB_CONN,
             FROM = dbManager.Db_Content,
             WHERE = "Content_Id = %i" % _contentId)
 
-        print("Content %s Removed from Db" % str(content))
         changed = True
 
     for contentFolder in dbManager.Current_ContFolder:
+        print("Folder %s Removed from Db" % str(contentFolder))
+
         _folderId = contentFolder[0]
 
         Database.Delete(DB_CONN,
             FROM = dbManager.Db_ContFolder,
             WHERE = "Folder_Id = %i" % _folderId)
-
-        print("Folder %s Removed from Db" % str(content))
         changed = True  
 
     for program in dbManager.Current_Program:
+        print("Program %s Removed from Db" % str(program))
+
         _programId = program[0]
 
         Database.Delete(DB_CONN,
             FROM = dbManager.Db_Program,
             WHERE = "Program_Id = %i" % _programId)
 
-        print("Program %s Removed from Db" % str(program))
         changed = True
     
     if changed:

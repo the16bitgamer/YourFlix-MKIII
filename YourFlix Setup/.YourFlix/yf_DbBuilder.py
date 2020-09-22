@@ -2,6 +2,12 @@
 import yf_DbHandler as Database
 import yf_Database as dbManager
 
+def UpdateDatabase(DB_CONN, DB_VERSION):
+    if(dbManager.Db_Version == 1.11 and DB_VERSION < 1.11):
+        Database.AlterTable(DB_CONN,
+            TABLE = dbManager.Db_Img,
+            RENAMECOLUMN = "Location TO Img_Location")
+
 def BuildDatabase(DB_CONN):
     #Checks to see if Database exists and if it does drop it
     listOfDb = dbManager.Db_Old + dbManager.Db_List
@@ -59,7 +65,7 @@ def BuildDatabase(DB_CONN):
             ["Program_Id", "INTEGER NOT NULL"],
             ["Image_Type", "INTEGER NOT NULL"],
             ["File_Type", "INTEGER NOT NULL"],
-            ["Location", "TEXT UNIQUE NOT NULL"]])
+            ["Img_Location", "TEXT UNIQUE NOT NULL"]])
 
     #Building Image Type Table
     Database.CreateTable(DB_CONN,
@@ -80,7 +86,7 @@ def BuildDatabase(DB_CONN):
     Database.Insert(DB_CONN, 
         INTO = dbManager.Db_File,
         ROW = ["FileType", "FileType_Extention"],
-        VALUES = ['Folder', ''])
+        VALUES = [dbManager.FolderType, ''])
     
     #Adding Supported Images
     for _type in dbManager.SupportedImg:
@@ -88,7 +94,7 @@ def BuildDatabase(DB_CONN):
             Database.Insert(DB_CONN,
                 INTO = dbManager.Db_File,
                 ROW = ["FileType", "FileType_Extention"],
-                VALUES = ['Image', fileExtention])
+                VALUES = [dbManager.ImageType, fileExtention])
     
     #Adding Supported Videos
     for _type in dbManager.SupportedVideos:
@@ -96,7 +102,7 @@ def BuildDatabase(DB_CONN):
             Database.Insert(DB_CONN,
                 INTO = dbManager.Db_File,
                 ROW = ["FileType", "FileType_Extention"],
-                VALUES = ['Video', fileExtention])
+                VALUES = [dbManager.VideoType, fileExtention])
     
     #Building Program Folder Table
     Database.CreateTable(DB_CONN,
@@ -120,13 +126,21 @@ def CheckDatabase(DB_CONN):
     
     #Checks to see if an DB Exists if a DB isn't present or has been updated we update or rebuild
     for db in dbManager.Db_List:
-        _returned = Database.Select(DB_CONN, SELECT = "name", FROM = "sqlite_master", WHERE = "type='table' AND name='%s'" % db)
+        _returned = Database.Select(DB_CONN,
+            SELECT = "name",
+            FROM = "sqlite_master",
+            WHERE = "type='table' AND name='%s'" % db)
+
         checkStruct = _returned != None and checkStruct
-    
+        _dbVersion = 0
+
         if(db == dbManager.Db_YourFlix and checkStruct):
-            versionReturned = Database.Select(DB_CONN, SELECT = "Version", FROM = db)
-            if(versionReturned):
-                _updateVersion = versionReturned[len(versionReturned)-1] != dbManager.Db_Version
+            _versionReturned = Database.Select(DB_CONN,
+                SELECT = "Version",
+                FROM = db)
+            if(_versionReturned):
+                _dbVersion = _versionReturned[0]
+                _updateVersion = _dbVersion != dbManager.Db_Version
     
     if(not checkStruct):
         print("Database is Missing Data, Dropping All Tables and Rebuilding")
@@ -134,6 +148,6 @@ def CheckDatabase(DB_CONN):
 
     elif (_updateVersion):
         print("Database Needs and Update")
-
+        UpdateDatabase(DB_CONN, _dbVersion)
     else:
         print("Database is setup Correctly")
