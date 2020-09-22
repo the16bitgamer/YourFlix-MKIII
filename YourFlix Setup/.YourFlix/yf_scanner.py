@@ -8,17 +8,21 @@ import yf_Database as dbManager
 import yf_DbHandler as Database
 import yf_DbBuilder as Builder
 import yf_ScanToDatabase as DirScanner
+import yf_ProgramBuilder as ProgramBuilder
 
 def LoadConfig():
-    _config = Xml.parse(dbManager.Yf_Config).getroot()
-    
-    dbManager.Yf_DbLoc = _config.find("Database").attrib["location"]
-    dbManager.YF_Html = _config.find("WebRoot").attrib["location"]
-    dbManager.Yf_Dir = _config.find("VideoRoot").attrib["location"]
-    localFiles = _config.find("FileTypes")
+    if(os.path.exists(dbManager.Yf_Config)):
+        _config = Xml.parse(dbManager.Yf_Config).getroot()
+        
+        dbManager.Yf_DbLoc = _config.find("Database").attrib["location"]
+        dbManager.YF_Html = _config.find("WebRoot").attrib["location"]
+        dbManager.Yf_Dir = _config.find("VideoRoot").attrib["location"]
+        localFiles = _config.find("FileTypes")
 
-    dbManager.SupportedVideos = localFiles.find("Video").attrib["types"].split(',')
-    dbManager.SupportedImg = localFiles.find("Image").attrib["types"].split(',')
+        dbManager.SupportedVideos = localFiles.find("Video").attrib["types"].split(',')
+        dbManager.SupportedImg = localFiles.find("Image").attrib["types"].split(',')
+    else:
+        print("Config File Not Found")
 
     dbManager.FileTypes = dbManager.FileTypes + dbManager.SupportedVideos + dbManager.SupportedImg
 
@@ -26,7 +30,8 @@ def LoadDatabase():
     conn = sqlite3.connect(dbManager.Yf_DbLoc)
     Builder.CheckDatabase(conn)
     DirScanner.ScanDirToDb(conn)
-    conn.commit()
+    ProgramBuilder.BuildPrograms(conn)
+    #conn.commit()
     conn.close()
 
 def UpdateChildren(DB_CONN, MOVED_FROM, MOVED_TO, CONTENT_TO_UPDATE):
@@ -87,13 +92,14 @@ def AddItemToDatabase(DB_CONN, ITEM_PHYSICAL_LOC,GET_PARENTS = False):
     
 def YourflixMonitor():
     _physicalLoc = os.path.join(dbManager.YF_Html,dbManager.Yf_Dir)
+
+    LoadDatabase()
+    print("Database up to date")
+
     print("Starting Scanner")
 
     watcher = inotify.adapters.InotifyTree(_physicalLoc)
     print("Scanner Started")
-
-    LoadDatabase()
-    print("Database up to date")
 
     movedFolderFlag = False  
     movedFolderRoot = None 
@@ -146,7 +152,7 @@ def YourflixMonitor():
                         if(_contentId):
                             DeleteItemFromDatabase(conn, _contentId[0])
 
-                    conn.commit()
+                    #conn.commit()
                     conn.close()
 
         pass

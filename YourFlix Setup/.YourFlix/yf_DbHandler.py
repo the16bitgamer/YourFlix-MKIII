@@ -1,6 +1,6 @@
 import sqlite3
 
-Debug = False
+Debug = True
 LastId = -1
 
 def FormatItem(ITEM):
@@ -47,11 +47,11 @@ def CreateTable(CONNECTION, TABLE = None, VALUES = None):
    
     _pointer.execute("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
 
-def Select(CONNECTION, SELECT = None, FROM = None, WHERE = None, fetchall = False):
+def Select(CONNECTION, SELECT = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
   
     if not SELECT:
         raise Exception("SELECT: type str cannot be empty")
-  
+
     if not FROM:
         raise Exception("FROM: type str cannot be empty")
   
@@ -73,20 +73,24 @@ def Select(CONNECTION, SELECT = None, FROM = None, WHERE = None, fetchall = Fals
             _selecting += ","
   
         _selecting += str(item)
-  
+    
+    SELECT = ('SELECT %s' % SELECT)
+    FROM = ('FROM %s' % FROM)
+
     if WHERE:
-  
-        if Debug:
-            print("SELECT %s FROM %s WHERE %s" % (SELECT, FROM, WHERE))
-  
-        _pointer.execute("SELECT %s FROM %s WHERE %s" % (SELECT, FROM, WHERE))
-  
+        WHERE = ('WHERE %s' % WHERE)
     else:
+        WHERE = ''
+    
+    if ORDERBY:
+        ORDERBY = ('ORDER BY %s' %ORDERBY)
+    else:
+        ORDERBY = ''
+    
+    if Debug:
+        print("%s %s %s %s" % (SELECT, FROM, WHERE, ORDERBY))
   
-        if Debug:
-            print("SELECT %s FROM %s" % (SELECT, FROM))
-  
-        _pointer.execute("SELECT %s FROM %s" % (SELECT, FROM))
+    _pointer.execute("%s %s %s %s" % (SELECT, FROM, WHERE, ORDERBY))
   
     if fetchall:
         return _pointer.fetchall()
