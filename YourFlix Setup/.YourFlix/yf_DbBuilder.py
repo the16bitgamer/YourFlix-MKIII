@@ -7,6 +7,10 @@ def UpdateDatabase(DB_CONN, DB_VERSION):
         Database.AlterTable(DB_CONN,
             TABLE = dbManager.Db_Img,
             RENAMECOLUMN = "Location TO Img_Location")
+    if(DB_VERSION < 1.12):
+        Database.AlterTable(DB_CONN,
+            TABLE = dbManager.Db_Program,
+            DROPCOLUMN = "Program_Visible")
     
     Database.Update(DB_CONN,
         dbManager.Db_YourFlix,
@@ -57,7 +61,6 @@ def BuildDatabase(DB_CONN):
             ["Program_Desctiption", "TEXT"],
             ["Program_Location", "TEXT NOT NULL"],
             ["Program_Web_Location", "TEXT NOT NULL"],
-            ["Program_Visible", "INTEGER NOT NULL"],
             ["First_Content", "INTEGER"],
             ["First_Folder", "INTEGER"],
             ["Num_Content", "INTEGER NOT NULL"]])

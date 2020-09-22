@@ -47,7 +47,7 @@ def CreateTable(CONNECTION, TABLE = None, VALUES = None):
    
     _pointer.execute("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
 
-def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
+def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None, DROPCOLUMN = None):
     if not TABLE:
         raise Exception("TABLE: type str cannot be empty")
 
@@ -56,15 +56,21 @@ def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
 
     _pointer = CONNECTION.cursor()
     TABLE = "ALTER TABLE %s" % TABLE
+
     if(RENAMECOLUMN):
         RENAMECOLUMN = "RENAME COLUMN %s" % RENAMECOLUMN
     else:
         RENAMECOLUMN = ""
 
+    if(DROP COLUMN):
+        DROPCOLUMN = "DROP COLUMN %s" DROPCOLUMN
+    else:
+        DROPCOLUMN = ""
+
     if Debug:
-        print("%s %s" % (TABLE, RENAMECOLUMN))
+        print("%s %s %s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
    
-    _pointer.execute("%s %s" % (TABLE, RENAMECOLUMN))
+    _pointer.execute("%s %s %s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
 
 def Select(CONNECTION, SELECT = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
   

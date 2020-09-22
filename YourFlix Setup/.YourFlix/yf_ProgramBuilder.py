@@ -205,7 +205,7 @@ def BuildPrograms(DB_CONN):
     _programData = Database.Select(DB_CONN,
         SELECT = 'Program_Id, Program_Web_Location, Program_Location, Num_Content',
         FROM = dbManager.Db_Program,
-        WHERE = 'Program_Visible = 1',
+        WHERE = 'Num_Content >= 1',
         fetchall = True)
 
     _allChannelId = Database.Select(DB_CONN,

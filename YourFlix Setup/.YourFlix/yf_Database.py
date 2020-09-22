@@ -6,7 +6,7 @@ Yf_DbLoc = '/usr/share/yourflix/yourflix2.db'
 YF_Html = "/var/www/html"
 Yf_Dir = "Test_Videos"
 
-Db_Version = 1.11
+Db_Version = 1.12
 
 Db_Channel = 'Channel'                                                                          #Channel DB is used to Categorize the Programs on YourFlix, by default we have the All Channel, Film Channel, and TV Channel
 Db_ChProgram = 'Channel_Program'                                                                #Channel Program DB is the association between the Channel DB and the Program DB

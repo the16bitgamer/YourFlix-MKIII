@@ -26,7 +26,7 @@ def GetVideoType(DB_CONN, PATH):
 #Scans a Directory for all of it's valid content
 def FindContent(DB_CONN, PHYSICAL_ROOT, WEB_ROOT, FOLDER_NAME, PROGRAM_ID):
     _currentPhysicalFolder = os.path.join(PHYSICAL_ROOT, FOLDER_NAME)
-    _foundOrAddedContent = False
+    _foundOrAddedContent = 0
     
     if os.path.isdir(_currentPhysicalFolder):
         if(debug):
@@ -44,8 +44,7 @@ def FindContent(DB_CONN, PHYSICAL_ROOT, WEB_ROOT, FOLDER_NAME, PROGRAM_ID):
                 _webContent = os.path.join(_currentWebFolder, _item)
 
                 if(os.path.isdir(_physicalContent)):
-                    _findResult = FindContent(DB_CONN, _currentPhysicalFolder, _currentWebFolder, _item, PROGRAM_ID)
-                    _foundOrAddedContent = _foundOrAddedContent or _findResult
+                    _foundOrAddedContent += FindContent(DB_CONN, _currentPhysicalFolder, _currentWebFolder, _item, PROGRAM_ID)
 
                 else:
 
@@ -62,7 +61,7 @@ def FindContent(DB_CONN, PHYSICAL_ROOT, WEB_ROOT, FOLDER_NAME, PROGRAM_ID):
                         if(debug):
                             print("Content: %s is already in DB" % _item)
                         dbManager.Current_Content.remove(_searchResult)
-                        _foundOrAddedContent = True
+                        _foundOrAddedContent += 1
 
                     else:
                         _fileType = GetVideoType(DB_CONN, _physicalContent)
@@ -80,7 +79,7 @@ def FindContent(DB_CONN, PHYSICAL_ROOT, WEB_ROOT, FOLDER_NAME, PROGRAM_ID):
                                 dbManager.Db_Program, 
                                 SET = 'Num_Content = Num_Content + 1',
                                 WHERE = 'Program_Id = %i' % PROGRAM_ID)
-                            _foundOrAddedContent = True
+                            _foundOrAddedContent += 1
 
     return _foundOrAddedContent
 

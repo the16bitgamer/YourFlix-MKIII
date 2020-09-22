@@ -17,43 +17,29 @@ def BuildProgramDb(DB_CONN):
 
 
             if(_item not in dbManager.ScannerIgnore and os.path.isdir(_physicalLoc)):
-                _programVisibility = 0
                 _programId = -1
                 _searchResult = Database.Select(DB_CONN, 
-                    SELECT = 'Program_Id, Program_Visible',
+                    SELECT = 'Program_Id',
                     FROM = dbManager.Db_Program,
                     WHERE = 'Program_Location == "%s"' % _physicalLoc)
 
                 if(_searchResult):
                     _programId = _searchResult[0]
-                    _programVisibility = _searchResult[1]
                     dbManager.Current_Program.remove(_searchResult)
 
                 else:
                     _programId = Database.Insert(DB_CONN,
                         INTO = dbManager.Db_Program,
-                        ROW = ['Program_Name', 'Program_Location', 'Program_Web_Location', 'Program_Visible', 'Num_Content'],
-                        VALUES = [_item, _physicalLoc, _webLoc, _programVisibility, 0])
+                        ROW = ['Program_Name', 'Program_Location', 'Program_Web_Location', 'Num_Content'],
+                        VALUES = [_item, _physicalLoc, _webLoc, 0])
 
                 if(_programId == -1):
                     raise Exception("ERROR: No Program Id Created")
 
-                _hasContent = ContentManager.FindContent(DB_CONN, _physicalRoot, _webRoot, _item, _programId)
-
-                if(_hasContent and _programVisibility != 1):
-                    Database.Update(DB_CONN, 
-                        dbManager.Db_Program, 
-                        SET = 'Program_Visible = %i' % 1,
-                        WHERE = 'Program_Id = %i' % _programId)
-
-                elif(not _hasContent and _programVisibility == 1):
-                    Database.Update(DB_CONN, 
-                        dbManager.Db_Program, 
-                        SET = 'Program_Visible = %i' % 0,
-                        WHERE = 'Program_Id = %i' % _programId)
+                ContentManager.FindContent(DB_CONN, _physicalRoot, _webRoot, _item, _programId)
 
 def PullFromDatabase(DB_CONN):
-    dbManager.Current_Program = Database.Select(DB_CONN, SELECT = 'Program_Id, Program_Visible', FROM = dbManager.Db_Program, fetchall = True)
+    dbManager.Current_Program = Database.Select(DB_CONN, SELECT = 'Program_Id', FROM = dbManager.Db_Program, fetchall = True)
     
     dbManager.Current_ContFolder = Database.Select(DB_CONN, SELECT = 'Folder_Id, Program_Id', FROM = dbManager.Db_ContFolder, fetchall = True)
     
