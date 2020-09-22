@@ -3,10 +3,14 @@ import yf_DbHandler as Database
 import yf_Database as dbManager
 
 def UpdateDatabase(DB_CONN, DB_VERSION):
-    if(dbManager.Db_Version == 1.11 and DB_VERSION < 1.11):
+    if(DB_VERSION < 1.11):
         Database.AlterTable(DB_CONN,
             TABLE = dbManager.Db_Img,
             RENAMECOLUMN = "Location TO Img_Location")
+    
+    Database.Update(DB_CONN,
+        dbManager.Db_YourFlix,
+        SET = "Version = %s" % str(dbManager.Db_Version))
 
 def BuildDatabase(DB_CONN):
     #Checks to see if Database exists and if it does drop it

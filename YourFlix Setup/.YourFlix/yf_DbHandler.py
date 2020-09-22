@@ -203,7 +203,7 @@ def Delete(CONNECTION, FROM = None, WHERE = None):
   
     _pointer.execute("DELETE FROM '%s' WHERE %s" % (FROM, WHERE))
 
-def Update(CONNECTION, DATABASE, SET, WHERE):
+def Update(CONNECTION, DATABASE, SET, WHERE = None):
   
     if not DATABASE:
         raise Exception("DATABASE: type str cannot be empty")
@@ -211,21 +211,22 @@ def Update(CONNECTION, DATABASE, SET, WHERE):
     if not SET:
         raise Exception("SET: type str cannot be empty")
   
-    if not WHERE:
-        raise Exception("WHERE: type str cannot be empty")
-  
     if not type(DATABASE) is str:
         raise TypeError("Update DATABASE Need to be a string, it is a %s" % str(type(DATABASE)))
   
     if not type(SET) is str:
         raise TypeError("Update SET Need to be a string, it is a %s" % str(type(SET)))
   
-    if not type(WHERE) is str:
-        raise TypeError("Update WHERE Need to be a string, it is a %s" % str(type(WHERE)))
-  
     _pointer = CONNECTION.cursor()
   
+    DATABASE = "UPDATE %s" % DATABASE
+    SET = "SET %s" % SET
+    if(WHERE):
+        WHERE = "WHERE %s" % WHERE
+    else:
+        WHERE = ""
+
     if Debug:
-        print('UPDATE %s SET %s WHERE %s' % (DATABASE, SET, WHERE))
+        print('%s %s %s' % (DATABASE, SET, WHERE))
   
-    _pointer.execute('UPDATE %s SET %s WHERE %s' % (DATABASE, SET, WHERE))
+    _pointer.execute('%s %s %s' % (DATABASE, SET, WHERE))
