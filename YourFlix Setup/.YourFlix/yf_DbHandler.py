@@ -47,32 +47,41 @@ def CreateTable(CONNECTION, TABLE = None, VALUES = None):
    
     _pointer.execute("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
 
-def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None, DROPCOLUMN = None):
+def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
     if not TABLE:
         raise Exception("TABLE: type str cannot be empty")
 
     if not type(TABLE) is str:
-        raise TypeError("CreateDb TABLE Need to be a string, it is a %s" % str(type(TABLE)))
+        raise TypeError("AlterTABLE: TABLE Need to be a string, it is a %s" % str(type(TABLE)))
 
     _pointer = CONNECTION.cursor()
-    TABLE = "ALTER TABLE %s" % TABLE
+    TABLE = "ALTER TABLE %s " % TABLE
 
     if(RENAMECOLUMN):
-        RENAMECOLUMN = "RENAME COLUMN %s" % RENAMECOLUMN
+        RENAMECOLUMN = "RENAME COLUMN %s " % RENAMECOLUMN
+
     else:
         RENAMECOLUMN = ""
 
-    if(DROP COLUMN):
-        DROPCOLUMN = "DROP COLUMN %s" DROPCOLUMN
-    else:
-        DROPCOLUMN = ""
-
     if Debug:
-        print("%s %s %s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
+        print("%s%s%s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
    
-    _pointer.execute("%s %s %s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
+    _pointer.execute("%s%s%s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
 
-def Select(CONNECTION, SELECT = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
+
+
+    Database.CreateTable(DB_CONN,
+        TABLE = "TempDb",
+        VALUES = [["Program_Id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
+            ["Program_Name", "TEXT UNIQUE NOT NULL"],
+            ["Program_Desctiption", "TEXT"],
+            ["Program_Location", "TEXT NOT NULL"],
+            ["Program_Web_Location", "TEXT NOT NULL"],
+            ["First_Content", "INTEGER"],
+            ["First_Folder", "INTEGER"],
+            ["Num_Content", "INTEGER NOT NULL"]])
+
+def Select(CONNECTION, SELECT = None, INTO = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
   
     if not SELECT:
         raise Exception("SELECT: type str cannot be empty")
@@ -99,23 +108,23 @@ def Select(CONNECTION, SELECT = None, FROM = None, WHERE = None, ORDERBY = None,
   
         _selecting += str(item)
     
-    SELECT = ('SELECT %s' % SELECT)
-    FROM = ('FROM %s' % FROM)
+    SELECT = ('SELECT %s ' % SELECT)
+    FROM = ('FROM %s ' % FROM)
 
     if WHERE:
-        WHERE = ('WHERE %s' % WHERE)
+        WHERE = ('WHERE %s ' % WHERE)
     else:
         WHERE = ''
     
     if ORDERBY:
-        ORDERBY = ('ORDER BY %s' %ORDERBY)
+        ORDERBY = ('ORDER BY %s ' %ORDERBY)
     else:
         ORDERBY = ''
     
     if Debug:
-        print("%s %s %s %s" % (SELECT, FROM, WHERE, ORDERBY))
+        print("%s%s%s%s" % (SELECT, FROM, WHERE, ORDERBY))
   
-    _pointer.execute("%s %s %s %s" % (SELECT, FROM, WHERE, ORDERBY))
+    _pointer.execute("%s%s%s%s" % (SELECT, FROM, WHERE, ORDERBY))
   
     if fetchall:
         return _pointer.fetchall()
@@ -137,30 +146,33 @@ def Drop(CONNECTION, DATABASE = None):
   
     _pointer.execute("DROP TABLE %s" % DATABASE)
 
-def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None):
+def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None, SELECT = None, FROM = None):
   
     if not INTO:
         raise Exception("INTO: type str cannot be empty")
   
-    if not VALUES:
-        raise Exception("VALUES: type list cannot be empty")
-  
     _pointer = CONNECTION.cursor()
+    
+    _into = 'INTO "%s" ' % INTO
     _insertRows = ""
     _insertValues = ""
+    _select = ""
+    _from = ""
   
-    if not type(VALUES) is list:
-        raise TypeError("INSERT VALUES Need to be a list, it is a %s" % str(type(VALUES)))
-  
-    for item in VALUES:
-  
-        if _insertValues != "":
-            _insertValues += ", "
-  
-        _insertValues += FormatItem(item)
+    if VALUES:
+        if not type(VALUES) is list:
+            raise TypeError("INSERT VALUES Need to be a list, it is a %s" % str(type(VALUES)))
+
+        for item in VALUES:
+            _insertValues = "VALUES("
+
+            if _insertValues != "":
+                _insertValues += ", "
+    
+            _insertValues += FormatItem(item)+')'
   
     if ROW:
-  
+        _insertRows = "("
         if not type(ROW) is list:
             raise TypeError("INSERT VALUES Need to be a list, it is a %s" % str(type(VALUES)))
                 
@@ -169,19 +181,18 @@ def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None):
             if _insertRows != "":
                 _insertRows += ", "
   
-            _insertRows += str(item)
+            _insertRows += str(item) + ')'
+
+    if SELECT:
+        _select = "SELECT %s " % SELECT
+    
+    if FROM:
+        _from = "FROM %s " % FROM
+
+    if Debug:
+        print("INSERT %s%s%s%s%s" % (_into, _insertRows, _insertValues, _select, _from))
   
-        if Debug:
-            print("INSERT INTO '%s' (%s) VALUES(%s)" % (INTO, _insertRows, _insertValues))
-  
-        _pointer.execute("INSERT INTO '%s' (%s) VALUES(%s)" % (INTO, _insertRows, _insertValues))
-  
-    else:
-  
-        if Debug:
-            print("INSERT INTO '%s' VALUES(%s)" % (INTO, _insertValues))
-  
-        _pointer.execute("INSERT INTO %s VALUES(%s)" % (INTO, _insertValues))
+    _pointer.execute("INSERT %s%s%s%s%s" % (_into, _insertRows, _insertValues, _select, _from))
   
     global LastId
     LastId = _pointer.lastrowid

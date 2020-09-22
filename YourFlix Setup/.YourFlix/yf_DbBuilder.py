@@ -3,14 +3,49 @@ import yf_DbHandler as Database
 import yf_Database as dbManager
 
 def UpdateDatabase(DB_CONN, DB_VERSION):
+    print(DB_VERSION)
     if(DB_VERSION < 1.11):
         Database.AlterTable(DB_CONN,
             TABLE = dbManager.Db_Img,
             RENAMECOLUMN = "Location TO Img_Location")
+
     if(DB_VERSION < 1.12):
-        Database.AlterTable(DB_CONN,
-            TABLE = dbManager.Db_Program,
-            DROPCOLUMN = "Program_Visible")
+        #SQLite doesn't support Drop Column while altering a table or Insert into a table. this is how we change a db if we need to remove a column
+        Database.CreateTable(DB_CONN,
+        TABLE = 'TEMP_DB',
+        VALUES = [["Program_Id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
+            ["Program_Name", "TEXT UNIQUE NOT NULL"],
+            ["Program_Desctiption", "TEXT"],
+            ["Program_Location", "TEXT NOT NULL"],
+            ["Program_Web_Location", "TEXT NOT NULL"],
+            ["First_Content", "INTEGER"],
+            ["First_Folder", "INTEGER"],
+            ["Num_Content", "INTEGER NOT NULL"]])
+
+        Database.Insert(DB_CONN,
+            INTO = 'TEMP_DB',
+            SELECT = 'Program_Id, Program_Name, Program_Desctiption, Program_Location, Program_Web_Location, First_Content, First_Folder, Num_Content',
+            FROM = dbManager.Db_Program)
+        
+        Database.Drop(DB_CONN, dbManager.Db_Program)
+
+        Database.CreateTable(DB_CONN,
+        TABLE = dbManager.Db_Program,
+        VALUES = [["Program_Id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
+            ["Program_Name", "TEXT UNIQUE NOT NULL"],
+            ["Program_Desctiption", "TEXT"],
+            ["Program_Location", "TEXT NOT NULL"],
+            ["Program_Web_Location", "TEXT NOT NULL"],
+            ["First_Content", "INTEGER"],
+            ["First_Folder", "INTEGER"],
+            ["Num_Content", "INTEGER NOT NULL"]])
+        
+        Database.Insert(DB_CONN,        
+            INTO = dbManager.Db_Program,
+            SELECT = '*',
+            FROM = 'TEMP_DB')
+
+        Database.Drop(DB_CONN, 'TEMP_DB')
     
     Database.Update(DB_CONN,
         dbManager.Db_YourFlix,
@@ -129,8 +164,10 @@ def BuildDatabase(DB_CONN):
             ["Content_Location", "TEXT UNIQUE NOT NULL"]])
 
 def CheckDatabase(DB_CONN):
-    checkStruct = True
-    
+    checkStruct = True  
+    _updateVersion = False  
+    _dbVersion = -1.0
+
     #Checks to see if an DB Exists if a DB isn't present or has been updated we update or rebuild
     for db in dbManager.Db_List:
         _returned = Database.Select(DB_CONN,
@@ -139,12 +176,12 @@ def CheckDatabase(DB_CONN):
             WHERE = "type='table' AND name='%s'" % db)
 
         checkStruct = _returned != None and checkStruct
-        _dbVersion = 0
 
         if(db == dbManager.Db_YourFlix and checkStruct):
             _versionReturned = Database.Select(DB_CONN,
                 SELECT = "Version",
                 FROM = db)
+            print(_versionReturned[0])
             if(_versionReturned):
                 _dbVersion = _versionReturned[0]
                 _updateVersion = _dbVersion != dbManager.Db_Version
