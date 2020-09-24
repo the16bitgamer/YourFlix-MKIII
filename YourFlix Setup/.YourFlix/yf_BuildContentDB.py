@@ -65,6 +65,8 @@ def FindContent(DB_CONN, PHYSICAL_ROOT, WEB_ROOT, FOLDER_NAME, PROGRAM_ID):
 
                     else:
                         _fileType = GetVideoType(DB_CONN, _physicalContent)
+                        _split = os.path.splitext(_item)
+                        _fileName = (_split[0]).lower()
 
                         if(_fileType > -1):
                             if(debug):
@@ -73,7 +75,7 @@ def FindContent(DB_CONN, PHYSICAL_ROOT, WEB_ROOT, FOLDER_NAME, PROGRAM_ID):
                             Database.Insert(DB_CONN,
                                 INTO = dbManager.Db_Content,
                                 ROW = ['Folder_Id', 'FileType_Id', 'Content_Name', 'Content_Location'],
-                                VALUES = [_currentFolderId, _fileType, _item, _webContent])
+                                VALUES = [_currentFolderId, _fileType, _fileName, _webContent])
                             
                             Database.Update(DB_CONN, 
                                 dbManager.Db_Program, 
