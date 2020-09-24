@@ -3,7 +3,10 @@ import yf_DbHandler as Database
 import yf_Database as dbManager
 
 def UpdateDatabase(DB_CONN, DB_VERSION):
-    print(DB_VERSION)
+    if(DB_VERSION < 1):
+        BuildDatabase(DB_CONN)
+        DB_VERSION = dbManager.Db_Version
+        
     if(DB_VERSION < 1.11):
         Database.AlterTable(DB_CONN,
             TABLE = dbManager.Db_Img,
