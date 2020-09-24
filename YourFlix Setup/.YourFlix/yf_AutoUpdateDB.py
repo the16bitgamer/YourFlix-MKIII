@@ -1,7 +1,7 @@
 #! /usr/bin/env python
+import os
 import yf_Database as dbManager
 import yf_DbHandler as Database
-import os
 
 debug = True
 
@@ -93,53 +93,3 @@ def UpdateContentLocation(DB_CONN, CONTENT_ID, NEW_LOC):
     
     if(debug):
         print("Updating Content: %i to change Location to: %s" % (CONTENT_ID, NEW_LOC))
-
-def AddProgramToDb(DB_CONN, LOCATION):
-    raise Exception("AddProgramToDb: has not been implemented")
-    #Check to see if the Program Already Exists
-    #Use OS Path to find folders within run AddFolderToDb
-    #Borrow Code from yf_ProgramBuilder and build single Program
-
-def AddFolderToDb(DB_CONN, LOCATION):
-    raise Exception("AddFolderToDb: has not been implemented")
-    #Check to see if Folder Already Exists
-    #Find Program Id for Folder
-    #Add Folder to Db with yf_BuildContentDB
-
-def AddContentToDb(DB_CONN, LOCATION):
-    raise Exception("AddContentToDb: has not been implemented")
-    #Check to see if Content Already Exists
-    #Find Folder it belongs to
-    #Add Content to DB
-
-def AddMetaToDb(DB_CONN, LOCATION):
-    raise Exception("AddMetaToDb: has not been implemented")
-    #Check to see if it exists
-    #Get Program Id
-    #Process and Add to Db
-    #Increase Db Num_Contents By 1
-
-def RemoveProgramFromDb(DB_CONN, LOCATION):
-    raise Exception("RemoveProgramFromDb: has not been implemented")
-    #Find Program Id
-    #Find and Remove all Meta which is linked to Program
-    #Find and Remove all Folders
-    #Remove Self
-
-def RemoveMetaFromDb(DB_CONN, LOCATION):
-    raise Exception("RemoveMetaFromDb: has not been implemented")
-    #Find Meta Id
-    #Remove Self
-
-def RemoveFolderFromDb(DB_CONN, LOCATION):
-    raise Exception("RemoveFolderFromDb: has not been implemented")
-    #Find Folder Id
-    #Find and Remove all Content which is linked to Folder
-    #Remove Self
-
-def RemoveContentFromDb(DB_CONN, LOCATION):
-    raise Exception("RemoveContentFromDb: has not been implemented")
-    #Find Content Id
-    #Find Program Id
-    #Subtract 1 from Program Num_Contents
-    #Remove Self

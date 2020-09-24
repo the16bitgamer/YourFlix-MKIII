@@ -9,7 +9,7 @@ import yf_DbHandler as Database
 import yf_DbBuilder as Builder
 import yf_ScanToDatabase as DirScanner
 import yf_ProgramBuilder as ProgramBuilder
-import yf_DatabaseUpdater as dbUpdater
+import yf_AutoUpdateDB as dbUpdater
 
 debug = True
 
@@ -112,8 +112,6 @@ def DeleteItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
 def UpdateFolder(DB_CONN, ROOT, OLD_FOLDER_LOC, NEW_FOLDER_LOC, FOLDER_NAME):
     _folderPhysRoot = os.path.join(dbManager.YF_Html, ROOT)
     _folderWebLoc = os.path.join(ROOT, FOLDER_NAME)
-
-    print(dbManager.YF_Html + " " + ROOT + " " + os.path.join(dbManager.YF_Html, ROOT))
 
     if(os.path.isdir(NEW_FOLDER_LOC)):
         _folderType = CheckFolderType(ROOT)
