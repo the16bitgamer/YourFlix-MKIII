@@ -9,6 +9,9 @@ import yf_DbHandler as Database
 import yf_DbBuilder as Builder
 import yf_ScanToDatabase as DirScanner
 import yf_ProgramBuilder as ProgramBuilder
+import yf_DatabaseUpdater as dbUpdater
+
+debug = True
 
 def LoadConfig():
     if(os.path.exists(dbManager.Yf_Config)):
@@ -31,129 +34,148 @@ def LoadDatabase():
     Builder.CheckDatabase(conn)
     DirScanner.ScanDirToDb(conn)
     ProgramBuilder.BuildPrograms(conn)
-    #conn.commit()
+    conn.commit()
     conn.close()
 
-def UpdateChildren(DB_CONN, MOVED_FROM, MOVED_TO, CONTENT_TO_UPDATE):
+def CheckFolderType(FOLDER_ROOT):
+    _yourFlix_Root = dbManager.Yf_Dir
 
-    for child in CONTENT_TO_UPDATE:
-        _currentLoc = child[1].split(MOVED_FROM)[1][1:]
-        _targetWeb = os.path.join(MOVED_TO, _currentLoc)
-        Database.Update(DB_CONN, DATABASE = dbManager.Db_Content, SET = 'Location="%s"' % _targetWeb, WHERE = "Id == %i" % child[0])
-        _childrenToUpdate = Database.Select(DB_CONN, SELECT = "Id, Location", FROM = dbManager.Db_Content, WHERE = 'Parent_Id == %i' % child[0], fetchall = True)
+    if(debug):
+        print("Checking if %s is %s" %(_yourFlix_Root, FOLDER_ROOT))
+
+    if(FOLDER_ROOT == _yourFlix_Root):
+        return "Program"
+
+    return "Folder"
+
+def CheckFileType(DB_CONN, FILE):
+
+    _split = os.path.splitext(FILE)
+    _search = (_split[len(_split)-1]).lower()
+
+    print("Extention is: %s" % _search)
         
-        if _childrenToUpdate:
-            UpdateChildren(DB_CONN, MOVED_FROM, MOVED_TO, _childrenToUpdate)
+    if(_search != None):
+        _searchResult = Database.Select(DB_CONN,
+            SELECT = 'FileType',
+            FROM = dbManager.Db_File,
+            WHERE = 'FileType_Extention = "%s"' % (_search))
 
-def DeleteItemFromDatabase(DB_CONN, CONTENT_ID):
-    _potentialChildren = Database.Select(DB_CONN, SELECT = "Id", FROM = dbManager.Db_Content, WHERE = 'Parent_Id == "%i"' % CONTENT_ID, fetchall=True)
+        if _searchResult:
+            return _searchResult[0]
 
-    if(_potentialChildren):
-        
-        for item in _potentialChildren:
-            DeleteItemFromDatabase(DB_CONN, item[0])
+    return None
 
-    Database.Delete(DB_CONN, FROM = dbManager.Db_Content, WHERE = "Id = %i" % CONTENT_ID)
-    Database.Delete(DB_CONN, FROM = dbManager.Db_Program, WHERE = "Folder_Id = %i" % CONTENT_ID)
+def AddItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
+    _itemPhysLoc = os.path.join(PHYS_ROOT, ITEM)
+    _itemWebLoc = os.path.join(WEB_ROOT, ITEM)
 
-def AddItemToDatabase(DB_CONN, ITEM_PHYSICAL_LOC,GET_PARENTS = False):
-    _split = os.path.splitext(ITEM_PHYSICAL_LOC)
-    _fileType = (_split[len(_split)-1][1:]).upper()
-    _item = os.path.split(ITEM_PHYSICAL_LOC)
-    _itemName = _item[1]
-    _itemPath = _item[0]
+    if(os.path.isdir(_itemPhysLoc)):
+        _folderType = CheckFolderType(WEB_ROOT)
+
+        if(_folderType == "Program"):
+            print("Adding Program: %s" % ITEM)
+
+        elif(_folderType == "Folder"):
+            print("Adding Content Folder: %s" %ITEM)
+
+    elif(os.path.isfile(_itemPhysLoc) and WEB_ROOT != dbManager.Yf_Dir):
+        _fileType = CheckFileType(DB_CONN, ITEM)
+
+        if(_fileType == dbManager.VideoType):
+            print("Adding Video %s" % ITEM)
+
+        elif(_fileType == dbManager.ImageType):
+            print("Adding Image %s to META" % ITEM)
+
+def DeleteItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
+    _itemPhysLoc = os.path.join(PHYS_ROOT, ITEM)
+    _itemWebLoc = os.path.join(WEB_ROOT, ITEM)
     
-    if _itemName not in dbManager.ScannerIgnore and (_fileType in dbManager.SupportedVideos or GET_PARENTS) and os.path.normpath(ITEM_PHYSICAL_LOC) != dbManager.YF_Html:
-        _webLoc = ITEM_PHYSICAL_LOC.split(dbManager.YF_Html)[1]
-        _itemDbId = Database.Select(DB_CONN, SELECT = "Id", FROM = dbManager.Db_Content, WHERE = 'Location == "%s"' % _webLoc)
-        
-        if(_itemDbId):
-            return _itemDbId[0]
+    _fileType = CheckFileType(DB_CONN, ITEM)
 
-        else:
-            _parent_Id = AddItemToDatabase(DB_CONN, _itemPath, GET_PARENTS = True)
-            _currentId = Database.Insert(DB_CONN, INTO = dbManager.Db_Content, ROW = ["Parent_Id", "File_Type", "Name", "Location"], VALUES = [_parent_Id, DirScanner.GetFileType(ITEM_PHYSICAL_LOC), _itemName, _webLoc])
-            print("NAME: %s, ID %s"%(_itemName,_currentId))
-            
-            if DirScanner.IsYourFlixProgram(ITEM_PHYSICAL_LOC):
-                _searchResult = SearchDb(DB_CONN, dbManager.Db_Program, "Id, Folder_Id, Name", 'Name == "%s"' % _itemName) 
+    if(_fileType == dbManager.FolderType):
+        _folderType = CheckFolderType(WEB_ROOT)
 
-                if not _searchResult:
-                    Database.Insert(DB_CONN, INTO = dbManager.Db_Program, ROW = ["Folder_Id", "Name"], VALUES = [_currentId, _itemName])
+        if(_folderType == "Program"):
+            print("Delete Program: %s" % ITEM)
 
-                else:
-                    Database.Delete(DB_CONN, FROM = dbManager.Db_Program, WHERE = "Id = %i" % _searchResult[0][0])
-                    Database.Insert(DB_CONN, INTO = dbManager.Db_Program, ROW = ["Folder_Id", "Name"], VALUES = [_currProgId, _itemName])
-
-            return _currentId
+        elif(_folderType == "Folder"):
+            print("Delete Content Folder: %s" %ITEM)
     
-    else:
-        return -1
-    
+    elif(_fileType == dbManager.VideoType):
+        print("Delete Video %s" % ITEM)
+
+    elif(_fileType == dbManager.ImageType):
+        print("Delete Image %s to META" % ITEM)
+
+def UpdateFolder(DB_CONN, ROOT, OLD_FOLDER_LOC, NEW_FOLDER_LOC, FOLDER_NAME):
+    _folderPhysRoot = os.path.join(dbManager.YF_Html, ROOT)
+    _folderWebLoc = os.path.join(ROOT, FOLDER_NAME)
+
+    print(dbManager.YF_Html + " " + ROOT + " " + os.path.join(dbManager.YF_Html, ROOT))
+
+    if(os.path.isdir(NEW_FOLDER_LOC)):
+        _folderType = CheckFolderType(ROOT)
+        _originalWebLoc = OLD_FOLDER_LOC.split(dbManager.YF_Html)[1]
+
+        if(_folderType == "Program"):
+            dbUpdater.UpdateProgramLocation(DB_CONN, _originalWebLoc, _folderWebLoc)
+
+        elif(_folderType == "Folder"):
+            dbUpdater.UpdateFolderLocation(DB_CONN, _originalWebLoc, _folderWebLoc)
+
 def YourflixMonitor():
-    _physicalLoc = os.path.join(dbManager.YF_Html,dbManager.Yf_Dir)
+    _physicalLoc = os.path.join(dbManager.YF_Html, dbManager.Yf_Dir)
 
     LoadDatabase()
     print("Database up to date")
 
     print("Starting Scanner")
 
-    watcher = inotify.adapters.InotifyTree(_physicalLoc)
+    _watcher = inotify.adapters.InotifyTree(_physicalLoc)
     print("Scanner Started")
 
-    movedFolderFlag = False  
-    movedFolderRoot = None 
-    movedFolder = None  
-    movedWebFolder = None    
-    orphanedChild = None
+    _movedFolderFlag = False
+    _movedFolderRoot = None
+    _movedFolder = None
 
-    for event in watcher.event_gen():
+    for event in _watcher.event_gen():
 
         if event is not None:
-                (header, types, path, filename) = event              
+                (header, types, path, filename) = event
                 
                 #Folder Moved
                 if 'IN_MOVED_FROM' in types:
-                    movedFolderFlag = True
-                    movedFolderRoot = path
-                    movedFolder = os.path.join(path, filename)
-                    movedWebFolder = os.path.join(path.split(dbManager.YF_Html)[1], filename)
+                    _movedFolderFlag = True
+                    _movedFolderRoot = path
+                    _movedFolder = os.path.join(path, filename)
 
                 else:
-                    conn = sqlite3.connect(dbManager.Yf_DbLoc)
+                    _conn = sqlite3.connect(dbManager.Yf_DbLoc)
+
+                    _webRoot = path.split(dbManager.YF_Html + "/")[1]
                     
-                    if 'IN_MOVED_TO' in types and movedFolderFlag and movedFolderRoot == path:
+                    #Update Folder
+                    if 'IN_MOVED_TO' in types and _movedFolderFlag and _movedFolderRoot == path:
                         _target = os.path.join(path, filename)
-                        _targetWeb = os.path.join(path.split(dbManager.YF_Html)[1], filename)
-                        _contentId = Database.Select(conn, SELECT = "Id", FROM = dbManager.Db_Content, WHERE = 'Location == "%s"' % movedWebFolder)[0]
-                        Database.Update(conn, DATABASE = dbManager.Db_Content, SET = 'Location="%s"' % _targetWeb, WHERE = "Id == %i" % _contentId)
                         
-                        if os.path.isdir(_target):  
-                            
-                            if(DirScanner.IsYourFlixProgram(_target)):
-                                Database.Update(conn, DATABASE = dbManager.Db_Program, SET = 'Name="%s"' % filename,WHERE = "Folder_Id == %i" % _contentId)
-                           
-                            _childrenToUpdate = Database.Select(conn, SELECT = "Id, Location", FROM = dbManager.Db_Content, WHERE = 'Parent_Id == "%i"' % _contentId, fetchall = True)
-                            UpdateChildren(conn, movedWebFolder, _targetWeb, _childrenToUpdate)
-                        movedFolderFlag = False  
-                        movedFolderRoot = None 
-                        movedFolder = None  
-                        movedWebFolder = None
+                        UpdateFolder(_conn, _webRoot, _movedFolder, _target, filename)
+
+                        _movedFolderFlag = False
+                        _movedFolderRoot = None
+                        _movedFolder = None
                     
                     #File/Folder Created/Changed
                     if 'IN_CREATE' in types:
-                        _createdItem = os.path.join(path, filename)
-                        AddItemToDatabase(conn, _createdItem)
+                        AddItem(_conn, _webRoot, path, filename)
                     
+                    #File/Folder Deleted
                     if 'IN_DELETE' in types:
-                        _removedWebItem = os.path.join(path.split(dbManager.YF_Html)[1], filename)
-                        _contentId = Database.Select(conn, SELECT = "Id", FROM = dbManager.Db_Content, WHERE = 'Location == "%s"' % _removedWebItem)
-                        
-                        if(_contentId):
-                            DeleteItemFromDatabase(conn, _contentId[0])
+                        DeleteItem(_conn, _webRoot, path, filename)
 
-                    #conn.commit()
-                    conn.close()
+                    #_conn.commit()
+                    _conn.close()
 
         pass
 
