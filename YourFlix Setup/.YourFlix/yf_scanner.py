@@ -10,6 +10,7 @@ import yf_DbBuilder as Builder
 import yf_ScanToDatabase as DirScanner
 import yf_ProgramBuilder as ProgramBuilder
 import yf_AutoUpdateDB as dbUpdater
+import yf_AutoAddtoDB as dbAdder
 
 debug = True
 
@@ -74,19 +75,19 @@ def AddItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
         _folderType = CheckFolderType(WEB_ROOT)
 
         if(_folderType == "Program"):
-            print("Adding Program: %s" % ITEM)
+            dbAdder.AddProgramToDb(DB_CONN, _itemWebLoc, ITEM)
 
         elif(_folderType == "Folder"):
-            print("Adding Content Folder: %s" %ITEM)
+            dbAdder.AddFolderToDb(DB_CONN, WEB_ROOT, _itemWebLoc, ITEM)
 
     elif(os.path.isfile(_itemPhysLoc) and WEB_ROOT != dbManager.Yf_Dir):
         _fileType = CheckFileType(DB_CONN, ITEM)
 
         if(_fileType == dbManager.VideoType):
-            print("Adding Video %s" % ITEM)
+            dbAdder.AddContentToDb(DB_CONN, WEB_ROOT, _itemWebLoc, ITEM)
 
-        elif(_fileType == dbManager.ImageType):
-            print("Adding Image %s to META" % ITEM)
+        elif(_fileType == dbManager.ImageType and dbManager.MetaFolder in WEB_ROOT):
+            dbAdder.AddMetaImgToDb(DB_CONN, WEB_ROOT, _itemWebLoc, ITEM)
 
 def DeleteItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
     _itemPhysLoc = os.path.join(PHYS_ROOT, ITEM)

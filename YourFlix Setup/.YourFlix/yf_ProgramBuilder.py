@@ -145,23 +145,28 @@ def ProgramFirstContentScanner(DB_CONN, PROGRAM_ID, PROGRAM_WEB_LOC):
         SET = 'First_Content = %i, First_Folder = %i' % (_folderId, _contentId),
         WHERE = 'Program_Id = %i' % PROGRAM_ID)
 
-def PullAllChannelPrograms(DB_CONN, ALL_CHANNEL_ID, FILM_CHANNEL_ID, SHOW_CHANNEL_ID):
+def PullAllChannelPrograms(DB_CONN, ALL_CHANNEL_ID, FILM_CHANNEL_ID, SHOW_CHANNEL_ID, PROGRAM_ID = None):
+    _programContition = ''
+
+    if(PROGRAM_ID):
+        _programContition = 'AND Program_Id = %i' % PROGRAM_ID
+
     dbManager.Current_AllChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i' % ALL_CHANNEL_ID,
+        WHERE = 'Channel_Id = %i%s' % (ALL_CHANNEL_ID, _programContition),
         fetchall = True)
 
     dbManager.Current_FilmsChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i' % FILM_CHANNEL_ID,
+        WHERE = 'Channel_Id = %i%s' % (FILM_CHANNEL_ID, _programContition),
         fetchall = True)
 
     dbManager.Current_ShowsChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i' % SHOW_CHANNEL_ID,
+        WHERE = 'Channel_Id = %i%s' % (SHOW_CHANNEL_ID, _programContition).
         fetchall = True)
 
 def RemoveUnusedChannelPrograms(DB_CONN):
@@ -200,6 +205,42 @@ def RemoveUnusedMetaData(DB_CONN):
         Database.Delete(DB_CONN,
             FROM = dbManager.Db_Img,
             WHERE = "ProgImg_Id = %i" % _metaId)
+
+def BuildProgram(DB_CONN, PROGRAM_ID):
+    _programData = Database.Select(DB_CONN,
+        SELECT = 'Program_Id, Program_Web_Location, Program_Location, Num_Content',
+        FROM = dbManager.Db_Program,
+        WHERE = 'Num_Content >= 1 AND Program_Id = %i' % PROGRAM_ID)
+
+    _allChannelId = Database.Select(DB_CONN,
+        SELECT = 'Channel_Id',
+        FROM = dbManager.Db_Channel,
+        WHERE = 'Channel_Name = "%s"' % dbManager.DefaultChannels[0])[0]
+    
+    _filmChannelId = Database.Select(DB_CONN,
+        SELECT = 'Channel_Id',
+        FROM = dbManager.Db_Channel,
+        WHERE = 'Channel_Name = "%s"' % dbManager.DefaultChannels[1])[0]
+    
+    _showChannelId = Database.Select(DB_CONN,
+        SELECT = 'Channel_Id',
+        FROM = dbManager.Db_Channel,
+        WHERE = 'Channel_Name = "%s"' % dbManager.DefaultChannels[2])[0]
+
+    PullAllMetaData(DB_CONN)
+    PullAllChannelPrograms(DB_CONN, _allChannelId, _filmChannelId, _showChannelId, PROGRAM_ID)
+
+    _programId = _program[0]
+    _programWeb = _program[1]
+    _programLoc = _program[2]
+    _numContent = _program[3]
+
+    ScanProgramMetaFolder(DB_CONN, _programId, _programLoc, _programWeb)
+    ProgramFirstContentScanner(DB_CONN, _programId, _programWeb)
+    AddToDefaultChannel(DB_CONN, _programId, _numContent, _allChannelId, _filmChannelId, _showChannelId)
+    
+    RemoveUnusedMetaData(DB_CONN)
+    RemoveUnusedChannelPrograms(DB_CONN)
 
 def BuildPrograms(DB_CONN):
     _programData = Database.Select(DB_CONN,
