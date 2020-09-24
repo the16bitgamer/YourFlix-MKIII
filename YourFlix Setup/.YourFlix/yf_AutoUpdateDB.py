@@ -41,7 +41,7 @@ def UpdateProgramLocation(DB_CONN, ORIG_LOC, NEW_LOC):
             _originalMetaLoc = _meta[1]
             _newContentLocation = os.path.join(NEW_LOC, _originalMetaLoc.split(ORIG_LOC)[1][1:])
             
-            UpdateProgramMetaLocation(DB_CONN, _folderId, _newContentLocation)
+            UpdateProgramMetaImgLocation(DB_CONN, _folderId, _newContentLocation)
 
         if(debug):
             print("Updating Program: %i to change Location to: %s" % (_programId, NEW_LOC))
@@ -49,7 +49,7 @@ def UpdateProgramLocation(DB_CONN, ORIG_LOC, NEW_LOC):
     elif(debug):
         print("Program missing from Location %s" % (ORIG_LOC))
 
-def UpdateProgramMetaLocation(DB_CONN, META_ID, NEW_LOC):
+def UpdateProgramMetaImgLocation(DB_CONN, META_ID, NEW_LOC):
     
     if(debug):
         print("Updating Program Meta: %i to change Location to: %s" % (META_ID, NEW_LOC))
