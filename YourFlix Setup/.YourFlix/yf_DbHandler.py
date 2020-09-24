@@ -1,6 +1,7 @@
+#! /usr/bin/env python
 import sqlite3
 
-Debug = True
+Debug = False
 LastId = -1
 
 def FormatItem(ITEM):
