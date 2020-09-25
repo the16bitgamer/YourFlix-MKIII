@@ -3,7 +3,7 @@ import os
 import yf_Database as dbManager
 import yf_DbHandler as Database
 
-debug = True
+debug = False
 
 def UpdateProgramLocation(DB_CONN, ORIG_LOC, NEW_LOC):
     _programId = None
@@ -16,6 +16,8 @@ def UpdateProgramLocation(DB_CONN, ORIG_LOC, NEW_LOC):
         _programId = _programData[0]
     
     if(_programId):
+        _programPhysicalLoc = os.path.join(dbManager.YF_Html, NEW_LOC)
+
         _programFolders = Database.Select(DB_CONN,
             SELECT = 'Folder_Id, Folder_Location',
             FROM = dbManager.Db_ContFolder,
@@ -42,17 +44,26 @@ def UpdateProgramLocation(DB_CONN, ORIG_LOC, NEW_LOC):
             _newContentLocation = os.path.join(NEW_LOC, _originalMetaLoc.split(ORIG_LOC)[1][1:])
             
             UpdateProgramMetaImgLocation(DB_CONN, _folderId, _newContentLocation)
-
+        
+        Database.Update(DB_CONN,
+            dbManager.Db_Program,
+            'Program_Web_Location = "%s", Program_Location = "%s"' % (NEW_LOC, _programPhysicalLoc),
+            WHERE = 'Program_Id = %i' % _programId)
+        
         if(debug):
-            print("Updating Program: %i to change Location to: %s" % (_programId, NEW_LOC))
+            print("AutoUpdateDB - Updating Program: %i to change Location to: %s" % (_programId, NEW_LOC))
     
     elif(debug):
-        print("Program missing from Location %s" % (ORIG_LOC))
+        print("AutoUpdateDB - Program missing from Location %s" % (ORIG_LOC))
 
-def UpdateProgramMetaImgLocation(DB_CONN, META_ID, NEW_LOC):
-    
+def UpdateProgramMetaImgLocation(DB_CONN, META_ID, NEW_LOC): 
+    Database.Update(DB_CONN,
+        dbManager.Db_Img,
+        'Img_Location = "%s"' % (NEW_LOC),
+        WHERE = 'ProgImg_Id = %i' % META_ID)
+
     if(debug):
-        print("Updating Program Meta: %i to change Location to: %s" % (META_ID, NEW_LOC))
+        print("AutoUpdateDB - Updating Program Meta: %i to change Location to: %s" % (META_ID, NEW_LOC))
 
 def UpdateFolderLocation(DB_CONN, ORIG_LOC, NEW_LOC, FOLDER_ID = None):
     _folderId = None
@@ -83,13 +94,22 @@ def UpdateFolderLocation(DB_CONN, ORIG_LOC, NEW_LOC, FOLDER_ID = None):
             
             UpdateContentLocation(DB_CONN, _contentId, _newContentLocation)
 
+        Database.Update(DB_CONN,
+            dbManager.Db_ContFolder,
+            'Folder_Location = "%s"' % (NEW_LOC),
+            WHERE = 'Folder_Id = %i' % _folderId)
+
         if(debug):
-            print("Updating Folder: %i to change Location to: %s" % (_folderId, NEW_LOC))
+            print("AutoUpdateDB - Updating Folder: %i to change Location to: %s" % (_folderId, NEW_LOC))
     
     elif(debug):
-        print("Folder missing from Location %s" % (ORIG_LOC))
+        print("AutoUpdateDB - Folder missing from Location %s" % (ORIG_LOC))
 
 def UpdateContentLocation(DB_CONN, CONTENT_ID, NEW_LOC):
-    
+    Database.Update(DB_CONN,
+        dbManager.Db_Content,
+        'Content_Location = "%s"' % (NEW_LOC),
+        WHERE = 'Content_Id = %i' % CONTENT_ID)
+
     if(debug):
-        print("Updating Content: %i to change Location to: %s" % (CONTENT_ID, NEW_LOC))
+        print("AutoUpdateDB - Updating Content: %i to change Location to: %s" % (CONTENT_ID, NEW_LOC))

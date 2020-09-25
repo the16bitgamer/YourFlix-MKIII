@@ -1,8 +1,12 @@
 #! /usr/bin/env python
 import sqlite3
 
-Debug = False
+debug = False
 LastId = -1
+
+def DebugLog(MESSAGE):
+    if(debug):
+        print("DbHandler - %s" % MESSAGE)
 
 def FormatItem(ITEM):
    
@@ -43,9 +47,7 @@ def CreateTable(CONNECTION, TABLE = None, VALUES = None):
                 _insertValues += " "
             _insertValues += str(item)
    
-    if Debug:
-        print("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
-   
+    DebugLog('CREATE TABLE "%s" (%s)' % (TABLE,_insertValues))
     _pointer.execute("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
 
 def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
@@ -64,23 +66,9 @@ def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
     else:
         RENAMECOLUMN = ""
 
-    if Debug:
-        print("%s%s%s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
+    DebugLog('%s%s%s' % (TABLE, RENAMECOLUMN, DROPCOLUMN))
    
     _pointer.execute("%s%s%s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
-
-
-
-    Database.CreateTable(DB_CONN,
-        TABLE = "TempDb",
-        VALUES = [["Program_Id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
-            ["Program_Name", "TEXT UNIQUE NOT NULL"],
-            ["Program_Desctiption", "TEXT"],
-            ["Program_Location", "TEXT NOT NULL"],
-            ["Program_Web_Location", "TEXT NOT NULL"],
-            ["First_Content", "INTEGER"],
-            ["First_Folder", "INTEGER"],
-            ["Num_Content", "INTEGER NOT NULL"]])
 
 def Select(CONNECTION, SELECT = None, INTO = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
   
@@ -122,9 +110,7 @@ def Select(CONNECTION, SELECT = None, INTO = None, FROM = None, WHERE = None, OR
     else:
         ORDERBY = ''
     
-    if Debug:
-        print("%s%s%s%s" % (SELECT, FROM, WHERE, ORDERBY))
-  
+    DebugLog('%s%s%s%s' % (SELECT, FROM, WHERE, ORDERBY))  
     _pointer.execute("%s%s%s%s" % (SELECT, FROM, WHERE, ORDERBY))
   
     if fetchall:
@@ -142,9 +128,7 @@ def Drop(CONNECTION, DATABASE = None):
     if len(DATABASE) == "":
         raise Exception("CreateDb DATABASE cannot be empty")  
   
-    if Debug:
-        print("DROP TABLE %s" % DATABASE)
-  
+    DebugLog('DROP TABLE %s' % DATABASE)  
     _pointer.execute("DROP TABLE %s" % DATABASE)
 
 def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None, SELECT = None, FROM = None):
@@ -153,8 +137,7 @@ def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None, SELECT = None, FR
         raise Exception("INTO: type str cannot be empty")
   
     _pointer = CONNECTION.cursor()
-    
-    _into = 'INTO "%s" ' % INTO
+    _into = 'INTO %s' % INTO
     _insertRows = ""
     _insertValues = ""
     _select = ""
@@ -164,35 +147,44 @@ def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None, SELECT = None, FR
         if not type(VALUES) is list:
             raise TypeError("INSERT VALUES Need to be a list, it is a %s" % str(type(VALUES)))
 
-        for item in VALUES:
-            _insertValues = "VALUES("
+        _insertValues = " VALUES("
+        x = 0
 
-            if _insertValues != "":
-                _insertValues += ", "
+        for item in VALUES:
+
+            if x > 0:
+                _insertValues += ', '
     
-            _insertValues += FormatItem(item)+')'
+            _insertValues += FormatItem(item)
+            x += 1
+
+        _insertValues += ')'
+
   
     if ROW:
-        _insertRows = "("
         if not type(ROW) is list:
             raise TypeError("INSERT VALUES Need to be a list, it is a %s" % str(type(VALUES)))
-                
+
+        _insertRows = " ("   
+        x = 0
+
         for item in ROW:
   
-            if _insertRows != "":
+            if x > 0:
                 _insertRows += ", "
   
-            _insertRows += str(item) + ')'
+            _insertRows += str(item)
+            x += 1
+        
+        _insertRows += ')'
 
     if SELECT:
-        _select = "SELECT %s " % SELECT
+        _select = " SELECT %s" % SELECT
     
     if FROM:
-        _from = "FROM %s " % FROM
+        _from = " FROM %s" % FROM
 
-    if Debug:
-        print("INSERT %s%s%s%s%s" % (_into, _insertRows, _insertValues, _select, _from))
-  
+    DebugLog('INSERT %s%s%s%s%s' % (_into, _insertRows, _insertValues, _select, _from))
     _pointer.execute("INSERT %s%s%s%s%s" % (_into, _insertRows, _insertValues, _select, _from))
   
     global LastId
@@ -216,9 +208,7 @@ def Delete(CONNECTION, FROM = None, WHERE = None):
   
     _pointer = CONNECTION.cursor()
   
-    if Debug:
-        print("DELETE FROM '%s' WHERE %s" % (FROM, WHERE))
-  
+    DebugLog('DELETE FROM "%s" WHERE %s' % (FROM, WHERE))  
     _pointer.execute("DELETE FROM '%s' WHERE %s" % (FROM, WHERE))
 
 def Update(CONNECTION, DATABASE, SET, WHERE = None):
@@ -244,7 +234,5 @@ def Update(CONNECTION, DATABASE, SET, WHERE = None):
     else:
         WHERE = ""
 
-    if Debug:
-        print('%s %s %s' % (DATABASE, SET, WHERE))
-  
+    DebugLog('%s %s %s' % (DATABASE, SET, WHERE))
     _pointer.execute('%s %s %s' % (DATABASE, SET, WHERE))

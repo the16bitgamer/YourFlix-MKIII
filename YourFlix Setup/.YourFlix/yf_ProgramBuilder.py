@@ -3,7 +3,11 @@ import os
 import yf_Database as dbManager
 import yf_DbHandler as Database
 
-debug = True
+debug = False
+
+def DebugLog(MESSAGE):
+    if(debug):
+        print("ProgramBuilder - %s" % MESSAGE)
 
 def GetPhotoType(DB_CONN, PATH):
     _search = None
@@ -83,13 +87,11 @@ def ScanProgramMetaFolder(DB_CONN, PROGRAM_ID, PROGRAM_LOC, PROGRAM_WEB_LOC):
     _programMetaLoc = os.path.join(PROGRAM_LOC, dbManager.MetaFolder)
     _programWebLoc = os.path.join(PROGRAM_WEB_LOC, dbManager.MetaFolder)
     
-    if(debug):
-        print("Scanning %s for MetaData" % _programMetaLoc)
+    DebugLog("Scanning %s for MetaData" % _programMetaLoc)
 
     if(os.path.exists(_programMetaLoc)):
         for _item in os.listdir(_programMetaLoc):
-            if(debug):
-                print("Found Meta Data %s" % _item)
+            DebugLog("Found Meta Data %s" % _item)
 
             _physicalLoc = os.path.join(_programMetaLoc, _item)
             _webLoc = os.path.join(_programWebLoc, _item)
@@ -103,21 +105,22 @@ def ScanProgramMetaFolder(DB_CONN, PROGRAM_ID, PROGRAM_LOC, PROGRAM_WEB_LOC):
                     WHERE = 'Img_Location = "%s"' % _webLoc)
 
                 if(_searchResult):
-                    if(debug):
-                        print("%s Exists in Database" % (_item))
+                    DebugLog("%s Exists in Database" % (_item))
                     dbManager.Current_MetaImages.remove(_searchResult)
                 
                 else:
-                    if(debug):
-                        print("%s is being added to Database" % (_item))
+                    DebugLog("%s is being added to Database" % (_item))
                     Database.Insert(DB_CONN,
                         INTO = dbManager.Db_Img,
                         ROW = ['Program_Id', 'Image_Type', 'File_Type', 'Img_Location'],
                         VALUES = [PROGRAM_ID, _imageType, _fileType, _webLoc])
-    elif(debug):
-        print("Meta Data Folder Does not Exist for Program with ID = %i" % PROGRAM_ID)
+    else:
+        DebugLog("Meta Data Folder Does not Exist for Program with ID = %i" % PROGRAM_ID)
 
 def ProgramFirstContentScanner(DB_CONN, PROGRAM_ID, PROGRAM_WEB_LOC):
+    _folderId = -1
+    _contentId = -1
+
     _folderSearch = Database.Select(DB_CONN,
         SELECT = 'Folder_Id',
         FROM = dbManager.Db_ContFolder,
@@ -130,15 +133,16 @@ def ProgramFirstContentScanner(DB_CONN, PROGRAM_ID, PROGRAM_WEB_LOC):
             WHERE = 'Program_Id = %i' % PROGRAM_ID,
             ORDERBY = '%s.Folder_Name COLLATE NOCASE ASC' % dbManager.Db_ContFolder)
     
-    _folderId = _folderSearch[0]
-
-    _contentSearch = Database.Select(DB_CONN,
-        SELECT = 'Content_Id',
-        FROM = dbManager.Db_Content,
-        WHERE = 'Folder_Id = %i' % _folderId,
-        ORDERBY = '%s.Content_Name COLLATE NOCASE ASC' % dbManager.Db_Content)
+    if(_folderSearch):
+        _folderId = _folderSearch[0]
+        _contentSearch = Database.Select(DB_CONN,
+            SELECT = 'Content_Id',
+            FROM = dbManager.Db_Content,
+            WHERE = 'Folder_Id = %i' % _folderId,
+            ORDERBY = '%s.Content_Name COLLATE NOCASE ASC' % dbManager.Db_Content)
     
-    _contentId = _contentSearch[0]
+        if(_contentSearch):
+            _contentId = _contentSearch[0]
 
     Database.Update(DB_CONN, 
         dbManager.Db_Program, 
@@ -154,19 +158,19 @@ def PullAllChannelPrograms(DB_CONN, ALL_CHANNEL_ID, FILM_CHANNEL_ID, SHOW_CHANNE
     dbManager.Current_AllChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i%s' % (ALL_CHANNEL_ID, _programContition),
+        WHERE = 'Channel_Id = %i %s' % (ALL_CHANNEL_ID, _programContition),
         fetchall = True)
 
     dbManager.Current_FilmsChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i%s' % (FILM_CHANNEL_ID, _programContition),
+        WHERE = 'Channel_Id = %i %s' % (FILM_CHANNEL_ID, _programContition),
         fetchall = True)
 
     dbManager.Current_ShowsChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i%s' % (SHOW_CHANNEL_ID, _programContition).
+        WHERE = 'Channel_Id = %i %s' % (SHOW_CHANNEL_ID, _programContition),
         fetchall = True)
 
 def RemoveUnusedChannelPrograms(DB_CONN):
@@ -230,14 +234,15 @@ def BuildProgram(DB_CONN, PROGRAM_ID):
     PullAllMetaData(DB_CONN)
     PullAllChannelPrograms(DB_CONN, _allChannelId, _filmChannelId, _showChannelId, PROGRAM_ID)
 
-    _programId = _program[0]
-    _programWeb = _program[1]
-    _programLoc = _program[2]
-    _numContent = _program[3]
+    if(_programData):
+        _programId = _programData[0]
+        _programWeb = _programData[1]
+        _programLoc = _programData[2]
+        _numContent = _programData[3]
 
-    ScanProgramMetaFolder(DB_CONN, _programId, _programLoc, _programWeb)
-    ProgramFirstContentScanner(DB_CONN, _programId, _programWeb)
-    AddToDefaultChannel(DB_CONN, _programId, _numContent, _allChannelId, _filmChannelId, _showChannelId)
+        ScanProgramMetaFolder(DB_CONN, _programId, _programLoc, _programWeb)
+        ProgramFirstContentScanner(DB_CONN, _programId, _programWeb)
+        AddToDefaultChannel(DB_CONN, _programId, _numContent, _allChannelId, _filmChannelId, _showChannelId)
     
     RemoveUnusedMetaData(DB_CONN)
     RemoveUnusedChannelPrograms(DB_CONN)

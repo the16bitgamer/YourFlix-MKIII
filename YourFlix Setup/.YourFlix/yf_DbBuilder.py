@@ -178,7 +178,7 @@ def CheckDatabase(DB_CONN):
             FROM = "sqlite_master",
             WHERE = "type='table' AND name='%s'" % db)
 
-        checkStruct = _returned != None and checkStruct
+        checkStruct = _returned != None and checkStruct and False
 
         if(db == dbManager.Db_YourFlix and checkStruct):
             _versionReturned = Database.Select(DB_CONN,
@@ -190,11 +190,11 @@ def CheckDatabase(DB_CONN):
                 _updateVersion = _dbVersion != dbManager.Db_Version
     
     if(not checkStruct):
-        print("Database is Missing Data, Dropping All Tables and Rebuilding")
+        print("Db Builder - Database is Missing Data, Dropping All Tables and Rebuilding")
         BuildDatabase(DB_CONN)
 
     elif (_updateVersion):
-        print("Database Needs and Update")
+        print("Db Builder - Database Needs and Update")
         UpdateDatabase(DB_CONN, _dbVersion)
     else:
-        print("Database is setup Correctly")
+        print("Db Builder - Database is setup Correctly")
