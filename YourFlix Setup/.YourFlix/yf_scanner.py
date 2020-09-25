@@ -13,7 +13,7 @@ import yf_AutoUpdateDB as dbUpdater
 import yf_AutoAddToDB as dbAdder
 import yf_AutoRemoveFromDB as dbRemover
 
-debug = True
+debug = False
 
 def DebugLog(MESSAGE):
     print("Scanner - %s" % MESSAGE)
@@ -43,7 +43,7 @@ def LoadDatabase():
     conn.close()
 
 def CheckFolderType(FOLDER_ROOT):
-    _yourFlix_Root = dbManager.Yf_Dir
+    _yourFlix_Root = "/"+dbManager.Yf_Dir
 
     DebugLog("Checking if %s is %s" %(_yourFlix_Root, FOLDER_ROOT))
 
@@ -78,9 +78,11 @@ def AddItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
         _folderType = CheckFolderType(WEB_ROOT)
 
         if(_folderType == "Program"):
+            DebugLog("Adding Program %s" % ITEM)
             dbAdder.AddProgramToDb(DB_CONN, _itemWebLoc, ITEM)
 
         elif(_folderType == "Folder"):
+            DebugLog("Adding Folder %s" % ITEM)
             dbAdder.AddFolderToDb(DB_CONN, WEB_ROOT, _itemWebLoc, ITEM)
 
     elif(os.path.isfile(_itemPhysLoc) and WEB_ROOT != dbManager.Yf_Dir):
@@ -93,7 +95,7 @@ def AddItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
             dbAdder.AddMetaImgToDb(DB_CONN, WEB_ROOT, _itemWebLoc)
 
 def DeleteItem(DB_CONN, WEB_ROOT, ITEM):
-    _itemWebLoc = '/' + os.path.join(WEB_ROOT, ITEM)    
+    _itemWebLoc = os.path.join(WEB_ROOT, ITEM)    
     _fileType = CheckFileType(DB_CONN, ITEM)
 
     if(_fileType == dbManager.FolderType):

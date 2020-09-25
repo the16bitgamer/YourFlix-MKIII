@@ -4,10 +4,13 @@ yfPublic = "/usr/share/yourflix/"
 yfEct = "/etc/yourflix/"
 yfSystemD = "/lib/systemd/system/"
 yfSource = "./.YourFlix/"
-scanner = "yf_scanner.py"
-dbHandler = "yf_DbHandler.py"
-service = "yourflix.service"
-config = "yourflix.config"
+pythonFilesToAdd = ['yf_AutoAddToDB.py', 'yf_AutoRemoveFromDB.py', 'yf_AutoUpdateDB.py',
+    'yf_BuildContentDB.py', 'yf_Database.py', 'yf_DbBuilder.py',
+    'yf_DbHandler.py', 'yf_ProgramBuilder.py', 'yf_scanner.py',
+    'yf_ScanToDatabase.py']
+
+service = 'yourflix.service'
+config = 'yourflix.config'
 
 def CheckFolder(folderLoc):
     if not os.path.isdir(folderLoc) and folderLoc != yfSource:
@@ -28,21 +31,19 @@ def UpdateFile(fileLoc):
 def BuildSystemD():
 
     if(CheckFolder(yfPublic) and CheckFolder(yfSystemD) and CheckFolder(yfSource) and CheckFolder(yfEct)):
-        scannerSource = open(yfSource+scanner, "r")
-        handlerSource = open(yfSource+dbHandler, "r")
-        serviceSource = open(yfSource+service, "r")
-        configSource = open(yfSource+config, "r")
-    
-        file = UpdateFile(yfPublic+scanner)
-        file.write(scannerSource.read())
-        
-        file = UpdateFile(yfPublic+dbHandler)
-        file.write(handlerSource.read())
-        
-        file = UpdateFile(yfEct+config)
+
+        for _file in pythonFilesToAdd:
+            sourceFile = open(yfSource + _file, "r")
+
+            file = UpdateFile(yfPublic + _file)
+            file.write(sourceFile.read())
+
+        configSource = open(yfSource + config, "r")
+        file = UpdateFile(yfEct + config)
         file.write(configSource.read())
         
-        file = UpdateFile(yfSystemD+service)
+        serviceSource = open(yfSource + service, "r")
+        file = UpdateFile(yfSystemD + service)
         file.write(serviceSource.read())
         
         os.system('sudo chmod 644 /lib/systemd/system/yourflix.service')

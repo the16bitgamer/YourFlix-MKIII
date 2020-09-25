@@ -146,31 +146,31 @@ def ProgramFirstContentScanner(DB_CONN, PROGRAM_ID, PROGRAM_WEB_LOC):
 
     Database.Update(DB_CONN, 
         dbManager.Db_Program, 
-        SET = 'First_Content = %i, First_Folder = %i' % (_folderId, _contentId),
+        SET = 'First_Folder = %i, First_Content = %i' % (_folderId, _contentId),
         WHERE = 'Program_Id = %i' % PROGRAM_ID)
 
 def PullAllChannelPrograms(DB_CONN, ALL_CHANNEL_ID, FILM_CHANNEL_ID, SHOW_CHANNEL_ID, PROGRAM_ID = None):
     _programContition = ''
 
     if(PROGRAM_ID):
-        _programContition = 'AND Program_Id = %i' % PROGRAM_ID
+        _programContition = ' AND Program_Id = %i' % PROGRAM_ID
 
     dbManager.Current_AllChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i %s' % (ALL_CHANNEL_ID, _programContition),
+        WHERE = 'Channel_Id = %i%s' % (ALL_CHANNEL_ID, _programContition),
         fetchall = True)
 
     dbManager.Current_FilmsChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i %s' % (FILM_CHANNEL_ID, _programContition),
+        WHERE = 'Channel_Id = %i%s' % (FILM_CHANNEL_ID, _programContition),
         fetchall = True)
 
     dbManager.Current_ShowsChannel = Database.Select(DB_CONN,
         SELECT = 'ChProg_Id, Channel_Id, Program_Id',
         FROM = dbManager.Db_ChProgram,
-        WHERE = 'Channel_Id = %i %s' % (SHOW_CHANNEL_ID, _programContition),
+        WHERE = 'Channel_Id = %i%s' % (SHOW_CHANNEL_ID, _programContition),
         fetchall = True)
 
 def RemoveUnusedChannelPrograms(DB_CONN):
@@ -196,10 +196,16 @@ def RemoveUnusedChannelPrograms(DB_CONN):
             FROM = dbManager.Db_ChProgram,
             WHERE = "ChProg_Id = %i" % _chProgId)
 
-def PullAllMetaData(DB_CONN):
+def PullAllMetaData(DB_CONN, PROGRAM_ID = None):
+    _where = ''
+    
+    if(PROGRAM_ID):
+        _where = 'Program_Id = %i' %PROGRAM_ID
+
     dbManager.Current_MetaImages = Database.Select(DB_CONN,
         SELECT = 'ProgImg_Id',
         FROM = dbManager.Db_Img,
+        WHERE = _where,
         fetchall = True)
 
 def RemoveUnusedMetaData(DB_CONN):
@@ -231,7 +237,7 @@ def BuildProgram(DB_CONN, PROGRAM_ID):
         FROM = dbManager.Db_Channel,
         WHERE = 'Channel_Name = "%s"' % dbManager.DefaultChannels[2])[0]
 
-    PullAllMetaData(DB_CONN)
+    PullAllMetaData(DB_CONN, PROGRAM_ID)
     PullAllChannelPrograms(DB_CONN, _allChannelId, _filmChannelId, _showChannelId, PROGRAM_ID)
 
     if(_programData):

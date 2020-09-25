@@ -140,6 +140,8 @@ def RemoveContentFromDb(DB_CONN, FILE_LOCATION = None, CONTENT_ID = None, FOLDER
 
             DebugLog("Program with ID: %i is one less Content in it's DB" % _programId)
 
+            programBuilder.BuildProgram(DB_CONN, _programId)
+
     else:
         DebugLog("Content Already Removed\nContent ID: %s\nFolder ID: %s" % (str(_contentId), str(_folderId)))
 

@@ -23,7 +23,7 @@ def GetProgramId(DB_CONN, FOLDER_LOC):
 
 def FindProgram(DB_CONN, ROOT, FOLDER_LOC):
 
-    if(ROOT == dbManager.Yf_Dir):
+    if(ROOT == "/" + dbManager.Yf_Dir):
         DebugLog("Found Program @ %s" % FOLDER_LOC)
         return GetProgramId(DB_CONN, FOLDER_LOC)
 
@@ -33,7 +33,7 @@ def FindProgram(DB_CONN, ROOT, FOLDER_LOC):
 
     DebugLog("ROOT: %s\nFOLDER_LOC: %s\n_folderLoc: %s\n_folderName: %s\n_folderRoot: %s\n"%(ROOT, FOLDER_LOC, _folderLoc, _folderName, _folderRoot))
 
-    if(_folderRoot == ''):
+    if(_folderRoot == '/'):
         raise Exception("FindProgram ERROR: No Program Exists")
 
     return FindProgram(DB_CONN, _folderRoot, _folderLoc)
