@@ -10,15 +10,15 @@ class ShowDescription extends React.Component
 
         this.state =
         {
-            program: props.Program,
-            img: ""
+            program: props.Program
         }
     }
 
     render()
     {
-        const programName = this.state.program.Name;
-        const img = this.state.img;
+        const program = this.state.program;
+        const programName = program.Program_Name;
+        const img = program.Img_Location;
         return(
             <div className="ShowDescription">
                 <div className="Image">

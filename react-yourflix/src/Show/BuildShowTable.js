@@ -97,8 +97,8 @@ class BuildShowTable extends React.Component
             }
             currIndex++;
             contentArray.push(
-                <th key={"element-"+currentContent.Id} style={{minWidth:width, maxWidth:width, padding:padding/2}}>
-                    <ShowTile Name={currentContent.Name} Id={currentContent.Id}/>
+                <th key={"element-"+currentContent.Content_Id} style={{minWidth:width, maxWidth:width, padding:padding/2}}>
+                    <ShowTile Name={currentContent.Content_Name} Id={currentContent.Content_Id}/>
                 </th>
             );
         }

@@ -55,7 +55,7 @@
     white-space: nowrap;
 }
 
-.dropdown:hover .dropdown-content
+.dropdown:focus-within .dropdown-content
 {
     display: block;
 }
@@ -70,13 +70,13 @@
     width: 100%;
     margin-left: -2em;
 }
-.dropdown-content div:hover {
+.dropdown-content a:hover {
     background-color: #a6a6a6;
     border: solid #8057e9;
     border-width: 2px 1px;
 }
 
-.dropdown-content div {
+.dropdown-content a {
     cursor: pointer;
     color: black;
     padding: 12px 16px;

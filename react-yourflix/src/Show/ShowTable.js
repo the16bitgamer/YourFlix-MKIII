@@ -29,7 +29,7 @@ class ShowTable extends React.Component
                     Id: currId
                 })
         };
-        Fetch("/php/PullRequestedContent.php", this.ContentReturn, requestOptions);
+        Fetch("/php/GetFolderContent.php", this.ContentReturn, requestOptions);
     }
 
     ContentReturn(results)

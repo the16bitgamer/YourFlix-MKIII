@@ -35,7 +35,7 @@ class VideoInfo extends React.Component
                                 <img className="Arrow" alt="Next" src={rightArrow}/>
                             </button>
                         </a>
-                        <h1 className="CurrentName">{currentVideo.Name.substring(0,currentVideo.Name.length-4)}</h1>
+                        <h1 className="CurrentName">{currentVideo.Content_Name}</h1>
                 </div>
             );
         }
@@ -43,7 +43,7 @@ class VideoInfo extends React.Component
         {
             return(
                 <div className="VideoInfoBar">
-                        <h1 className="CurrentName">{currentVideo.Name.substring(0,currentVideo.Name.length-4)}</h1>
+                        <h1 className="CurrentName">{currentVideo.Content_Name}</h1>
                 </div>
             );
         }

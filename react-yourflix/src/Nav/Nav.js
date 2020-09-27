@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './img/YourFlix.png';
+import logo from './img/YourFlix.svg';
 import menu from './img/Temp Hamburger Buttons.png';
 import SearchBar from './SearchBar';
 import './css/yf-sizing.css'
@@ -7,6 +7,15 @@ import './css/yf-sizing.css'
 
 class Nav extends React.Component
 {
+    MenuOption()
+    {
+        return (            
+            <th className="VCenter RowFixed">
+                <input type="image" className="FloatRight NavBarHamSize" alt="Options" src={menu}/>
+            </th>
+        );
+    }
+
     render()
     {
         return(
@@ -21,9 +30,7 @@ class Nav extends React.Component
                         <th className="VCenter">
                             <SearchBar/>
                         </th>
-                        <th className="VCenter RowFixed">
-                            <input type="image" className="FloatRight NavBarHamSize" alt="Options" src={menu}/>
-                        </th>
+                        <this.MenuOption />
                     </tr>
                 </thead>
             </table>

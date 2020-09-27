@@ -120,11 +120,18 @@ class VideoPlayer extends React.Component
     {
         const videoData = this.state.videoData;
         const isSet = this.state.heightSet;
+        var programLink = "/Show?id=" + videoData.Folder_Id;
+
+        if(videoData.Num_Content == 1)
+        {
+            programLink = "/";
+        }
+
         if(!isSet)
         {
             return(
             <div ref={this.controlRef}>
-                <VideoControls Parent={videoData.Parent_Id}/>
+                <VideoControls Link={programLink}/>
             </div>);
         }
         else
@@ -134,10 +141,10 @@ class VideoPlayer extends React.Component
             return(
                 <div>
                     <video style={{height: height+"px"}} ref={this.videoRef} className='VideoPlayer' controls autoPlay>
-                        <source src={videoData.Location} type='video/mp4'/>
+                        <source src={ encodeURI(videoData.Content_Location)} type='video/mp4'/>
                     </video>
                     <div ref={this.controlRef}>
-                        <VideoControls VideoPaused={isPaused} Parent={videoData.Parent_Id} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton}/>
+                        <VideoControls VideoPaused={isPaused} Link={programLink} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton}/>
                     </div>
                 </div>
             );

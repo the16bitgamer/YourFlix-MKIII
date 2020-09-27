@@ -3,14 +3,16 @@ import searchIcon from './img/SearchIcon.svg';
 import Fetch from '../Database/Fetch';
 import './css/yf-search.css';
 
+const searchLimit = 5;
+
 class SearchBar extends React.Component
 {
+
     constructor(props) {
         super(props);
         this.state = 
         {
             search: "",
-            link: "",
             program: [],
             isVisible: false
         }
@@ -57,11 +59,7 @@ class SearchBar extends React.Component
 
     LinkResults(results)
     {
-        this.setState(
-            {
-                link: results
-            }
-        );
+        window.open(results,"_self");
     }
 
     searchInput(event)
@@ -72,12 +70,11 @@ class SearchBar extends React.Component
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
                 { 
-                    query: event.target.value,
-                    limit: 5
+                    query: event.target.value
                 })
         };
         
-        Fetch("/php/SearchDb.php", this.SearchReturn, requestOptions);
+        Fetch("/php/SearchForProgram.php", this.SearchReturn, requestOptions);
     }
 
     SearchReturn(results)
@@ -94,18 +91,35 @@ class SearchBar extends React.Component
         const len = progs.length;
         const hasResults = len > 0;
         var searchItems = [];
+        const search = this.state.search;
             
         if(hasResults)
         {
             for(var i = 0; i < len; i++)
             {
                 const obj = JSON.parse(progs[i]);
-                const link = obj.Folder_Id;
+                var programLink = "/Show?id=" + obj.First_Folder;
+
+                if(obj.Num_Content == 1)
+                {
+                    programLink = "/Video?id=" + obj.First_Content;
+                }
                 
                 searchItems.push(
-                    <div onClick={()=> this.FetchLink(link)} key={link}>
-                        {obj.Name}
-                    </div>);
+                    <a href={programLink} key={obj.Program_Id}>
+                            {obj.Program_Name}
+                    </a>);
+                    
+                if(i >= searchLimit-2 && len > searchLimit)
+                    break;
+            }
+            
+            if(len > searchLimit)
+            {
+                searchItems.push(
+                    <a href={"/Search?query="+search} key={"More"}>
+                            {"+" + (len - searchLimit + 1) + " More Results"}
+                    </a>);
             }
 
             return(
