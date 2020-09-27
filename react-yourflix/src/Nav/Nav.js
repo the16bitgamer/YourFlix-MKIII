@@ -11,7 +11,7 @@ class Nav extends React.Component
     {
         return (            
             <th className="VCenter RowFixed">
-                <input type="image" className="FloatRight NavBarHamSize" alt=""/>
+                <input type="image" className="FloatRight NavBarHamSize" alt="Options" src={menu}/>
             </th>
         );
     }
