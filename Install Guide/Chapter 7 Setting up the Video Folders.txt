@@ -1,0 +1,60 @@
+The File Folder Structure in YourFlix is critical for the operation of the Service since if it's not set up correctly it either wont work, or it'll be missing items.
+
+So Where do your Video Folders live for YourFlix?
+
+By default YourFlix will scan a Folder in /var/www/html called Videos/ and inside Videos/ you'll have even more Folders.
+
+A Folder inside of the Root of the scanned Folder is called a Program, and Videos/Pictures inside a Program Folder is called Content.
+
+Content cannot exist outside of a Program Folder, and a Program will not be visible without content (though it will exist)
+
+So lets say we are adding the Disney Classic "Bambi" to YourFlix. This is how it should look on the server:
+
+Videos/ -> Bambi/ -> Bambi.mp4
+                    
+So you've done that and oh no there's no Image of Bamb, but a coloured square, how does one add Images for the Programs?
+
+Well all you'll need to do is Create another Folder inside the Program Folder called "YF-META", this meta folder will contain meta data, images, and even video. But at the moment only images are supported.
+
+So inside YF-META just place a picture of any size into the folder in a supported HTML5 video type and it'll show up. (JPG, PNG, etc.)
+
+So now your Bambi Program looks like
+
+Videos/ -> Bambi/ -> YF-META/ -> Bambi.png
+                  -> Bambi.mp4
+                  
+Cool but I have a TV Show with lots of Videos, how do I add that?
+
+Well you could just dump them into the Program Folder, but a Program can have a Folder, infact a Program is a Folder. But a Folder must have content before it shows up.
+
+So lets say we have a TV Show like Avatar and we wanted to add all 3 Seasons of the show. It will look like this:
+
+Videos/ -> Avatar/ -> YF-META/ -> Avatar_The_Last_Airbener.png
+
+                   -> Season 1/ -> E01.mp4
+                                -> E02.mp4
+                                -> ...
+                                -> E19.mp4
+                                -> E20.mp4
+                                
+                   -> Season 2/ -> E01.mp4
+                                -> E02.mp4
+                                -> ...
+                                -> E19.mp4
+                                -> E20.mp4
+
+                   -> Season 3/ -> E01.mp4
+                                -> E02.mp4
+                                -> ...
+                                -> E20.mp4
+                                -> E21.mp4
+
+Now that you know how to add Programs to YourFlix, here a few tricks.
+
+If you mounted your HDD elsewhere on your device you can use a symlink to move it to the HDD with the command:
+
+$ln -s <path to the file/folder to be linked> <the path of the link to be created>
+
+There is a config file located in /etc/yourflix/yourflix.config which the programs loads on start which loads in all the supported files and the location of folders, so if you want to rename the YF-META to something else or have your videos located elsewhere, you can change it there.
+
+The config also hosts the supported file types, and if you want YourFlix to support more video types, you can update it there.
