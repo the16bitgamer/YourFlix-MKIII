@@ -1,10 +1,47 @@
 # YourFlix-MKIII
-Rev.3 of the YourFlix Web server now built in react.
 
-YourFlix is a combination of webcode, server side scripts, and servers to allow you to browse and view your entire video library from a local web server, in my case a Raspberry Pi 3
+Update 2020-09-27: YourFlix MKIII is now in Beta!
 
-The webcode is designed to that it can be used with legacy web browsers found on such devices like the New Nintendo 3DS and PlayStation Vita. And it's designed to work on Web Browsers which only has controller inputs like the PlayStation 4.
+# What is YourFlix?
 
-I will include instructions for how to set up your own YourFlix Server running Linux with install instructions for each component, since a YourFlix Server can be more than just serving Video Content in a browser.
+As an idea, YourFlix is a tool to let you watch _your_ _flicks_. Now this can be done with just a neatly organized file folder system, but that's not what I've done.
 
-Or if you wish to just download a preconfigured YourFlix Server I will have links for a Raspberry Pi OS Lite package preconfigured.
+YourFlix MKIII is a combination of open source server programs (Apache 2.0, MiniDlna, OpenSSH), server side scripts (Python, PHP), and Web Code, to allow you to watch _your_ _flicks_ on your devices.
+
+The Web Site is designed to run on **Apache 2.0**, so it can be compatible with almost every device with a web browser that can play Videos, Apache 2.0 also handles the Video Stream so we don't need an adition stream client.
+
+If you have some older devices which cannot run a Web Browser that can play Videos, this is where **MiniDlna** comes in and can be used to stream your Videos.
+
+**PHP** is used to handle Database requests to dynamically build the Website
+
+**Python3** is used to automate building and populating the database. I have an install Python Script located in the **YourFlix Setup** folder. This will install and configure a systemctl service called *yourflix.service*. This code will automatically build, update, and maintain the yourflix database. Adding/Updating/Removing files and folders as you use it. The *yourflix.service* is designed to start on boot.
+
+**Web Code** the web code designed for YourFlix is a creation of my own. Designed in React it will take the structure of created by the database and present it to you in a (in my view) nice and easy to understand UI. It has a search feature!
+
+# What do you need to Run YourFlix?
+
+I've designed this code to run on a Raspberry Pi 3 without a cooling fan, so if it's about as powerful as that it should handle it, if you are looking for specs:
+
+- CPU 1.2GHz
+
+- RAM 1GB
+
+- Ethernet with atlease 100Mbps
+
+- OS Debian or a fork of it
+
+- Storage Min 4MB - Recomended Portable Storage 4TB - Recomended total storage 8TB
+
+# Can you Bring YourFlix with you?
+
+Yes and no. YourFlix is designed to be a local media streaming solution. Meaning that it's not designed to be exposed to the outside world, though if you know how to set up a VPN you're good to go.
+
+But a VPN isn't the only way YourFlix can be mobile. If you are running a Raspberry Pi, you can reverse the WiFi and use it not only as a WiFi hot spot, but also as a means so stream YourFlix, any where you go. With a 5000mah battery you can run YourFlix for around 4 hours.
+
+# What Video Files is YourFlix compatible with?
+
+Whatever HTML5/MiniDlna is compatible with. I have it set up in the YourFlix config to handle the most common HTML5 video types, mp4, WebM, and Ogg. Though it theoretically can handle MKV if you have the right streaming server.
+
+# How do I install YourFlix?
+
+Follow the guide in the [Install Guide](https://github.com/the16bitgamer/YourFlix-MKIII/tree/master/Install%20Guide). I will be updating it as more features are added in.
