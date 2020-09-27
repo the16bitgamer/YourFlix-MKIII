@@ -7,7 +7,6 @@ class ProgramTable extends React.Component
     constructor(props)
     {
         super(props);
-
         this.state =
         {
             programs: props.Programs,
@@ -77,7 +76,7 @@ class ProgramTable extends React.Component
         for(var i = 0; i < programs.length; i++)
         {
             var currentProg = JSON.parse(programs[i]);
-            if(currentProg.Name.substring(0, 1).toUpperCase() !== lastChar)
+            if(currentProg.Program_Name.substring(0, 1).toUpperCase() !== lastChar)
             {
                 if(numTables > 0)
                 {
@@ -94,7 +93,7 @@ class ProgramTable extends React.Component
                 }
                 numTables++;
                 colIndex = 0;
-                lastChar = currentProg.Name.substring(0, 1).toUpperCase();
+                lastChar = currentProg.Program_Name.substring(0, 1).toUpperCase();
             }
             if(colIndex >= numCol)
             {
@@ -102,9 +101,16 @@ class ProgramTable extends React.Component
                 colIndex = 0;
                 currentRow = [];
             }
+            var programLink = "/Show?id=" + currentProg.First_Folder;
+
+            if(currentProg.Num_Content == 1)
+            {
+                programLink = "/Video?id=" + currentProg.First_Content;
+            }
+
             currentRow.push(
             <th key={"element-"+i} style={{minWidth:width, maxWidth:width, padding:padding/2}}>
-                <Program key={currentProg.Id} width={width} program={currentProg} link={currentProg.Folder_Id}/>
+                <Program key={currentProg.Program_Id} width={width} program={currentProg} link={programLink}/>
             </th>
             );
             colIndex++;

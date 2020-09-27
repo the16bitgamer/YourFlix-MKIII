@@ -14,7 +14,7 @@ class HomePage extends React.Component
             pulled: false
         };
         this.PullReturn = this.PullReturn.bind(this);
-        Fetch("/php/PullFromDb.php", this.PullReturn);
+        Fetch("/php/GetChannelPrograms.php", this.PullReturn);
     }
 
     PullReturn(results)
