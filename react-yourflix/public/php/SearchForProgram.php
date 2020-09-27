@@ -6,9 +6,12 @@
 
         $_select = 'SELECT Program.Program_Name, Program.First_Content, Program.First_Folder, Program.Num_Content, Program_Image.Img_Location ';
         $_from = 'FROM Program LEFT JOIN Program_Image ON Program.Program_Id == Program_Image.Program_Id ';
+        $_where = 'WHERE Program.Num_Content > 0 ';
         $_orderBy = 'ORDER BY Program.Program_Name COLLATE NOCASE ASC ';
-        $_result = $DB_CONN->query($_select . $_from . $_orderBy);
-        $_returnMessage = ErrorMessage("No Results Found", ($_select . $_from . $_orderBy));
+        $_query = $_select . $_from . $_where . $_orderBy;
+
+        $_result = $DB_CONN->query($_query);
+        $_returnMessage = ErrorMessage("No Results Found", ($_query));
 
         if($_result)
         {
