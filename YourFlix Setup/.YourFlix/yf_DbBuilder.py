@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import yf_DbHandler as Database
 import yf_Database as dbManager
+import yf_RenameMetaFolders as metaFolders
 
 def UpdateDatabase(DB_CONN, DB_VERSION):
     if(DB_VERSION < 1):
@@ -50,6 +51,12 @@ def UpdateDatabase(DB_CONN, DB_VERSION):
 
         Database.Drop(DB_CONN, 'TEMP_DB')
     
+    if(DB_VERSION < 1.13):
+        metaFolders.RenameMeta()
+        Database.AlterTable(DB_CONN,
+            TABLE = dbManager.Db_Program,
+            ADDCOLUMN = "Program_Last_Updated DATETIME")
+
     Database.Update(DB_CONN,
         dbManager.Db_YourFlix,
         SET = "Version = %s" % str(dbManager.Db_Version))
@@ -101,7 +108,8 @@ def BuildDatabase(DB_CONN):
             ["Program_Web_Location", "TEXT NOT NULL"],
             ["First_Content", "INTEGER"],
             ["First_Folder", "INTEGER"],
-            ["Num_Content", "INTEGER NOT NULL"]])
+            ["Num_Content", "INTEGER NOT NULL"],
+            ["Program_Last_Updated", "DATETIME"]])
 
     #Building Program Image Table
     Database.CreateTable(DB_CONN,

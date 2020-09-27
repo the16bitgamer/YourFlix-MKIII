@@ -7,7 +7,7 @@ yfSource = "./.YourFlix/"
 pythonFilesToAdd = ['yf_AutoAddToDB.py', 'yf_AutoRemoveFromDB.py', 'yf_AutoUpdateDB.py',
     'yf_BuildContentDB.py', 'yf_Database.py', 'yf_DbBuilder.py',
     'yf_DbHandler.py', 'yf_ProgramBuilder.py', 'yf_scanner.py',
-    'yf_ScanToDatabase.py']
+    'yf_ScanToDatabase.py', 'yf_RenameMetaFolders.py']
 
 service = 'yourflix.service'
 config = 'yourflix.config'

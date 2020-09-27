@@ -5,9 +5,9 @@ Yf_Config = '/etc/yourflix/yourflix.config'
 Yf_DbLoc = '/usr/share/yourflix/yourflix.db'
 YF_Html = "/var/www/html"
 Yf_Dir = "Videos"
-MetaFolder = ".YF-META"
+MetaFolder = "YF-META"
 
-Db_Version = 1.12
+Db_Version = 1.13
 
 Db_Channel = 'Channel'
 Db_ChProgram = 'Channel_Program'
@@ -30,6 +30,7 @@ Current_ShowsChannel = None
 
 Db_List = [Db_YourFlix, Db_Channel, Db_ChProgram, Db_Program, Db_Img, Db_ImageType, Db_File, Db_ContFolder, Db_Content]
 Db_Old = ['Img_Db', 'Content_Db', 'Program_Db', 'YourFlix_Db', 'FileType_Db']
+Meta_Old = ['.YF-IMG', '.YF-META']
 
 FolderType = "Folder"
 VideoType = "Video"
@@ -41,4 +42,4 @@ SupportedVideos = ['MP4', 'WebM', 'Ogg']
 SupportedImg = ['PNG', 'BMP', 'GIF', 'ICO', 'JPEG', 'JPG']
 FileTypes = ['Folder']
 
-ScannerIgnore = ['$RECYCLE.BIN', '.YF-IMG', '.YF-META', 'System Volume Information']
+ScannerIgnore = Meta_Old + ['$RECYCLE.BIN', MetaFolder, 'System Volume Information']

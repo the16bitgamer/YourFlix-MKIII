@@ -50,7 +50,7 @@ def CreateTable(CONNECTION, TABLE = None, VALUES = None):
     DebugLog('CREATE TABLE "%s" (%s)' % (TABLE,_insertValues))
     _pointer.execute("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
 
-def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
+def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None, ADDCOLUMN = None):
     if not TABLE:
         raise Exception("TABLE: type str cannot be empty")
 
@@ -58,17 +58,21 @@ def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None):
         raise TypeError("AlterTABLE: TABLE Need to be a string, it is a %s" % str(type(TABLE)))
 
     _pointer = CONNECTION.cursor()
-    TABLE = "ALTER TABLE %s " % TABLE
+    _table = "ALTER TABLE %s " % TABLE
+    _renameColumn = ""
+    _dropColumn = ""
+    _addColumn = ""
 
     if(RENAMECOLUMN):
-        RENAMECOLUMN = "RENAME COLUMN %s " % RENAMECOLUMN
+        _renameColumn = "RENAME COLUMN %s " % RENAMECOLUMN
 
-    else:
-        RENAMECOLUMN = ""
+    if(ADDCOLUMN):
+        _addColumn = "ADD %s " % ADDCOLUMN
 
-    DebugLog('%s%s%s' % (TABLE, RENAMECOLUMN, DROPCOLUMN))
-   
-    _pointer.execute("%s%s%s" % (TABLE, RENAMECOLUMN, DROPCOLUMN))
+    _query = '%s%s%s' % (_table, _renameColumn, _addColumn)
+
+    DebugLog(_query)   
+    _pointer.execute(_query)
 
 def Select(CONNECTION, SELECT = None, INTO = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
   
