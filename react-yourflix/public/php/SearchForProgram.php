@@ -1,14 +1,13 @@
 <?php
     require 'DatabaseHandler.php';
 
-    function SearchDatabase($QUERY, $LIMIT)
+    function SearchDatabase($DB_CONN, $QUERY, $LIMIT)
     {
-        $_db = ConnectToDatabase();
 
         $_select = 'SELECT Program.Program_Name, Program.First_Content, Program.First_Folder, Program.Num_Content, Program_Image.Img_Location ';
         $_from = 'FROM Program LEFT JOIN Program_Image ON Program.Program_Id == Program_Image.Program_Id ';
         $_orderBy = 'ORDER BY Program.Program_Name COLLATE NOCASE ASC ';
-        $_result = $_db->query($_select . $_from . $_orderBy);
+        $_result = $DB_CONN->query($_select . $_from . $_orderBy);
         $_returnMessage = ErrorMessage("No Results Found", ($_select . $_from . $_orderBy));
 
         if($_result)
@@ -33,10 +32,10 @@
             $_returnMessage = json_encode($_returnArray);
         }
 
-        $_db->close();
         return $_returnMessage;
     }
     
+    $db = ConnectToDatabase();
     $limit = 5;
     $query = '';
 
@@ -49,8 +48,8 @@
             $query = $POST['query'];
     }
 
-    $searchResults = SearchDatabase($query, $limit);
+    $searchResults = SearchDatabase($db, $query, $limit);
 
     echo $searchResults;
-
+    $db->close();
 ?>

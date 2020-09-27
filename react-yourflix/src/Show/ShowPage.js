@@ -36,7 +36,7 @@ class ShowPage extends React.Component
             )
         };
 
-        Fetch("/php/PullShow.php", this.ShowReturn, requestOptions);
+        Fetch("/php/GetProgramFolders.php", this.ShowReturn, requestOptions);
     }
 
     ShowReturn(results)
@@ -70,7 +70,7 @@ class ShowPage extends React.Component
             return(
                 <div>
                     <Nav/>
-                    <ShowBar ProgramId={program.Id} currentId={this.state.currId} Folders={content} function={this.ChangeFolder}/>
+                    <ShowBar ProgramId={program.Program_Id} currentId={this.state.currId} Folders={content} function={this.ChangeFolder}/>
                     <ShowDescription Program={program}/>
                     <ShowTable currentId={this.state.currId}/>
                 </div>

@@ -17,7 +17,6 @@ class ShowTile extends React.Component
     render()
     {
         var name = this.state.showName;
-        name = name.substring(0, name.length - 4);
         const id = this.state.showId;
 
         return(

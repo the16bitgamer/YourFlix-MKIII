@@ -97,5 +97,13 @@
     border-bottom-style: solid;  
     border-color: #8057e9;
 }
+
+.show-content div:focus-within {
+    background-color: #cccccc;
+    border: 2px;
+    border-top-style: solid;  
+    border-bottom-style: solid;  
+    border-color: #8057e9;
+}
   
 .showDropDown:hover .show-content {display: block;}
