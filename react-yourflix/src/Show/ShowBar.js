@@ -54,10 +54,10 @@ class ShowBar extends React.Component
                 currentFolder = folderData.Folder_Name;                
                 var last = (i-1+folders.length)%folders.length;
                 var lastData = JSON.parse(folders[last]);
-                prevId = lastData.Id;
+                prevId = lastData.Folder_Id;
                 var next = (i+1)%folders.length;
                 var nextData = JSON.parse(folders[next]);
-                nextId = nextData.Id;
+                nextId = nextData.Folder_Id;
             }
         }
 
