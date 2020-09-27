@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './img/YourFlix.png';
+import logo from './img/YourFlix.svg';
 import menu from './img/Temp Hamburger Buttons.png';
 import SearchBar from './SearchBar';
 import './css/yf-sizing.css'
