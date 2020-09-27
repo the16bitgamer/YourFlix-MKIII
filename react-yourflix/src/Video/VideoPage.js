@@ -34,7 +34,7 @@ class VideoPage extends React.Component
                     Id: currId
                 })
         };
-        Fetch("/php/PullContentData.php", this.ContentReturn, requestOptions);
+        Fetch("/php/GetContentData.php", this.ContentReturn, requestOptions);
     }
 
     ContentReturn(results)
@@ -42,22 +42,22 @@ class VideoPage extends React.Component
         const currentVideo = results[0];
         const otherVideos = results[1];
 
-        var prevId = "/Show?id="+currentVideo.Parent_Id;
+        var prevId = "/Show?id="+currentVideo.Folder_Id;
         var nextId = prevId;
         if(otherVideos.length > 1)
         {
             for(var i = 0; i < otherVideos.length; i++)
             {
                 const selectedVideo = JSON.parse(otherVideos[i])
-                if(selectedVideo.Id === currentVideo.Id)
+                if(selectedVideo.Content_Id === currentVideo.Content_Id)
                 {
                     if(i+1 < otherVideos.length)
                     {
-                        nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Id;
+                        nextId = "/Video?id="+JSON.parse(otherVideos[i+1]).Content_Id;
                     }
                     break;
                 }
-                prevId = "/Video?id="+selectedVideo.Id;
+                prevId = "/Video?id="+selectedVideo.Content_Id;
             }
             console.log(prevId);
             this.setState(
@@ -105,7 +105,10 @@ class VideoPage extends React.Component
         else
         {
             return(
-                <h3>Loading...</h3>
+                <div>
+                    <NavBar/>
+                    <h3>Loading...</h3>
+                </div>
             )
         }
         

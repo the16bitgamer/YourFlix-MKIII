@@ -13,8 +13,10 @@
         $_groupBy = 'GROUP BY Program.Program_Id ';
         $_orderBy = 'ORDER BY Program.Program_Name COLLATE NOCASE ASC ';
         
-        $_result = $_db->query($_select . $_from . $_where . $_groupBy . $_orderBy);
-        $_returnMessage = ErrorMessage("No Results Found", ($_select . $_from . $_where . $_groupBy . $_orderBy));
+        $_query = ($_select . $_from . $_where . $_groupBy . $_orderBy);
+
+        $_result = $_db->query($_query);
+        $_returnMessage = ErrorMessage("No Results Found", $_query);
 
         if($_result)
         {

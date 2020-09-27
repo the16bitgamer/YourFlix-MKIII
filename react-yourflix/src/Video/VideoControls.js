@@ -12,7 +12,7 @@ class VideoControls extends React.Component
         super(props);
         this.state = 
         {
-            parentId: props.Parent,
+            backLink: props.Link,
             isPaused: props.VideoPaused,
             play: props.PlayFunc,
             seek: props.SeekFunc,
@@ -31,7 +31,7 @@ class VideoControls extends React.Component
 
     render()
     {
-        const returnPage = "/Show?id="+this.state.parentId;
+        const returnPage = this.state.backLink;
         const playButt = this.state.play;
         const fullButt = this.state.full;
         const seekButt = this.state.seek;
