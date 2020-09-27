@@ -178,7 +178,7 @@ def CheckDatabase(DB_CONN):
             FROM = "sqlite_master",
             WHERE = "type='table' AND name='%s'" % db)
 
-        checkStruct = _returned != None and checkStruct and False
+        checkStruct = _returned != None and checkStruct
 
         if(db == dbManager.Db_YourFlix and checkStruct):
             _versionReturned = Database.Select(DB_CONN,
