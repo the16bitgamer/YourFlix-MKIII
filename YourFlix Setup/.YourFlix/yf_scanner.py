@@ -85,13 +85,15 @@ def AddItem(DB_CONN, WEB_ROOT, PHYS_ROOT, ITEM):
             DebugLog("Adding Folder %s" % ITEM)
             dbAdder.AddFolderToDb(DB_CONN, WEB_ROOT, _itemWebLoc, ITEM)
 
-    elif(os.path.isfile(_itemPhysLoc) and WEB_ROOT != dbManager.Yf_Dir):
+    elif(os.path.isfile(_itemPhysLoc) and WEB_ROOT[1:] != dbManager.Yf_Dir):
+        DebugLog("Adding File %s" % ITEM)
         _fileType = CheckFileType(DB_CONN, ITEM)
 
         if(_fileType == dbManager.VideoType):
             dbAdder.AddContentToDb(DB_CONN, WEB_ROOT, _itemWebLoc, ITEM)
 
         elif(_fileType == dbManager.ImageType and dbManager.MetaFolder in WEB_ROOT):
+            DebugLog("File %s is META DATA" % ITEM)
             dbAdder.AddMetaImgToDb(DB_CONN, WEB_ROOT, _itemWebLoc)
 
 def DeleteItem(DB_CONN, WEB_ROOT, ITEM):

@@ -45,14 +45,14 @@ def AddProgramToDb(DB_CONN, PROGAM_WEB_LOC, PROGRAM_NAME):
 
         _programName = PROGRAM_NAME
         _programWebLoc = PROGAM_WEB_LOC
-        _programPhysLoc = os.path.join(dbManager.YF_Html, _programWebLoc)
+        _programPhysLoc = os.path.join(dbManager.YF_Html, _programWebLoc[1:])
 
         _programId = _programId = Database.Insert(DB_CONN,
             INTO = dbManager.Db_Program,
             ROW = ['Program_Name', 'Program_Location', 'Program_Web_Location', 'Num_Content'],
             VALUES = [PROGRAM_NAME, _programPhysLoc, _programWebLoc, 0])
 
-        DebugLog("Adding Program %s in Location: %s" % (_programName, _programWebLoc))
+        DebugLog("Adding Program %s in Physical Loc: %s - Web Loc: %s" % (_programName, _programPhysLoc, _programWebLoc))
         
         return _programId
 
@@ -80,9 +80,12 @@ def AddFolderToDb(DB_CONN, ROOT, FOLDER_LOC, FOLDER_NAME):
                 FROM = dbManager.Db_ContFolder,
                 WHERE = 'Folder_Location = "%s"' % FOLDER_LOC)
 
-        if(not _folderData):
+        if(_folderData):
+            DebugLog("Folder %s exists at location %s" % (FOLDER_NAME, FOLDER_LOC))
+            return (_folderData[0], _folderData[1])
+        
+        elif(FOLDER_NAME not in dbManager.ScannerIgnore):
             _programId = None
-
             _programId = FindProgram(DB_CONN, ROOT, FOLDER_LOC, FOLDER_NAME)
 
             if(_programId != -1):
@@ -93,7 +96,7 @@ def AddFolderToDb(DB_CONN, ROOT, FOLDER_LOC, FOLDER_NAME):
                     ROW = ['Folder_Name', 'Folder_Location', 'Program_Id'],
                     VALUES = [FOLDER_NAME, FOLDER_LOC, _programId])
 
-                DebugLog("Adding Folder: %s to change Location to: %s" % (FOLDER_NAME, FOLDER_LOC))
+                DebugLog("Adding Folder: %s to Location: %s" % (FOLDER_NAME, FOLDER_LOC))
 
                 return (_folderId, _programId)
 
@@ -101,10 +104,10 @@ def AddFolderToDb(DB_CONN, ROOT, FOLDER_LOC, FOLDER_NAME):
                 raise Exception("Program not found for Folder: %s in Location: %s" % (FOLDER_NAME, FOLDER_LOC))
         
         else:
+            DebugLog("Folder %s has been ignored at location %s" % (FOLDER_NAME, FOLDER_LOC))
+            return None
 
-            DebugLog("Folder %s exists at location %s" % (FOLDER_NAME, FOLDER_LOC))
-
-            return (_folderData[0], _folderData[1])
+            
     
     DebugLog("Folder %s is being skipped" % (FOLDER_NAME))
 
@@ -156,18 +159,10 @@ def AddContentToDb(DB_CONN, ROOT, FILE_LOC, FILE_NAME):
         return _contentData[0]
 
 def AddMetaImgToDb(DB_CONN, ROOT, FILE_LOC):
-    _metaImgData = Database.Select(DB_CONN,
-        SELECT = 'ProgImg_Id',
-        FROM = dbManager.Db_Img,
-        WHERE = 'Img_Location = "%s"' % FILE_LOC)
+    DebugLog("Adding Program Meta %s" % FILE_LOC)
 
-    if(_metaImgData):
-        _folderLoc = os.path.dirname(ROOT)
-        _folderName = os.path.basename(_folderLoc)
-        _folderRoot = os.path.dirname(_folderLoc)
-        _programId = FindProgram(DB_CONN, _folderRoot, _folderLoc, _folderName)
-
-        programBuilder.BuildProgram(DB_CONN, _programId)
-    
-    else:
-        DebugLog("MetaImg: %s already exists" % (FILE_LOC))
+    _folderLoc = os.path.dirname(ROOT)
+    _folderName = os.path.basename(_folderLoc)
+    _folderRoot = os.path.dirname(_folderLoc)
+    _programId = FindProgram(DB_CONN, _folderRoot, _folderLoc, _folderName)
+    programBuilder.BuildProgram(DB_CONN, _programId)

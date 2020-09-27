@@ -66,6 +66,8 @@ def AddProgram(DB_CONN, ITEM, PHYSICAL_ROOT, WEB_ROOT):
             dbManager.Current_Program.remove(_searchResult)
 
         else:
+            DebugLog("Adding Program at %s" % _physicalLoc)
+
             _programId = Database.Insert(DB_CONN,
                 INTO = dbManager.Db_Program,
                 ROW = ['Program_Name', 'Program_Location', 'Program_Web_Location', 'Num_Content'],
