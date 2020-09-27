@@ -24,15 +24,16 @@ class ShowPage extends React.Component
         this.SearchShow(currentId);
     }
 
-    SearchShow(showId)
+    SearchShow(SHOW_ID)
     {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
                 { 
-                    Id: showId
-                })
+                    Id: SHOW_ID
+                }
+            )
         };
 
         Fetch("/php/PullShow.php", this.ShowReturn, requestOptions);
@@ -48,14 +49,14 @@ class ShowPage extends React.Component
             });
     }
 
-    ChangeFolder(newId)
+    ChangeFolder(NEW_ID)
     {
         const progId = this.state.program.Id;
-        window.history.replaceState(null, null, "/Show?id="+newId);
-        this.SearchShow(newId);
+        window.history.replaceState(null, null, "/Show?id="+NEW_ID);
+        this.SearchShow(NEW_ID);
         this.setState(
             {
-                currId: newId
+                currId: NEW_ID
             });
     }
 

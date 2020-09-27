@@ -72,7 +72,7 @@ class SearchBar extends React.Component
                 })
         };
         
-        Fetch("/php/SearchDb.php", this.SearchReturn, requestOptions);
+        Fetch("/php/SearchForProgram.php", this.SearchReturn, requestOptions);
     }
 
     SearchReturn(results)
@@ -95,12 +95,17 @@ class SearchBar extends React.Component
             for(var i = 0; i < len; i++)
             {
                 const obj = JSON.parse(progs[i]);
-                const link = obj.Folder_Id;
+                var programLink = "/Show?id=" + obj.First_Folder;
+
+                if(obj.Num_Content == 1)
+                {
+                    programLink = "/Video?id=" + obj.First_Content;
+                }
                 
                 searchItems.push(
-                    <div onClick={()=> this.FetchLink(link)} key={link}>
-                        {obj.Name}
-                    </div>);
+                    <a href={programLink} key={programLink}>
+                            {obj.Program_Name}
+                    </a>);
             }
 
             return(

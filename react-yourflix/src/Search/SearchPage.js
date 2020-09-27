@@ -3,7 +3,7 @@ import Nav from '../Nav/Nav';
 import Fetch from '../Database/Fetch';
 import ProgramTable from '../Programs/ProgramTable';
 
-class HomePage extends React.Component
+class SearchPage extends React.Component
 {
     constructor(props)
     {
@@ -20,26 +20,26 @@ class HomePage extends React.Component
         this.SearchProgram(currentSearch);
     }
 
-    SearchProgram(Search)
+    SearchProgram(SEARCH)
     {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
                 { 
-                    query: Search,
+                    query: SEARCH,
                     limit: -1
                 })
         };
-        Fetch("/php/SearchDb.php", this.PullReturn, requestOptions);
+        Fetch("/php/SearchForProgram.php", this.PullReturn, requestOptions);
     }
 
-    PullReturn(results)
+    PullReturn(RESULTS)
     {
-        console.log(results);
+        console.log(RESULTS);
         this.setState(
             {
-                programs: results,
+                programs: RESULTS,
                 pulled: true
             });
     }
@@ -67,4 +67,4 @@ class HomePage extends React.Component
     }
 }
 
-export default HomePage
+export default SearchPage
