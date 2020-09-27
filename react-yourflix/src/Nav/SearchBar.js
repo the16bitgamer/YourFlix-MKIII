@@ -3,8 +3,11 @@ import searchIcon from './img/SearchIcon.svg';
 import Fetch from '../Database/Fetch';
 import './css/yf-search.css';
 
+const searchLimit = 5;
+
 class SearchBar extends React.Component
 {
+
     constructor(props) {
         super(props);
         this.state = 
@@ -67,8 +70,7 @@ class SearchBar extends React.Component
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
                 { 
-                    query: event.target.value,
-                    limit: 5
+                    query: event.target.value
                 })
         };
         
@@ -89,6 +91,7 @@ class SearchBar extends React.Component
         const len = progs.length;
         const hasResults = len > 0;
         var searchItems = [];
+        const search = this.state.search;
             
         if(hasResults)
         {
@@ -103,8 +106,19 @@ class SearchBar extends React.Component
                 }
                 
                 searchItems.push(
-                    <a href={programLink} key={programLink}>
+                    <a href={programLink} key={obj.Program_Id}>
                             {obj.Program_Name}
+                    </a>);
+                    
+                if(i >= searchLimit-2 && len > searchLimit)
+                    break;
+            }
+            
+            if(len > searchLimit)
+            {
+                searchItems.push(
+                    <a href={"/Search?query="+search} key={"More"}>
+                            {"+" + (len - searchLimit + 1) + " More Results"}
                     </a>);
             }
 

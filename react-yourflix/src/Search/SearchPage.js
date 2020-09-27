@@ -27,8 +27,7 @@ class SearchPage extends React.Component
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
                 { 
-                    query: SEARCH,
-                    limit: -1
+                    query: SEARCH
                 })
         };
         Fetch("/php/SearchForProgram.php", this.PullReturn, requestOptions);
