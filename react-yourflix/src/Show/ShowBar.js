@@ -46,7 +46,7 @@ class ShowBar extends React.Component
             const folderData = JSON.parse(folders[i]);
 
             dropDown.push(
-                <div key={folderData.Folder_Id} onClick={() => this.state.func(folderData.Folder_Id)}>{folderData.Folder_Name}</div>
+                <div key={folderData.Folder_Id} tabindex="-1" onClick={() => this.state.func(folderData.Folder_Id)}>{folderData.Folder_Name}</div>
             )
 
             if(parseInt(folderData.Folder_Id) === currentId)
@@ -68,7 +68,7 @@ class ShowBar extends React.Component
                 </button>
                 <div className="showDropDown">
                     <button key={currentFolder} className="showBtn">{currentFolder}</button>
-                    <div className="show-content">
+                    <div className="show-content" tabindex="-1">
                         {dropDown}
                     </div>
                 </div>
