@@ -12,11 +12,13 @@ The Web Site is designed to run on **Apache 2.0**, so it can be compatible with 
 
 If you have some older devices which cannot run a Web Browser that can play Videos, this is where **MiniDlna** comes in and can be used to stream your Videos.
 
-**PHP** is used to handle Database requests to dynamically build the Website
+**PHP** is used to handle Database requests to dynamically build the Website (don't forget php-sqlite3)
 
-**Python3** is used to automate building and populating the database. I have an install Python Script located in the **YourFlix Setup** folder. This will install and configure a systemctl service called *yourflix.service*. This code will automatically build, update, and maintain the yourflix database. Adding/Updating/Removing files and folders as you use it. The *yourflix.service* is designed to start on boot.
+**Python3** is used to automate building and populating the database. I have an install Python Script located in the **YourFlix Setup** folder. This will install and configure a systemctl service called *yourflix.service*. This code will automatically build, update, and maintain the yourflix database. Adding/Updating/Removing files and folders as you use it. The *yourflix.service* is designed to start on boot. (python3-pip, with pip3 install pysqlite3 & inotify)
 
 **Web Code** the web code designed for YourFlix is a creation of my own. Designed in React it will take the structure of created by the database and present it to you in a (in my view) nice and easy to understand UI. It has a search feature!
+
+You'll also need to enable Apache2 RewriteEngine in /etc/httpd/conf.d\vhosts.conf
 
 # What do you need to Run YourFlix?
 
