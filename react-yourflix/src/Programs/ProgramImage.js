@@ -28,6 +28,10 @@ class ProgramImage extends React.Component
         return colour.toString(16);
     }
 
+    addDefaultSrc(ev){
+        ev.target.src = sizeImg;
+      }
+
     render()
     {
         const progName = this.state.name;
@@ -37,7 +41,7 @@ class ProgramImage extends React.Component
         {
             return(
                 <div className="ImageBox" style={{backgroundColor:"#"+showColor}}>
-                    <img src={"http://yourflix.tv/"+this.state.img} alt={progName}/>
+                    <img onError={this.addDefaultSrc} src={this.state.img} alt={progName}/>
                 </div>
             );
         }

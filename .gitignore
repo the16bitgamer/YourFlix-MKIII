@@ -1,0 +1,51 @@
+
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/DEBIAN/control
+YourFlix Setup/YourFlixMKIII_1.13_all.deb
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/DEBIAN/postinst
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/etc/yourflix/yourflix.config
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/lib/systemd/system/yourflix.service
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_AutoAddToDB.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_AutoRemoveFromDB.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_AutoUpdateDB.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_BuildContentDB.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_Database.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_DbBuilder.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_DbHandler.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_ProgramBuilder.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_RenameMetaFolders.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_scanner.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yf_ScanToDatabase.py
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/usr/share/yourflix/yourflix.service
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/asset-manifest.json
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/index.html
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/manifest.json
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/php/DatabaseHandler.php
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/php/GetChannelPrograms.php
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/php/GetContentData.php
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/php/GetFolderContent.php
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/php/GetProgramFolders.php
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/php/SearchForProgram.php
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/precache-manifest.75d53646b6168d1874326f95f727764e.js
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/robots.txt
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/service-worker.js
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/css/main.2efa9b5c.chunk.css
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/css/main.2efa9b5c.chunk.css.map
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/2.0aa8a645.chunk.js
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/2.0aa8a645.chunk.js.LICENSE.txt
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/2.0aa8a645.chunk.js.map
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/main.8d2dc7a5.chunk.js
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/main.8d2dc7a5.chunk.js.map
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/runtime-main.a5d36475.js
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/js/runtime-main.a5d36475.js.map
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/ExpandButton.b7aa267e.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/Left-Point Arrow.d9dd7ebe.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/LeftArrow.9617fc8f.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/PauseButton.c01c689e.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/PlayButton.d8deac50.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/RightArrow.e0b3e6f5.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/SearchIcon.703dffd2.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/yf-PlayButton.4746b672.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/static/media/YourFlix.5601ef9b.svg
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/YourFlix 180x180.png
+YourFlix Setup/YourFlixMKIII_1.14.1.13_all/var/www/html/YourFlix.ico
+YourFlix Setup/YourFlix Deb.code-workspace
