@@ -10,3 +10,4 @@ Chapter 3) Setting up Pi as Wireless Access Point
 Chapter 4) Media Server with MiniDlna
 Chapter 5) Auto-Mounting an HDD to a folder
 Chapter 6) Apache2 and the YourFlix Web Server
+Chapter 7) Adding the Folder/File Structure
