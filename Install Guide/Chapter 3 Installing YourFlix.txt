@@ -1,0 +1,30 @@
+---   Chapter 3 Installing YourFlix   ---
+
+Before we can install YourFlix we need to first update and upgrade our software with:
+
+:$ sudo apt update
+:$ sudo apt upgrade
+
+YourFlix relys on Apache2, PHP, and Python3 so if there are system resources which are out of date these might not work.
+
+Now that the Pi is up to date lets download and install YourFlix
+
+1) Download the lastest Release of YourFlix
+    We can download to the Pi by getting the latest release from https://github.com/the16bitgamer/YourFlix-MKIII/releases copying the link and run the command
+        :$ wget [LATEST RELEASE LINK HERE]
+
+2) Install YourFlix by typing install
+    :$ sudo apt install ./YourFlix
+    
+    and press the 'TAB' key to fill in the rest
+    
+    Now the YourFlix Webserver is live and working you can visit it by typing in your YourFlix server IP address into a web browser. The server isn't ready yet since we need to enable rewrite but that's covered in Chapter 5
+
+3) Once installed you need to restart the reload the deamon serveice and enable YourFlix Auto Scan script, to automatically build and populate the sqlite database
+    :$ sudo systemctl daemon-reload
+    :$ sudo systemctl enable yourflix
+    :$ sudo systemctl start yourflix
+
+4) FTP YourFlix Programs into Videos Folder and it should automagically add itself.
+
+    See chapter 4 to know how to make a YourFlix Program.

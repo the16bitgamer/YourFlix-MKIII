@@ -1,3 +1,5 @@
+---   Chapter 4 Creating a YourFlix Program   ---
+
 The File Folder Structure in YourFlix is critical for the operation of the Service since if it's not set up correctly it either wont work, or it'll be missing items.
 
 So Where do your Video Folders live for YourFlix?
@@ -58,3 +60,5 @@ $ln -s <path to the file/folder to be linked> <the path of the link to be create
 There is a config file located in /etc/yourflix/yourflix.config which the programs loads on start which loads in all the supported files and the location of folders, so if you want to rename the YF-META to something else or have your videos located elsewhere, you can change it there.
 
 The config also hosts the supported file types, and if you want YourFlix to support more video types, you can update it there.
+
+Next lets get the Website working by enabling the rewrite on Apache2

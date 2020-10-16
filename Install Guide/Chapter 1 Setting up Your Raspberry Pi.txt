@@ -1,0 +1,45 @@
+---   Chapter 1 Setting up Your Raspberry Pi   ---
+
+YourFlix is designed and tested to work on a Raspberry Pi, with Raspberry Pi OS (Raspbian). This guide will show you how to install YourFlix from scratch.
+
+If you are using another distro of Linux or have a Pi already setup Skip to Chapter 2.
+
+If you are on Windows/Mac we don't have a guide for you yet... sorry. The software should still work, but I have yet to test for it, or create configuration untilities for it.
+
+
+So to set up a raspberry pi:
+
+1) Download Pi Imager
+https://www.raspberrypi.org/downloads/
+
+You can flash a Pi image yourself this tool is just a little bit easier to use.
+
+2) Install/Run Pi Imager
+   a) Select Raspberry Pi OS (Other)
+   b) Raspberry Pi OS Lite
+       The Desktop version of Pi OS has a bit more overhead than I like, you can use it if you want but it isn't necessary for this tutorial.
+   c) Select SD Card you wish to install this on
+       Current Guide is tested on a 2GB MicroSD card. You'll need more/external storage if you want to watch more than a few low res videos
+   d) Write to the SD Card and wait until it finishes writing and verifiying the image
+
+The SD Card is now setup next we need to plug it into the Pi and get it set up.
+
+3) Plug in and log into Pi
+   a) Plug in SD Card into Pi
+   b) Plug Pi into a USB Power supply
+   c) Connect Pi to a Minitor (via HDMI or other)
+   d) Wait until login Prompt show up
+       default user is: pi
+       default password is: raspberry
+
+4) Change Pi's Default Password (optional)
+
+I'll highly recomend changing the password on your Pi. But it's not necessary.
+
+   a) To change the password in a terminal type:
+       :$ sudo raspi-config       
+   b) Select '1 Change User Password Change password for the 'pi' user'
+   c) Select 'Yes' and type in your new password twice.
+   d) When done select 'Finish' by pressing Right twice.
+   
+Now that our Pi is setup and ready to go, we'll now move to Chapter 2 to configure the Network.

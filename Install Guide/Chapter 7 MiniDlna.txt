@@ -1,0 +1,24 @@
+---   Chapter 7 MiniDlna   ---
+
+Now YourFlix is compatible with a lot of different devices via a web browsers. But there are some older devices, like the Sony PlayStation 3, and Xbox 360 where it won't work, but it would be nice to have YourFlix on.
+
+This is where MiniDlna comes in and can bridge the gap between intergenerational Devices, and this is just going to be a quick guide for setting it up and configuring it to automatically work.
+
+1) Install MiniDlna
+    :$ sudo apt install minidlna
+
+2) Conifgure MiniDlna
+    :$ sudo nano /etc/minidlna.conf
+    
+    Go through and enable set the following settings
+        media_dir=/var/www/html/Videos
+        merge_media_dirs=Yes
+        root_container=B
+        port=8200
+        friendly_name=YourFlix MKIII
+        inotify=yes
+
+3) Restart MiniDLNA
+    :$ sudo systemctl restart minidlna
+    
+MiniDLNA has now been configured and should work across all devices.

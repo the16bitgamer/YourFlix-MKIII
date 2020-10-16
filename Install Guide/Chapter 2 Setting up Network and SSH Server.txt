@@ -1,0 +1,67 @@
+---   Chapter 2 Setting up Network and SSH Server   ---
+
+So now that Raspberry Pi OS is installed (I miss calling it Raspbain), it's time to configure your ethernet network with a static IP and enable the SSH Server. By default the ethernet is setup to a IP given to it by the router, but not knowing where our server is means it will be tricky to access YourFlix when you want to. So lets follow (this guide from raspberrypi.org)[https://www.raspberrypi.org/documentation/configuration/tcpip/]
+
+1) Get the current IP Address
+    a) We shoud already be logged in. so in a terminal type:
+        :$ hostname -I
+
+    This will return a number like '192.168.0.35' we will need the first 3 numbers for this example '192.168.0'.
+
+2) Setting up a static IP
+
+    We now need to setup a static IP, this is so we always know where the Pi is on our network, and if we ever wanted it, can even have a local DNS Server running to give it a local domain name.
+
+    a) Edit the Network config file with the built in text editor nano
+        :$ sudo nano /etc/dhcpcd.conf
+       
+    b) Add in the lines:
+        interface eth0
+           static ip_address=[PUT YOUR IP ADDRESS HERE]/24    
+           static routers=[PUT YOUR ROUTER LOCATION HERE]
+           static domain_name_servers=[PUT DNS SERVERS HERE] [PUT BACKUP DNS HERE]
+
+    Quick break down of the IP Address I have the PI. 192.168.0 is from earlier, and an IPv4 address can go up to 255, meaning it can support 255 devices. I doubt there will ever be 155 machines on my network. Static routers are typically the first device on a network i.e. XXX.XXX.X.1, and they can resolve domain name server (DNS) requests, but I also added Google's DNS 8.8.8.8 as a backup if it fails.
+
+    c) Quit nano by pressing 'crtl'+'x'
+    d) save with 'y'
+    e) Reset Network
+        :$ sudo ifconfig eth0 down
+        :$ sudo ifconfig eth0 up
+
+
+--  Chapter 2.2 Enabling SSH  --
+
+Next task is a simple one, enabling open SSH so we can transfer files to it remotly on the same network or access the pi itself remotly, by following the guide on (raspberrypi.org)[https://www.raspberrypi.org/documentation/remote-access/ssh/]:
+
+1) Open the Pi Config window
+    :$  sudo raspi-config
+
+2) Select '5. Interfacing Options',
+    a) Navigate to and select 'F2 SSH',
+    b) Choose 'Yes'
+    c) Select 'Ok',
+
+    You've now enabled SSH on your Raspberry Pi, however something else we can do here if you wish is change the hostname of the device so we can access YourFlix via a web browser by just typing in 'yourflix.local'. If you want to do that:
+
+3) Changing Hostname (optional)
+
+    The hostname is a local domain name which will resolve to your device, currently it's set to raspberrypi.local but you can change it to whatever you want
+
+    1) In the config Select '2. Network Options',
+        a) Select 'N1. Host Name',
+        b) Select 'OK',
+        c) Type in the hostname you want, i.e. 'yourflix'
+        d) Select 'OK',
+
+    Now that we've set our hostname the pi needs to reset, but now all that's left is to quit the config by:
+
+    choosing 'Finish' by pressing Right twice.
+
+    Now that we have the SSH client installed you can access your Pi with a FTP server (with a sftp connection) or with a SSH client like Putty.
+
+    Just connect with 'pi@raspberrypi.local' or if you changed your hostname 'pi@yourflix.local' instead of the IP since that might change as you are going through the setup.
+
+Now that your Pi has been setup it will reset, and you should now be able to access your Pi Remotly with a terminal client like Putty, and send files to it remotly with a FTP Client, like FileZilla.
+
+Now we will move to Chapter 3 to actually install YourFlix
