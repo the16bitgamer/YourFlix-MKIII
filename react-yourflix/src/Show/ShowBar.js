@@ -63,16 +63,16 @@ class ShowBar extends React.Component
 
         return (
             <div className="FolderBar">
-                <button key={prevId} className="toggleBtn" onClick={() => this.state.func(prevId)}>
+                <button key="Back" className="toggleBtn" onClick={() => this.state.func(prevId)}>
                     <img alt="<" src={leftArrow}/>
                 </button>
-                <div className="showDropDown">
+                <div className="showDropDown" ontouchstart="">
                     <button key={currentFolder} className="showBtn">{currentFolder}</button>
                     <div className="show-content" tabindex="-1">
                         {dropDown}
                     </div>
                 </div>
-                <button key={nextId} className="toggleBtn" onClick={() => this.state.func(nextId)}>
+                <button key="Next" className="toggleBtn" onClick={() => this.state.func(nextId)}>
                     <img alt=">" src={rightArrow}/>
                 </button>
             </div>
