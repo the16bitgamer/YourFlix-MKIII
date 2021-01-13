@@ -6,7 +6,7 @@
 
         $_select = 'SELECT Program.Program_Name, Program.First_Content, Program.First_Folder, Program.Num_Content, Program_Image.Img_Location ';
         $_from = 'FROM Program LEFT JOIN Program_Image ON Program.Program_Id == Program_Image.Program_Id ';
-        $_where = 'WHERE Program.Num_Content > 0 ';
+        $_where = 'WHERE Program.Num_Content > 0 AND Program.Program_Name LIKE "%'.$QUERY.'%"';
         $_orderBy = 'ORDER BY Program.Program_Name COLLATE NOCASE ASC ';
         $_query = $_select . $_from . $_where . $_orderBy;
 
@@ -18,11 +18,7 @@
             $_returnArray = [];
             while($content = $_result->fetchArray()) 
             {
-                $_search = stripos($content['Program_Name'], $QUERY);
-                if($_search !== false)
-                {
-                    array_push($_returnArray,json_encode($content));
-                }
+                array_push($_returnArray,json_encode($content));
             }
             $_returnMessage = json_encode($_returnArray);
         }
