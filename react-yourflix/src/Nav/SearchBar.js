@@ -135,7 +135,7 @@ class SearchBar extends React.Component
     {
         const search = this.state.search;
         return(
-            <div className="dropdown">
+            <div className="dropdown" ontouchstart="">
                 <input className="SearchInput" ref={this.InputField} type="text" value={this.state.search} onChange={this.searchInput} placeholder="Search Program"/>
                 <a href={"/Search?query="+search}>
                     <button className="SearchButton" value="Submit">
