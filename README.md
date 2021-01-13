@@ -2,6 +2,8 @@
 
 Update 2020-09-27: YourFlix MKIII is now in Beta!
 
+Update 2020-10-16: Added a Wiki to install and configure YourFlix for a Raspberry Pi https://github.com/the16bitgamer/YourFlix-MKIII/wiki
+
 # What is YourFlix?
 
 As an idea, YourFlix is a tool to let you watch _your_ _flicks_. Now this can be done with just a neatly organized file folder system, but that's not what I've done.
@@ -47,3 +49,5 @@ Whatever HTML5/MiniDlna is compatible with. I have it set up in the YourFlix con
 # How do I install YourFlix?
 
 Follow the guide in the [Install Guide](https://github.com/the16bitgamer/YourFlix-MKIII/tree/master/Install%20Guide). I will be updating it as more features are added in.
+
+[Or checkout the Wiki if you want hyperlinks](https://github.com/the16bitgamer/YourFlix-MKIII/wiki)
