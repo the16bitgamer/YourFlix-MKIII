@@ -11,16 +11,24 @@ class VideoPage extends React.Component
         super(props);
         let params = new URLSearchParams(document.location.search.substring(1));
         let currentId = parseInt(params.get("id"));
+        let theaterView = false;
+        if ("theaterView" in localStorage)
+        {
+            theaterView = localStorage.getItem("theaterView") == "true";
+        }
         this.state =
         {
             videoId: currentId,
+            theaterView: theaterView,
             videoData: [],
             pulled: false
         }
         this.GetHeights = this.GetHeights.bind(this);
         this.navBarRef = React.createRef();
         this.videoInfoRef = React.createRef();
-        this.ContentReturn = this.ContentReturn.bind(this);        
+        this.ContentReturn = this.ContentReturn.bind(this);
+        this.ToggleTheaterView = this.ToggleTheaterView.bind(this);
+        this.GetTheaterMode = this.GetTheaterMode.bind(this);   
         this.PullContent(currentId);
     }
 
@@ -76,9 +84,25 @@ class VideoPage extends React.Component
 
     GetHeights()
     {
-        var navHeight = this.navBarRef.current.offsetHeight;
+        var navHeight = 0;
+        if(!this.state.theaterView){ navHeight = this.navBarRef.current.offsetHeight; }
         var infoHeight = this.videoInfoRef.current.offsetHeight;
         return navHeight + infoHeight;
+    }
+
+    ToggleTheaterView()
+    {
+        var currentView = !this.state.theaterView;
+        localStorage.setItem('theaterView', currentView);
+        this.setState(
+            {
+                theaterView: currentView
+            });
+    }
+
+    GetTheaterMode()
+    {
+        return this.state.theaterView;
     }
 
     render()
@@ -86,26 +110,39 @@ class VideoPage extends React.Component
         // Use to send to php: const videoId = this.state.videoId;
         var videoData = this.state.videoData;
         var pulled = this.state.pulled;
+        var theaterView = this.state.theaterView;
         if(pulled)
         {
             var prevVideo = this.state.prevVideo;
             var nextVideo = this.state.nextVideo;
+            if(theaterView)
+            {
+                return(
+                    <div class="NightMode">
+                        <div key="VideoBar" ref={this.videoInfoRef} >
+                            <VideoInfo CurrentVideo={videoData} PrevVideo={prevVideo} NextVideo={nextVideo}/>
+                        </div>
+                        <VideoPlayer key="VideoPlayer" VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights} TheaterOn={theaterView} TheaterFunc={this.ToggleTheaterView}/>
+                    </div>
+                );
+            }
             return(
                 <div>
-                    <div ref={this.navBarRef}>
+                    <div key="NavBar" ref={this.navBarRef}>
                         <NavBar/>
-                        </div>
-                    <div ref={this.videoInfoRef} >
+                    </div>
+                    <div key="VideoBar" ref={this.videoInfoRef} >
                         <VideoInfo CurrentVideo={videoData} PrevVideo={prevVideo} NextVideo={nextVideo}/>
                     </div>
-                    <VideoPlayer VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights}/>
+                    <VideoPlayer key="VideoPlayer" VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights} TheaterOn={theaterView} TheaterFunc={this.ToggleTheaterView}/>
                 </div>
             );
+            
         }
         else
         {
             return(
-                <div>
+                <div key="NavBar">
                     <NavBar/>
                     <h3>Loading...</h3>
                 </div>

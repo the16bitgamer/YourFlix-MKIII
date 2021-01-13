@@ -3,6 +3,8 @@ import BackArrow from '../img/Left-Point Arrow.svg';
 import PlayButton from './img/PlayButton.svg';
 import PauseButton from './img/PauseButton.svg';
 import ExpandButton from './img/ExpandButton.svg';
+import TheaterButton from './img/TheaterIcon.svg';
+import TheaterOffButton from './img/TheaterOffIcon.svg';
 import './css/yf-VideoControls.css';
 
 class VideoControls extends React.Component
@@ -16,8 +18,11 @@ class VideoControls extends React.Component
             isPaused: props.VideoPaused,
             play: props.PlayFunc,
             seek: props.SeekFunc,
-            full: props.FulllScreenFunc
+            full: props.FulllScreenFunc,
+            isTheaterOn: props.TheaterOn,
+            theaterFunc: props.TheaterFunc
         }
+        this.ToggleTheaterView = this.ToggleTheaterView.bind(this);
     }
     
     shouldComponentUpdate(nextProps) 
@@ -29,6 +34,12 @@ class VideoControls extends React.Component
         return true;
     }
 
+    ToggleTheaterView()
+    {
+        this.state.theaterFunc();
+        this.setState({ isTheaterOn: !this.state.isTheaterOn});
+    }
+
     render()
     {
         const returnPage = this.state.backLink;
@@ -36,9 +47,15 @@ class VideoControls extends React.Component
         const fullButt = this.state.full;
         const seekButt = this.state.seek;
         var playImg = PauseButton;
+        var theater = TheaterOffButton;
         if(this.state.isPaused)
         {
             playImg = PlayButton;
+        }
+        
+        if(this.state.isTheaterOn)
+        {
+            theater = TheaterButton;
         }
 
         return(
@@ -49,7 +66,10 @@ class VideoControls extends React.Component
                     </button>
                 </a>
                 <button className="FullScreen" onClick={fullButt}>
-                    <img alt="Back" src={ExpandButton}/>
+                    <img alt="Full Screen" src={ExpandButton}/>
+                </button>
+                <button className="FullScreen" onClick={this.ToggleTheaterView}>
+                    <img alt="Theater Mode" src={theater}/>
                 </button>
                 <div className="MiddleBar">
                     <button className="Skip" onClick={() => seekButt(-10)}>

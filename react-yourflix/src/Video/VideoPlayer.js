@@ -12,15 +12,19 @@ class VideoPlayer extends React.Component
             videoData: props.VideoData,
             topHeight: props.Heights,
             nextVideo: props.NextVideo,
+            theaterView: props.TheaterOn,
+            theaterFunc: props.TheaterFunc,
             heightSet: false,
             videoSet: false,
             isPaused: true,
+            updateHight: false,
             height: 0
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.PlayButton = this.PlayButton.bind(this);
         this.SeekButton = this.SeekButton.bind(this);
         this.FullScreenButton = this.FullScreenButton.bind(this);
+        this.EnableTheaterMode = this.EnableTheaterMode.bind(this);
         this.controlRef = React.createRef();
         this.videoRef = React.createRef();
     }
@@ -51,6 +55,12 @@ class VideoPlayer extends React.Component
                 this.setState({videoSet:true});
             }
         }
+
+        if(this.state.updateHight === true)
+        {
+            this.updateWindowDimensions();
+            this.setState({updateHight:false});
+        }
     }
     
     componentDidMount()
@@ -74,6 +84,7 @@ class VideoPlayer extends React.Component
                 height: height - topHeight - bottomHeight,
                 heightSet: true
             });
+        console.log("Height = " + topHeight);
     }
 
     PlayButton()
@@ -116,6 +127,13 @@ class VideoPlayer extends React.Component
         }
     }
 
+    EnableTheaterMode()
+    {
+        this.state.theaterFunc();
+        this.setState({updateHight:true});
+        console.log("Entered Theater Mode");
+    }
+
     render()
     {
         const videoData = this.state.videoData;
@@ -144,7 +162,7 @@ class VideoPlayer extends React.Component
                         <source src={ encodeURI(videoData.Content_Location)} type='video/mp4'/>
                     </video>
                     <div ref={this.controlRef}>
-                        <VideoControls VideoPaused={isPaused} Link={programLink} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton}/>
+                        <VideoControls VideoPaused={isPaused} Link={programLink} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton} TheaterOn={this.state.theaterView} TheaterFunc={this.EnableTheaterMode}/>
                     </div>
                 </div>
             );
