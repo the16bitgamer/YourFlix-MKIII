@@ -5,7 +5,7 @@
     {
         $_db = ConnectToDatabase();
 
-        $_select = 'SELECT Program.Program_Name, Program.Program_Id, Program.First_Content, Program.First_Folder, Program.Num_Content, Program_Image.Img_Location ';
+        $_select = 'SELECT Program.Program_Name, Program.Program_Id, Program.First_Content, Program.First_Folder, Program.Num_Content, Program_Image.Img_Location, Program.Program_Last_Updated ';
         $_from = 'FROM Channel_Program LEFT JOIN Program ON Program.Program_Id == Channel_Program.Program_Id '.
         'LEFT JOIN Program_Image ON Program.Program_Id == Program_Image.Program_Id '.
         'LEFT JOIN Channel ON Channel_Program.Channel_Id == Channel.Channel_Id ';
