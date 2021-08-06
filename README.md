@@ -1,8 +1,10 @@
 # YourFlix-MKIII
 
-Update 2020-09-27: YourFlix MKIII is now in Beta!
+Update 2021-08-06: Added a New page which will allow you to see recently uploaded programs and programs that've been updated.
 
 Update 2020-10-16: Added a Wiki to install and configure YourFlix for a Raspberry Pi https://github.com/the16bitgamer/YourFlix-MKIII/wiki
+
+Update 2020-09-27: YourFlix MKIII is now in Beta!
 
 # What is YourFlix?
 
