@@ -16,6 +16,7 @@ class Program extends React.Component
             name: program.Program_Name,
             id: program.Program_Id,
             img: program.Img_Location,
+            date: Date.parse(program.Program_Last_Updated),
             link: props.link,
             width: width
         }
@@ -26,10 +27,12 @@ class Program extends React.Component
         const progName = this.state.name;
         const link = this.state.link;
         const img = this.state.img;
+        var currentDate = new Date();
+        const isNew = this.state.date >= currentDate.setMonth(currentDate.getMonth() - 1);
 
         return(
             <a href={link} className="Program" style={{cursor: "pointer"}}>
-                <ProgramImage name={progName} img={img}/>
+                <ProgramImage name={progName} img={img} isNew={isNew}/>
                 <h4 className="ProgramName">{progName}</h4>
             </a>
         );

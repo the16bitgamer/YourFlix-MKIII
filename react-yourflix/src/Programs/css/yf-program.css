@@ -15,6 +15,18 @@
     margin-right: auto;
 }
 
+.NewTextBadge
+{
+    background-color: #0057e9;
+    color: white;
+    position: absolute;
+    bottom: 0%;
+    right: 1%;
+    padding: 2%;
+    margin: 0;
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+}
+
 .ProgramName
 {
     background-color: white;

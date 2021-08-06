@@ -8,11 +8,39 @@
     height : 2em;
 }
 
+.TopBar
+{
+    width: 100%;
+    background-color: #272727;
+}
+
 .NavBar
 {
     width: 100%;
     background-color: #272727;
-    height:4em;
+    height: 4em;
+}
+.ChannelBar
+{
+    width: 100%;
+    background-color: #272727;
+    table-layout: fixed;
+}
+
+.ChannelBar a
+{
+    color: white;
+    text-decoration: none;
+}
+.ChannelBar a div
+{
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    font-size: 1.5em;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .RowFixed

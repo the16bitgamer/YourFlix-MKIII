@@ -10,7 +10,8 @@ class ProgramTable extends React.Component
         this.state =
         {
             programs: props.Programs,
-            lastWidth: 1
+            lastWidth: 1,
+            sortByName: props.SortByName
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.ShowPrograms = this.ShowPrograms.bind(this);
@@ -65,18 +66,19 @@ class ProgramTable extends React.Component
         var returnPage = [];
         var currentTable = [];
         var currentRow = [];
-        var lastChar = "";
+        var tableHeadder = "";
         var numTables = 0;
         var width = props.width;
         var padding = props.padding;
         var numCol = props.columns;
+        var sorting = this.state.sortByName;
         var colIndex = 0;
         var programs = this.state.programs;
 
         for(var i = 0; i < programs.length; i++)
         {
             var currentProg = JSON.parse(programs[i]);
-            if(currentProg.Program_Name.substring(0, 1).toUpperCase() !== lastChar)
+            if(currentProg.Program_Name.substring(0, 1).toUpperCase() !== tableHeadder && sorting)
             {
                 if(numTables > 0)
                 {
@@ -84,7 +86,7 @@ class ProgramTable extends React.Component
                     returnPage.push(
                     <table key={"table-"+i} className="ProgramTable">
                         <thead key={"head-"+i}>
-                            <h1 key={"Name-"+i}>{lastChar}</h1>
+                            <h1 key={"Name-"+i}>{tableHeadder}</h1>
                         </thead>
                         <tbody key={"body-"+i}>{currentTable}</tbody>
                     </table>);
@@ -93,7 +95,7 @@ class ProgramTable extends React.Component
                 }
                 numTables++;
                 colIndex = 0;
-                lastChar = currentProg.Program_Name.substring(0, 1).toUpperCase();
+                tableHeadder = currentProg.Program_Name.substring(0, 1).toUpperCase();
             }
             if(colIndex >= numCol)
             {
@@ -115,11 +117,12 @@ class ProgramTable extends React.Component
             );
             colIndex++;
         }
+
         currentTable.push(<tr key={"row-"+i}>{currentRow}</tr>);
         returnPage.push(
             <table key={"table-"+i} className="ProgramTable">
                 <thead key={"head-"+i}>
-                    <h1 key={"Name-"+i}>{lastChar}</h1>
+                    <h1 key={"Name-"+i}>{tableHeadder}</h1>
                 </thead>
                 <tbody key={"body-"+i}>{currentTable}</tbody>
             </table>);

@@ -8,7 +8,8 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import HomePage from './Home/HomePage';
+import NewPage from './NewPage/NewPage';
+import ProgramPage from './ProgramPage/ProgramPage';
 import SearchPage from './Search/SearchPage';
 import ShowPage from './Show/ShowPage';
 import VideoPage from './Video/VideoPage';
@@ -17,8 +18,11 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
         <Switch>
-          <Route path="/home">
-            <HomePage />
+          <Route path="/Programs">
+            <ProgramPage />
+          </Route>
+          <Route path="/New">
+            <NewPage />
           </Route>
           <Route path="/Search">
             <SearchPage />
@@ -30,7 +34,7 @@ ReactDOM.render(
             <VideoPage />
           </Route>
           <Route path="/">
-            <HomePage />
+            <ProgramPage />
           </Route>
         </Switch>
     </Router>

@@ -3,42 +3,50 @@ import Nav from '../Nav/Nav';
 import Fetch from '../Database/Fetch';
 import ProgramTable from '../Programs/ProgramTable';
 
-class SearchPage extends React.Component
+class ProgramPage extends React.Component
 {
     constructor(props)
     {
         super(props);
+        
         let params = new URLSearchParams(document.location.search.substring(1));
-        let currentSearch = params.get("query")+"";
-        console.log(currentSearch);
+        let currentChannel = params.get("channel")+"";
         this.state =
         {
             programs: [],
             pulled: false
         };
         this.PullReturn = this.PullReturn.bind(this);
-        this.SearchProgram(currentSearch);
+        if(currentChannel === "null")
+        {
+            console.log("Am Null");
+            Fetch("/php/GetChannelPrograms.php", this.PullReturn);
+        }
+        else
+        {
+            console.log("Am not Null");
+            this.GetChannelProgram(currentChannel);
+        }
     }
 
-    SearchProgram(SEARCH)
+    GetChannelProgram(CHANNEL)
     {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
                 { 
-                    query: SEARCH
+                    Channel_Id: CHANNEL
                 })
         };
-        Fetch("/php/SearchForProgram.php", this.PullReturn, requestOptions);
+        Fetch("/php/GetChannelPrograms.php", this.PullReturn, requestOptions);
     }
 
-    PullReturn(RESULTS)
+    PullReturn(results)
     {
-        console.log(RESULTS);
         this.setState(
             {
-                programs: RESULTS,
+                programs: results,
                 pulled: true
             });
     }
@@ -53,7 +61,7 @@ class SearchPage extends React.Component
             return(
                 <div>
                     <Nav/>
-                    <ProgramTable Programs={programs} SortByName={false}/>
+                    <ProgramTable Programs={programs} SortByName={true}/>
                 </div>
             )
         }
@@ -66,4 +74,4 @@ class SearchPage extends React.Component
     }
 }
 
-export default SearchPage
+export default ProgramPage

@@ -3,7 +3,7 @@ import Nav from '../Nav/Nav';
 import Fetch from '../Database/Fetch';
 import ProgramTable from '../Programs/ProgramTable';
 
-class HomePage extends React.Component
+class NewPage extends React.Component
 {
     constructor(props)
     {
@@ -14,7 +14,7 @@ class HomePage extends React.Component
             pulled: false
         };
         this.PullReturn = this.PullReturn.bind(this);
-        Fetch("/php/GetChannelPrograms.php", this.PullReturn);
+        Fetch("/php/GetLatestPrograms.php", this.PullReturn);
     }
 
     PullReturn(results)
@@ -36,7 +36,7 @@ class HomePage extends React.Component
             return(
                 <div>
                     <Nav/>
-                    <ProgramTable Programs={programs}/>
+                    <ProgramTable Programs={programs} SortByName={false}/>
                 </div>
             )
         }
@@ -49,4 +49,4 @@ class HomePage extends React.Component
     }
 }
 
-export default HomePage
+export default NewPage

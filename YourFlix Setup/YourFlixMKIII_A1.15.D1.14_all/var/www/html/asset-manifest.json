@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ee575553.chunk.css",
+    "main.js": "/static/js/main.dbd2fcd2.chunk.js",
+    "main.js.map": "/static/js/main.dbd2fcd2.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a5d36475.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a5d36475.js.map",
+    "static/js/2.bb0a10a5.chunk.js": "/static/js/2.bb0a10a5.chunk.js",
+    "static/js/2.bb0a10a5.chunk.js.map": "/static/js/2.bb0a10a5.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.609c7d9a124a0a490c5e7968c2f27132.js": "/precache-manifest.609c7d9a124a0a490c5e7968c2f27132.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.ee575553.chunk.css.map": "/static/css/main.ee575553.chunk.css.map",
+    "static/js/2.bb0a10a5.chunk.js.LICENSE.txt": "/static/js/2.bb0a10a5.chunk.js.LICENSE.txt",
+    "static/media/ExpandButton.svg": "/static/media/ExpandButton.b7aa267e.svg",
+    "static/media/Left-Point Arrow.svg": "/static/media/Left-Point Arrow.d9dd7ebe.svg",
+    "static/media/LeftArrow.svg": "/static/media/LeftArrow.9617fc8f.svg",
+    "static/media/PauseButton.svg": "/static/media/PauseButton.c01c689e.svg",
+    "static/media/PlayButton.svg": "/static/media/PlayButton.d8deac50.svg",
+    "static/media/RightArrow.svg": "/static/media/RightArrow.e0b3e6f5.svg",
+    "static/media/SearchIcon.svg": "/static/media/SearchIcon.703dffd2.svg",
+    "static/media/TheaterIcon.svg": "/static/media/TheaterIcon.029da95f.svg",
+    "static/media/TheaterOffIcon.svg": "/static/media/TheaterOffIcon.60895a75.svg",
+    "static/media/YourFlix.svg": "/static/media/YourFlix.5601ef9b.svg",
+    "static/media/yf-PlayButton.svg": "/static/media/yf-PlayButton.4746b672.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a5d36475.js",
+    "static/js/2.bb0a10a5.chunk.js",
+    "static/css/main.ee575553.chunk.css",
+    "static/js/main.dbd2fcd2.chunk.js"
+  ]
+}

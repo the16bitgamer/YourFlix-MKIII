@@ -1,0 +1,11 @@
+[Unit]
+Description=Autoscan YourFlix Scanner
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /usr/share/yourflix/yf_scanner.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

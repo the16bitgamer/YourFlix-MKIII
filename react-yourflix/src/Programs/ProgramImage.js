@@ -8,12 +8,15 @@ class ProgramImage extends React.Component
         super(props);
         const programName = props.name;
         const programImg = props.img;
+        const programNew = props.isNew;
 
         this.state =
         {
             name: programName,
-            img: programImg
+            img: programImg,
+            isNew: programNew
         }
+        this.GetNewBadge = this.GetNewBadge.bind(this);
     }
 
     GetShowColor()
@@ -32,15 +35,24 @@ class ProgramImage extends React.Component
         ev.target.src = sizeImg;
       }
 
+    GetNewBadge()
+    {
+        if(this.state.isNew)
+            return <h4 className="NewTextBadge">New</h4>;
+        return <div/>
+    }
+
     render()
     {
         const progName = this.state.name;
         const showImg = this.state.img;
         const showColor = this.GetShowColor();
+
         if(showImg)
         {
             return(
                 <div className="ImageBox" style={{backgroundColor:"#"+showColor}}>
+                    <this.GetNewBadge/>
                     <img onError={this.addDefaultSrc} src={this.state.img} alt={progName}/>
                 </div>
             );
@@ -49,6 +61,7 @@ class ProgramImage extends React.Component
         {
             return(
                 <div className="ImageBox" style={{backgroundColor:"#"+showColor}}>
+                    <this.GetNewBadge/>
                     <img src={sizeImg} alt={progName}/>
                 </div>
             );
