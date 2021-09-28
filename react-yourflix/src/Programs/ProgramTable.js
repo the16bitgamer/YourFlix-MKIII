@@ -105,7 +105,7 @@ class ProgramTable extends React.Component
             }
             var programLink = "/Show?id=" + currentProg.First_Folder;
 
-            if(currentProg.Num_Content == 1)
+            if(currentProg.Num_Content === 1)
             {
                 programLink = "/Video?id=" + currentProg.First_Content;
             }

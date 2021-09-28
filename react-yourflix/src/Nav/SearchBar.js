@@ -100,7 +100,7 @@ class SearchBar extends React.Component
                 const obj = JSON.parse(progs[i]);
                 var programLink = "/Show?id=" + obj.First_Folder;
 
-                if(obj.Num_Content == 1)
+                if(obj.Num_Content === 1)
                 {
                     programLink = "/Video?id=" + obj.First_Content;
                 }

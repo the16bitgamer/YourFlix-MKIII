@@ -47,7 +47,7 @@
 
     
     $db = new SQLite3('/usr/share/yourflix/yourflix.db');
-    $contentID = 0;
+    $contentID = 1028;
 
     if($POST)
     {

@@ -51,7 +51,6 @@ class ShowPage extends React.Component
 
     ChangeFolder(NEW_ID)
     {
-        const progId = this.state.program.Id;
         window.history.replaceState(null, null, "/Show?id="+NEW_ID);
         this.SearchShow(NEW_ID);
         this.setState(

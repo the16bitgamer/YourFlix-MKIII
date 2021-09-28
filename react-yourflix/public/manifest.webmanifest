@@ -1,0 +1,31 @@
+{
+  "background_color": "#272727",
+  "theme_color": "#8057e9",
+  "description": "YourFlix Video Streaming Service",
+  "display": "fullscreen",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "YourFlix 180x180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "YourFlix512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "YourFlix192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+        "src": "YourFlix.ico",
+        "sizes": "16x16 32x32 48x48 256x256"
+    }
+  ],
+  "name": "YourFlix MKIII",
+  "short_name": "YourFlix",
+  "start_url": "/index.html"
+}

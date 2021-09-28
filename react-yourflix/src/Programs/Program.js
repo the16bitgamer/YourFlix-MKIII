@@ -1,6 +1,5 @@
 import React from 'react';
 import './css/yf-program.css';
-import Fetch from '../Database/Fetch';
 import ProgramImage from './ProgramImage';
 
 class Program extends React.Component
