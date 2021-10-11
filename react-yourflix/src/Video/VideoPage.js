@@ -17,7 +17,8 @@ class VideoPage extends React.Component
             videoId: currentId,
             videoData: [],
             pulled: false,
-            isFullScreen: checkFull
+            isFullScreen: checkFull,
+            height: 0
         }
         this.GetHeights = this.GetHeights.bind(this);
         this.navBarRef = React.createRef();
@@ -88,18 +89,26 @@ class VideoPage extends React.Component
 
     GetHeights()
     {
+        if(this.state.isFullScreen)
+            return 0;
+        else if(this.state.height !== 0)
+            return this.state.height;
+        
         var navHeight = 0;
         var infoHeight = 0;
         if(this.navBarRef.current !== null)
             navHeight = this.navBarRef.current.offsetHeight;
         if(this.videoInfoRef.current !== null)
             infoHeight = this.videoInfoRef.current.offsetHeight;
-        return navHeight + infoHeight;
+
+        var height = navHeight + infoHeight;
+        if(height !== 0)
+        this.setState({height: height});
+        return height;
     }
 
     render()
     {
-        // Use to send to php: const videoId = this.state.videoId;
         var videoData = this.state.videoData;
         var pulled = this.state.pulled;
         var isFullScreen = this.state.isFullScreen;
@@ -111,8 +120,12 @@ class VideoPage extends React.Component
             if(isFullScreen)
             {
                 return(
-                    <div>
-                        <VideoPlayer key="VideoPlayer" VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights} FullScreenChange={this.FullScreenChange}/>
+                    <div>                        
+                        <div key="NavBar" ref={this.navBarRef}>
+                        </div>
+                        <div key="VideoBar" ref={this.videoInfoRef} >
+                        </div>
+                        <VideoPlayer key="VideoPlayer" VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights} FullScreenChange={this.FullScreenChange} PulledFullScreen={this.state.isFullScreen}/>
                     </div>
                 );
             }
@@ -126,7 +139,7 @@ class VideoPage extends React.Component
                         <div key="VideoBar" ref={this.videoInfoRef} >
                             <VideoInfo CurrentVideo={videoData} PrevVideo={prevVideo} NextVideo={nextVideo}/>
                         </div>
-                        <VideoPlayer key="VideoPlayer" VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights} FullScreenChange={this.FullScreenChange}/>
+                        <VideoPlayer key="VideoPlayer" VideoData={videoData} NextVideo={nextVideo} Heights={this.GetHeights} FullScreenChange={this.FullScreenChange} PulledFullScreen={this.state.isFullScreen}/>
                     </div>
                 );
             }

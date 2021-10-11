@@ -12,17 +12,25 @@ class VideoPlayer extends React.Component
             videoData: props.VideoData,
             topHeight: props.Heights,
             nextVideo: props.NextVideo,
-            FullScreenChange: props.FullScreenChange,
+            FullScreenChange: props.FullScreenChange,            
+            pulledFullScreen: props.PulledFullScreen,
             isFullScreen: false,
+            fullScreenEnabled: false,
             heightSet: false,
             videoSet: false,
             videoLoaded: false,
             isPaused: true,
             updateHight: false,
             hideTimmer: 0,
+            touchTimmer: 0,
+            touchPos: 0,
+            touchCount : 0,
             newTime: 0,
             showBar: true,
-            height: 0
+            height: 0,
+            controlHeight: 0,
+            hideDelay: 3000,
+            skipDelay: 1000
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.PlayButton = this.PlayButton.bind(this);
@@ -35,6 +43,16 @@ class VideoPlayer extends React.Component
         this.videoRef = React.createRef();
         this.progressBarRef = React.createRef();
         this.timerRef = React.createRef();
+    }    
+    
+    shouldComponentUpdate(nextProps) 
+    {
+        if(this.state.pulledFullScreen !== nextProps.PulledFullScreen)
+        {
+            this.setState({pulledFullScreen: nextProps.PulledFullScreen});
+            this.updateWindowDimensions();
+        }
+        return true;
     }
 
     SecondsToHHMM(value, hasHours)
@@ -69,36 +87,35 @@ class VideoPlayer extends React.Component
     {
         if(nextProps.heightSet !== this.state.heightSet && this.state.videoSet === false)
         {
-            
+            //Detects Fullscreeen
             document.addEventListener('fullscreenchange', (event) => {
                 if (document.fullscreenElement)
                 {
                   console.log(`Element: ${document.fullscreenElement.id} entered full-screen mode.`);
-                  this.state.FullScreenChange(true);
                   this.setState({isFullScreen:true});
                 }
                 else
                 {
-                  console.log('Leaving full-screen mode.');
-                  this.state.FullScreenChange(false);
                   this.setState({isFullScreen:false});
                 }
                 this.updateWindowDimensions();
               });
-
             var video = this.videoRef.current;
             var progressBar = this.progressBarRef.current;
 
             if(progressBar && !this.state.videoLoaded)
             {
-                progressBar.value = 0;
+                progressBar.value = "0";
             }
 
             var updateBar = true;
+
+            //When the video element is ready
             if(video)
             {
+                //When the video data has loaded
                 video.addEventListener('loadeddata', (event) => {
-                    progressBar.max = video.duration;                    
+                    progressBar.max = video.duration;
                     this.setState({videoLoaded:false});
                 });
                 progressBar.addEventListener('touchstart', (event) => {
@@ -109,9 +126,10 @@ class VideoPlayer extends React.Component
                     var newTime = this.state.newTime;
                     updateBar = true;
                     video.currentTime = newTime;
-                    this.setState({ hideTimmer: newTime + 5});
+                    this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
                 });
-                progressBar.addEventListener('mousedown', (event) => {
+                progressBar.addEventListener('mousedown', (event) =>
+                {
                     updateBar = false;
                 });
                 progressBar.addEventListener('mouseup', (event) =>
@@ -119,15 +137,63 @@ class VideoPlayer extends React.Component
                     var newTime = this.state.newTime;
                     updateBar = true;
                     video.currentTime = newTime;
-                    this.setState({ hideTimmer: newTime + 5});
+                    this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
                 });
 
-                video.addEventListener('mousemove', (event) => {                    
-                    this.setState(
+                var onTouch = false;
+                var onSkip = false;
+                video.addEventListener('touchstart', (event) =>
+                {
+                    var touch = event.touches[0] || event.changedTouches[0];
+                    var x = Math.floor(touch.pageX / (video.offsetWidth/3));
+                    var prevTouch = this.state.touchPos === x;                    
+                    this.setState({touchPos: x});
+                    if(!prevTouch)
                     {
-                        hideTimmer: video.currentTime + 5,
-                        showBar: true
-                    });
+                        this.setState({touchCount: 0});
+                    }
+                    onTouch = true;
+                });
+                video.addEventListener('mousemove', (event) => {
+                    if(!onTouch)
+                    {
+                        this.setState(
+                        {
+                            hideTimmer: Date.now() + this.state.hideDelay,
+                            showBar: true
+                        });
+                    }
+                });
+                video.addEventListener('touchend', (event) =>
+                {
+                    var touch = event.touches[0] || event.changedTouches[0];
+                    var x = Math.floor(touch.pageX / (video.offsetWidth/3));
+                    
+                    var counter = this.state.touchCount;
+                    var active = counter > 0;
+
+                    if(active)
+                    {
+                        this.setState({ touchTimmer: Date.now() + this.state.skipDelay });
+                        switch(this.state.touchPos)
+                        {
+                            case 0:
+                                this.SeekButton(-10);
+                                break;
+                            case 1:
+                                this.setState({ touchTimmer: Date.now() });
+                                break;
+                            case 2:
+                                this.SeekButton(10);
+                                break;
+                        }
+                    }                   
+                    this.setState(
+                        {
+                            hideTimmer: Date.now() + this.state.hideDelay,
+                            showBar: true,
+                            touchCount: counter + 1
+                        });
                 });
 
                 video.addEventListener('timeupdate', (event) =>
@@ -135,25 +201,48 @@ class VideoPlayer extends React.Component
                     if(updateBar)
                     {
                         var currentTime = video.currentTime;
+                        var isFull = this.state.fullScreenEnabled;
                         progressBar.value = currentTime;
                         
                         var isHours = video.duration >= (3600);
                         this.timerRef.current.innerHTML = this.SecondsToHHMM(currentTime, isHours)+"/"+this.SecondsToHHMM(video.duration, isHours);
-                        if(this.state.hideTimmer <= currentTime && this.state.showBar && this.state.isFullScreen)
+                        if(this.state.hideTimmer <= Date.now() && this.state.showBar)
                         {
-                            this.setState({ showBar: false });
+                            this.setState(
+                                {
+                                    showBar: false || !isFull,                                    
+                                    touchCount: 0
+                                });
+                        }
+                        if(this.state.touchTimmer <= Date.now() && onTouch)
+                        {
+                            if(this.state.touchCount > 1)
+                            {
+                                this.setState(
+                                    {
+                                        showBar: false || !isFull,                                    
+                                        touchCount: 0
+                                    });
+                            }
+                            onTouch = false;
                         }
                     }
                 });
                 video.onpause = (event) =>
                 {
-                    this.setState({isPaused:true});
-                    this.setState({ showBar: true});
+                    this.setState(
+                        {
+                            isPaused:true,
+                            showBar: true
+                        });
                 };
                 video.onplay = (event) =>
                 {
-                    this.setState({isPaused:false});
-                    this.setState({ hideTimmer: video.currentTime + 5});
+                    this.setState(
+                        {
+                            isPaused:false,
+                            hideTimmer: Date.now() + this.state.hideDelay
+                        });
                 };
                 video.onended = (event) =>
                 {
@@ -189,15 +278,20 @@ class VideoPlayer extends React.Component
     {
         var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         var topHeight = this.state.topHeight();
-        var bottomHeight = this.controlRef.current.offsetHeight;
-        if(this.state.isFullScreen)
-            bottomHeight = 0;
+        var bottomHeight = 0;
+        if(this.controlRef !== null && this.state.controlHeight === 0)
+        {
+            bottomHeight = this.controlRef.current.offsetHeight;            
+            this.setState({controlHeight:bottomHeight});
+        }
+        else if(!this.state.fullScreenEnabled)
+            bottomHeight = this.state.controlHeight;
+
         this.setState(
             { 
                 height: height - topHeight - bottomHeight,
                 heightSet: true
             });
-        console.log("Height = " + topHeight);
     }
 
     PlayButton()
@@ -216,15 +310,14 @@ class VideoPlayer extends React.Component
     SeekButton(time)
     {
         const video = this.videoRef.current;
-        this.setState({ hideTimmer: video.currentTime + time + 5});
+        this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
         video.currentTime += time;
     }
 
     FullScreenButton()
     {
         const video = document.documentElement;
-        const checkFull = window.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || false;
-        if(!checkFull)
+        if(!this.state.isFullScreen && !this.state.fullScreenEnabled)
         {
             if (video.requestFullscreen)
             {
@@ -243,7 +336,7 @@ class VideoPlayer extends React.Component
                 video.msRequestFullscreen();
             }
         }
-        else
+        else if(this.state.isFullScreen && this.state.fullScreenEnabled)
         {
             if (document.exitFullscreen)
             {
@@ -258,6 +351,22 @@ class VideoPlayer extends React.Component
                 document.msExitFullscreen();
             }
         }
+        this.ToggleFullScreen();
+    }
+
+    ToggleFullScreen()
+    {
+        var video = this.videoRef.current;
+        var setFullScreen = !this.state.fullScreenEnabled;
+        this.state.FullScreenChange(setFullScreen);
+        this.setState(
+        {
+            fullScreenEnabled: setFullScreen,
+            hideTimmer: Date.now + this.state.hideDelay,
+            showBar: !setFullScreen,
+            heightSet: false
+        });
+        this.updateWindowDimensions();
     }
 
     render()
@@ -283,11 +392,10 @@ class VideoPlayer extends React.Component
         {
             const height = this.state.height;
             var isPaused = this.state.isPaused;
-            const isFullScreen = this.state.isFullScreen;
+            const isFullScreen = this.state.fullScreenEnabled;
             if(!this.state.showBar)
             {
                 controlHeight = "hidden";
-                console.log("change height")
             }
 
             return(
