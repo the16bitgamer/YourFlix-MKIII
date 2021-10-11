@@ -46,6 +46,7 @@ class VideoPage extends React.Component
         const currentVideo = results[0];
         const otherVideos = results[1];
 
+        document.title = currentVideo.Content_Name;
         var prevId = "/Show?id="+currentVideo.Folder_Id;
         var nextId = prevId;
         if(otherVideos.length > 1)

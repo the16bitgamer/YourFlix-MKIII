@@ -88,10 +88,9 @@ class VideoPlayer extends React.Component
         if(nextProps.heightSet !== this.state.heightSet && this.state.videoSet === false)
         {
             //Detects Fullscreeen
-            document.addEventListener('fullscreenchange', (event) => {
+            document.onFullscreenChange = (event) => {
                 if (document.fullscreenElement)
                 {
-                    console.log(`Element: ${document.fullscreenElement.id} entered full-screen mode.`);
                     this.setState({isFullScreen:true});
                 }
                 else
@@ -101,7 +100,7 @@ class VideoPlayer extends React.Component
                         this.ToggleFullScreen();
                 }
                 this.updateWindowDimensions();
-              });
+              }
             var video = this.videoRef.current;
             var progressBar = this.progressBarRef.current;
 
@@ -115,35 +114,38 @@ class VideoPlayer extends React.Component
             //When the video element is ready
             if(video)
             {
-                //When the video data has loaded
-                video.addEventListener('loadeddata', (event) => {
-                    progressBar.max = video.duration;
+                video.onloadeddata = (event) => {
+                    progressBar.max = video.duration+"";
                     this.setState({videoLoaded:false});
-                });
-                progressBar.addEventListener('touchstart', (event) => {
+                    console.log("Hello World")
+                }
+
+                //Progress Bar Update
+                progressBar.ontouchstart = (event) => {
                     updateBar = false;
-                })
-                progressBar.addEventListener('touchend', (event) => {
+                }
+                progressBar.onTouchEnd = (event) => {
                     
                     var newTime = this.state.newTime;
                     updateBar = true;
                     video.currentTime = newTime;
                     this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
-                });
-                progressBar.addEventListener('mousedown', (event) =>
+                }
+                progressBar.onmousedown = (event) =>
                 {
                     updateBar = false;
-                });
-                progressBar.addEventListener('mouseup', (event) =>
+                }
+                progressBar.onmouseup = (event) =>
                 {
                     var newTime = this.state.newTime;
                     updateBar = true;
                     video.currentTime = newTime;
                     this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
-                });
+                }
 
+                //Video Player Touch Controls
                 var onTouch = false;
-                video.addEventListener('touchstart', (event) =>
+                video.ontouchstart = (event) =>
                 {
                     var touch = event.touches[0] || event.changedTouches[0];
                     var x = Math.floor(touch.pageX / (video.offsetWidth/3));
@@ -154,19 +156,8 @@ class VideoPlayer extends React.Component
                         this.setState({touchCount: 0});
                     }
                     onTouch = true;
-                });
-                video.addEventListener('mousemove', (event) => {
-                    if(!onTouch)
-                    {
-                        this.setState(
-                        {
-                            hideTimmer: Date.now() + this.state.hideDelay,
-                            touchTimmer: Date.now() + this.state.skipDelay,
-                            showBar: true
-                        });
-                    }
-                });
-                video.addEventListener('touchend', (event) =>
+                }
+                video.ontouchend = (event) =>
                 {
                     var touch = event.touches[0] || event.changedTouches[0];
                     var x = Math.floor(touch.pageX / (video.offsetWidth/3));
@@ -179,9 +170,11 @@ class VideoPlayer extends React.Component
                         this.setState({ touchTimmer: Date.now() + this.state.skipDelay });
                         switch(this.state.touchPos)
                         {
+                            //Left Side
                             case 0:
                                 this.SeekButton(-10);
                                 break;
+                            //Right Side
                             case 2:
                                 this.SeekButton(10);
                                 break;
@@ -193,9 +186,31 @@ class VideoPlayer extends React.Component
                             showBar: true,
                             touchCount: counter + 1
                         });
-                });
+                }
 
-                video.addEventListener('timeupdate', (event) =>
+                //Mouse Controls
+                video.onmousedown = (event) =>
+                {
+                    if(!onTouch)
+                    {
+                        this.PlayButton();
+                        console.log("Pause me");
+                    }
+                };
+                video.onmousemove = (event) => {
+                    if(!onTouch)
+                    {
+                        this.setState(
+                        {
+                            hideTimmer: Date.now() + this.state.hideDelay,
+                            touchTimmer: Date.now() + this.state.skipDelay,
+                            showBar: true
+                        });
+                    }
+                }
+
+                //Updating Progress Bar Text & showing Video Controls deciders
+                video.ontimeupdate = (event) =>
                 {
                     if(updateBar)
                     {
@@ -226,15 +241,8 @@ class VideoPlayer extends React.Component
                             onTouch = false;
                         }
                     }
-                });
-                video.onmousedown = (event) =>
-                {
-                    if(!onTouch)
-                    {
-                        this.PlayButton();
-                        console.log("Pause me");
-                    }
-                };
+                }
+                //Video Player Events
                 video.onpause = (event) =>
                 {
                     this.setState(
