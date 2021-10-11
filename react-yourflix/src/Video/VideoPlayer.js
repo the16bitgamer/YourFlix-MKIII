@@ -91,12 +91,13 @@ class VideoPlayer extends React.Component
             document.addEventListener('fullscreenchange', (event) => {
                 if (document.fullscreenElement)
                 {
-                  console.log(`Element: ${document.fullscreenElement.id} entered full-screen mode.`);
-                  this.setState({isFullScreen:true});
+                    console.log(`Element: ${document.fullscreenElement.id} entered full-screen mode.`);
+                    this.setState({isFullScreen:true});
                 }
                 else
                 {
-                  this.setState({isFullScreen:false});
+                    this.ToggleFullScreen();
+                    this.setState({isFullScreen:false});
                 }
                 this.updateWindowDimensions();
               });
@@ -363,8 +364,7 @@ class VideoPlayer extends React.Component
         {
             fullScreenEnabled: setFullScreen,
             hideTimmer: Date.now + this.state.hideDelay,
-            showBar: !setFullScreen,
-            heightSet: false
+            showBar: !setFullScreen
         });
         this.updateWindowDimensions();
     }
