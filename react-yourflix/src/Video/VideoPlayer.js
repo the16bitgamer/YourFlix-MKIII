@@ -95,9 +95,10 @@ class VideoPlayer extends React.Component
                     this.setState({isFullScreen:true});
                 }
                 else
-                {
-                    this.ToggleFullScreen();
+                {                    
                     this.setState({isFullScreen:false});
+                    if(this.state.fullScreenEnabled)
+                        this.ToggleFullScreen();
                 }
                 this.updateWindowDimensions();
               });
@@ -165,6 +166,13 @@ class VideoPlayer extends React.Component
                         });
                     }
                 });
+                video.addEventListener('mouseup', (event) =>
+                {
+                    if(!onTouch)
+                    {
+                        this.PlayButton();
+                    }
+                });
                 video.addEventListener('touchend', (event) =>
                 {
                     var touch = event.touches[0] || event.changedTouches[0];
@@ -180,9 +188,6 @@ class VideoPlayer extends React.Component
                         {
                             case 0:
                                 this.SeekButton(-10);
-                                break;
-                            case 1:
-                                this.setState({ touchTimmer: Date.now() });
                                 break;
                             case 2:
                                 this.SeekButton(10);
