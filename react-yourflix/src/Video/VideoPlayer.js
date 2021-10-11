@@ -117,20 +117,19 @@ class VideoPlayer extends React.Component
                 video.onloadeddata = (event) => {
                     progressBar.max = video.duration+"";
                     this.setState({videoLoaded:false});
-                    console.log("Hello World")
                 }
 
                 //Progress Bar Update
-                progressBar.ontouchstart = (event) => {
+                progressBar.addEventListener('touchstart', (event) => {
                     updateBar = false;
-                }
-                progressBar.onTouchEnd = (event) => {
-                    
+                });
+                progressBar.addEventListener("touchend", (event) =>
+                {
                     var newTime = this.state.newTime;
                     updateBar = true;
                     video.currentTime = newTime;
                     this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
-                }
+                });
                 progressBar.onmousedown = (event) =>
                 {
                     updateBar = false;
@@ -145,7 +144,7 @@ class VideoPlayer extends React.Component
 
                 //Video Player Touch Controls
                 var onTouch = false;
-                video.ontouchstart = (event) =>
+                video.addEventListener('touchstart', (event) =>
                 {
                     var touch = event.touches[0] || event.changedTouches[0];
                     var x = Math.floor(touch.pageX / (video.offsetWidth/3));
@@ -153,12 +152,17 @@ class VideoPlayer extends React.Component
                     this.setState({touchPos: x});
                     if(!prevTouch)
                     {
-                        this.setState({touchCount: 0});
+                        this.setState(
+                            {
+                                touchTimmer: Date.now() + this.state.skipDelay,
+                                touchCount: 0                                
+                            });
                     }
                     onTouch = true;
-                }
-                video.ontouchend = (event) =>
+                });
+                video.addEventListener('touchend', (event) =>
                 {
+                    console.log("Hello World");
                     var touch = event.touches[0] || event.changedTouches[0];
                     var x = Math.floor(touch.pageX / (video.offsetWidth/3));
                     
@@ -186,17 +190,28 @@ class VideoPlayer extends React.Component
                             showBar: true,
                             touchCount: counter + 1
                         });
-                }
+                });
 
                 //Mouse Controls
-                video.onmousedown = (event) =>
+                video.onclick = (event) =>
                 {
                     if(!onTouch)
                     {
                         this.PlayButton();
-                        console.log("Pause me");
                     }
-                };
+                    else
+                    {
+                        const platform = String(navigator.platform);
+                        switch(platform)
+                        {
+                            case "New Nintendo 3DS":
+                            case "PlayStation Vita":
+                            case "Nintendo WiiU":
+                                this.PlayButton();
+                                break;
+                        }
+                    }
+                }
                 video.onmousemove = (event) => {
                     if(!onTouch)
                     {
@@ -265,18 +280,6 @@ class VideoPlayer extends React.Component
                     if(nextVideo)
                     {
                         window.open(nextVideo,"_self");
-                    }
-                }
-                video.onclick = (event) =>
-                {
-                    const platform = String(navigator.platform);
-                    switch(platform)
-                    {
-                        case "New Nintendo 3DS":
-                        case "PlayStation Vita":
-                        case "Nintendo WiiU":
-                            this.PlayButton();
-                            break;
                     }
                 }
                 this.setState({videoSet:true});
