@@ -267,6 +267,18 @@ class VideoPlayer extends React.Component
                         window.open(nextVideo,"_self");
                     }
                 }
+                video.onclick = (event) =>
+                {
+                    const platform = String(navigator.platform);
+                    switch(platform)
+                    {
+                        case "New Nintendo 3DS":
+                        case "PlayStation Vita":
+                        case "Nintendo WiiU":
+                            this.PlayButton();
+                            break;
+                    }
+                }
                 this.setState({videoSet:true});
             }
         }
@@ -294,7 +306,21 @@ class VideoPlayer extends React.Component
         var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         var topHeight = this.state.topHeight();
         var bottomHeight = 0;
-        if(this.controlRef !== null && this.state.controlHeight === 0)
+
+        const platform = String(navigator.platform);
+        var consoleOffSet = 0;
+        switch(platform)
+		{
+            case "New Nintendo 3DS":
+            case "PlayStation Vita":
+            case "Nintendo WiiU":
+                consoleOffSet = 45;
+                break;            
+                consoleOffSet = 45;
+                break;
+        }
+
+        if(this.controlRef.current !== null && this.state.controlHeight === 0)
         {
             bottomHeight = this.controlRef.current.offsetHeight;            
             this.setState({controlHeight:bottomHeight});
@@ -304,7 +330,7 @@ class VideoPlayer extends React.Component
 
         this.setState(
             { 
-                height: height - topHeight - bottomHeight,
+                height: height - topHeight - bottomHeight -consoleOffSet,
                 heightSet: true
             });
     }
