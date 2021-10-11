@@ -143,7 +143,6 @@ class VideoPlayer extends React.Component
                 });
 
                 var onTouch = false;
-                var onSkip = false;
                 video.addEventListener('touchstart', (event) =>
                 {
                     var touch = event.touches[0] || event.changedTouches[0];
@@ -162,15 +161,9 @@ class VideoPlayer extends React.Component
                         this.setState(
                         {
                             hideTimmer: Date.now() + this.state.hideDelay,
+                            touchTimmer: Date.now() + this.state.skipDelay,
                             showBar: true
                         });
-                    }
-                });
-                video.addEventListener('mouseup', (event) =>
-                {
-                    if(!onTouch)
-                    {
-                        this.PlayButton();
                     }
                 });
                 video.addEventListener('touchend', (event) =>
@@ -234,6 +227,14 @@ class VideoPlayer extends React.Component
                         }
                     }
                 });
+                video.onmousedown = (event) =>
+                {
+                    if(!onTouch)
+                    {
+                        this.PlayButton();
+                        console.log("Pause me");
+                    }
+                };
                 video.onpause = (event) =>
                 {
                     this.setState(
