@@ -88,7 +88,7 @@ class VideoPlayer extends React.Component
         if(nextProps.heightSet !== this.state.heightSet && this.state.videoSet === false)
         {
             //Detects Fullscreeen
-            document.onFullscreenChange = (event) => {
+            document.onfullscreenchange = (event) => {
                 if (document.fullscreenElement)
                 {
                     this.setState({isFullScreen:true});
@@ -144,8 +144,10 @@ class VideoPlayer extends React.Component
 
                 //Video Player Touch Controls
                 var onTouch = false;
+                var onClickLocked = false;
                 video.addEventListener('touchstart', (event) =>
                 {
+                    onClickLocked = true;
                     var touch = event.touches[0] || event.changedTouches[0];
                     var x = Math.floor(touch.pageX / (video.offsetWidth/3));
                     var prevTouch = this.state.touchPos === x;                    
@@ -195,7 +197,7 @@ class VideoPlayer extends React.Component
                 //Mouse Controls
                 video.onclick = (event) =>
                 {
-                    if(!onTouch)
+                    if(!onClickLocked)
                     {
                         this.PlayButton();
                     }
@@ -211,6 +213,7 @@ class VideoPlayer extends React.Component
                                 break;
                         }
                     }
+                    onClickLocked = false;
                 }
                 video.onmousemove = (event) => {
                     if(!onTouch)
@@ -282,6 +285,10 @@ class VideoPlayer extends React.Component
                         window.open(nextVideo,"_self");
                     }
                 }
+                document.onkeyup = (event) =>
+                {
+                    this.VideoOnKeyUp(event);
+                };
                 this.setState({videoSet:true});
             }
         }
@@ -338,6 +345,25 @@ class VideoPlayer extends React.Component
             });
     }
 
+    VideoOnKeyUp(e)
+    {
+        switch(e.keyCode)
+        {
+            case 39:
+                this.SeekButton(+10);
+                break;
+            case 37:
+                this.SeekButton(-10);
+                break;
+            case 32:
+                this.PlayButton();
+                break;
+            case 70:
+                this.FullScreenButton();
+                break;
+        }
+    }
+
     PlayButton()
     {
         const video = this.videoRef.current;
@@ -349,6 +375,7 @@ class VideoPlayer extends React.Component
         {
             video.pause();
         }
+        video.focus();
     }
 
     SeekButton(time)
@@ -356,6 +383,7 @@ class VideoPlayer extends React.Component
         const video = this.videoRef.current;
         this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
         video.currentTime += time;
+        video.focus();
     }
 
     FullScreenButton()
@@ -396,6 +424,7 @@ class VideoPlayer extends React.Component
             }
         }
         this.ToggleFullScreen();
+        video.focus();
     }
 
     ToggleFullScreen()
