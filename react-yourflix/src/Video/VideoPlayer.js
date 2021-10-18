@@ -14,6 +14,7 @@ class VideoPlayer extends React.Component
             nextVideo: props.NextVideo,
             FullScreenChange: props.FullScreenChange,            
             pulledFullScreen: props.PulledFullScreen,
+            updateBar: true,
             isFullScreen: false,
             fullScreenEnabled: false,
             heightSet: false,
@@ -29,8 +30,10 @@ class VideoPlayer extends React.Component
             showBar: true,
             height: 0,
             controlHeight: 0,
+            controlOffset: 0,
             hideDelay: 3000,
-            skipDelay: 1000
+            skipDelay: 1000,
+            controlVisible: true
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.PlayButton = this.PlayButton.bind(this);
@@ -43,6 +46,7 @@ class VideoPlayer extends React.Component
         this.videoRef = React.createRef();
         this.progressBarRef = React.createRef();
         this.timerRef = React.createRef();
+        this.lowerRight = React.createRef();
     }    
     
     shouldComponentUpdate(nextProps) 
@@ -80,7 +84,8 @@ class VideoPlayer extends React.Component
         var video = this.videoRef.current;
         this.setState({ newTime: value});
         var isHours = video.duration >= (3600);
-        this.timerRef.current.innerHTML = this.SecondsToHHMM(value, isHours)+"/"+this.SecondsToHHMM(video.duration, isHours);
+        this.timerRef.current.innerHTML = this.SecondsToHHMM(value, isHours)+"/"+this.SecondsToHHMM(video.duration, isHours);        
+        this.UpdateProgressBarPos(this.progressBarRef.current, value, video.duration);
     }
 
     componentDidUpdate(nextProps) 
@@ -109,8 +114,6 @@ class VideoPlayer extends React.Component
                 progressBar.value = "0";
             }
 
-            var updateBar = true;
-
             //When the video element is ready
             if(video)
             {
@@ -120,26 +123,33 @@ class VideoPlayer extends React.Component
                 }
 
                 //Progress Bar Update
-                progressBar.addEventListener('touchstart', (event) => {
-                    updateBar = false;
+                progressBar.addEventListener('touchstart', (event) =>
+                {
+                    this.setState( { updateBar: false });
                 });
                 progressBar.addEventListener("touchend", (event) =>
                 {
                     var newTime = this.state.newTime;
-                    updateBar = true;
                     video.currentTime = newTime;
-                    this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
+                    this.setState(
+                        {
+                            hideTimmer: Date.now() + this.state.hideDelay,
+                            updateBar: true
+                        });
                 });
                 progressBar.onmousedown = (event) =>
                 {
-                    updateBar = false;
+                    this.setState( { updateBar: false });
                 }
                 progressBar.onmouseup = (event) =>
                 {
                     var newTime = this.state.newTime;
-                    updateBar = true;
                     video.currentTime = newTime;
-                    this.setState({ hideTimmer: Date.now() + this.state.hideDelay});
+                    this.setState(
+                        {
+                            hideTimmer: Date.now() + this.state.hideDelay,
+                            updateBar: true
+                        });
                 }
 
                 //Video Player Touch Controls
@@ -164,7 +174,6 @@ class VideoPlayer extends React.Component
                 });
                 video.addEventListener('touchend', (event) =>
                 {
-                    console.log("Hello World");
                     var touch = event.touches[0] || event.changedTouches[0];
                     var x = Math.floor(touch.pageX / (video.offsetWidth/3));
                     
@@ -230,25 +239,20 @@ class VideoPlayer extends React.Component
                 //Updating Progress Bar Text & showing Video Controls deciders
                 video.ontimeupdate = (event) =>
                 {
-                    if(updateBar)
+                    var currentTime = video.currentTime;
+                    if(this.state.updateBar)
                     {
-                        var currentTime = video.currentTime;
-                        var isFull = this.state.fullScreenEnabled;
-                        progressBar.value = currentTime;
-                        
-                        var isHours = video.duration >= (3600);
-                        this.timerRef.current.innerHTML = this.SecondsToHHMM(currentTime, isHours)+"/"+this.SecondsToHHMM(video.duration, isHours);
-                        if(this.state.hideTimmer <= Date.now() && this.state.showBar)
+                        progressBar.value = currentTime+"";
+
+                        if(this.state.showBar)
                         {
-                            this.setState(
-                                {
-                                    showBar: false || !isFull,                                    
-                                    touchCount: 0
-                                });
-                        }
-                        if(this.state.touchTimmer <= Date.now() && onTouch)
-                        {
-                            if(this.state.touchCount > 1)
+                            var isFull = this.state.fullScreenEnabled;                        
+                            var isHours = video.duration >= (3600);
+                            this.timerRef.current.innerHTML = this.SecondsToHHMM(currentTime, isHours)+"/"+this.SecondsToHHMM(video.duration, isHours);
+                            
+                            this.UpdateProgressBarPos(progressBar, currentTime, video.duration);
+                            
+                            if(this.state.hideTimmer <= Date.now())
                             {
                                 this.setState(
                                     {
@@ -256,7 +260,18 @@ class VideoPlayer extends React.Component
                                         touchCount: 0
                                     });
                             }
-                            onTouch = false;
+                            if(this.state.touchTimmer <= Date.now() && onTouch)
+                            {
+                                if(this.state.touchCount > 1)
+                                {
+                                    this.setState(
+                                        {
+                                            showBar: false || !isFull,                                    
+                                            touchCount: 0
+                                        });
+                                }
+                                onTouch = false;
+                            }
                         }
                     }
                 }
@@ -310,57 +325,88 @@ class VideoPlayer extends React.Component
     {
       window.removeEventListener('resize', this.updateWindowDimensions);
     }
+
+    UpdateProgressBarPos(progressBar, currentTime, totalTime)
+    {
+        var currentProgress = currentTime/totalTime;
+        var ballSize = (25/2)/progressBar.offsetWidth;
+        var ballPosition = (1-(currentProgress*2))*ballSize;
+        currentProgress = (currentProgress+ballPosition)*100;
+        progressBar.style.setProperty('background-image', 'linear-gradient(to right,#8057e9A7 0%,#8057e9A7 '+currentProgress+'%, #272727A7 '+currentProgress+'%, #272727A7 100%)')
+
+    }
     
     updateWindowDimensions() 
     {
+        var controlBar = this.controlRef.current;
         var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         var topHeight = this.state.topHeight();
         var bottomHeight = 0;
-
-        const platform = String(navigator.platform);
         var consoleOffSet = 0;
-        switch(platform)
-		{
-            case "New Nintendo 3DS":
-            case "PlayStation Vita":
-            case "Nintendo WiiU":
-                consoleOffSet = 45;
-                break;            
-                consoleOffSet = 45;
-                break;
-        }
 
-        if(this.controlRef.current !== null && this.state.controlHeight === 0)
+        if(controlBar !== null && !this.state.fullScreenEnabled)
         {
-            bottomHeight = this.controlRef.current.offsetHeight;            
-            this.setState({controlHeight:bottomHeight});
+            if(this.state.controlHeight === 0)
+            {
+                bottomHeight = controlBar.offsetHeight;            
+                this.setState({controlHeight:bottomHeight});
+            }
+            else
+            {
+                bottomHeight = this.state.controlHeight;
+            }
+
+            const platform = String(navigator.platform);
+            switch(platform)
+            {
+                case "New Nintendo 3DS":
+                case "PlayStation Vita":
+                case "Nintendo WiiU":
+                    consoleOffSet = 45;
+                    break;
+            }
         }
-        else if(!this.state.fullScreenEnabled)
-            bottomHeight = this.state.controlHeight;
 
         this.setState(
             { 
                 height: height - topHeight - bottomHeight -consoleOffSet,
-                heightSet: true
+                heightSet: true,
+                controlOffset: consoleOffSet
             });
     }
 
     VideoOnKeyUp(e)
     {
-        switch(e.keyCode)
+        const platform = String(navigator.platform);
+        var keyboardControls = true;
+        switch(platform)
+		{
+            case "PlayStation 4":
+                keyboardControls = !this.state.showBar;
+                break;
+            case "New Nintendo 3DS":
+            case "PlayStation Vita":
+            case "Nintendo WiiU":
+                keyboardControls = false;
+                break;
+        }
+        if(keyboardControls)
         {
-            case 39:
-                this.SeekButton(+10);
-                break;
-            case 37:
-                this.SeekButton(-10);
-                break;
-            case 32:
-                this.PlayButton();
-                break;
-            case 70:
-                this.FullScreenButton();
-                break;
+            switch(e.keyCode)
+            {
+                case 39:
+                    this.SeekButton(+10);
+                    break;
+                case 37:
+                    this.SeekButton(-10);
+                    break;
+                case 32:
+                    this.PlayButton();
+                    break;
+                case 70:
+                    this.FullScreenButton();
+                    break;
+            }
         }
     }
 
@@ -376,6 +422,11 @@ class VideoPlayer extends React.Component
             video.pause();
         }
         video.focus();
+        this.setState(
+            { 
+                isPaused:true,
+                showBar: true
+            });
     }
 
     SeekButton(time)
@@ -435,8 +486,8 @@ class VideoPlayer extends React.Component
         this.setState(
         {
             fullScreenEnabled: setFullScreen,
-            hideTimmer: Date.now + this.state.hideDelay,
-            showBar: !setFullScreen
+            hideTimmer: Date.now() + this.state.hideDelay,
+            showBar: true
         });
         this.updateWindowDimensions();
     }
@@ -446,7 +497,8 @@ class VideoPlayer extends React.Component
         const videoData = this.state.videoData;
         const isSet = this.state.heightSet;
         var programLink = "/Show?id=" + videoData.Folder_Id;
-        var controlHeight = "visible";
+        var controlVisible = this.state.controlVisible;
+        var showBar = this.state.showBar;
 
         if(videoData.Num_Content === 1)
         {
@@ -464,18 +516,31 @@ class VideoPlayer extends React.Component
         {
             const height = this.state.height;
             var isPaused = this.state.isPaused;
-            const isFullScreen = this.state.fullScreenEnabled;
-            if(!this.state.showBar)
+            var isFullScreen = this.state.fullScreenEnabled;
+            var controlBar = this.controlRef.current;
+            controlBar.style.setProperty('--controlHeight', -this.state.controlHeight+'px');
+            controlBar.style.setProperty('--offset', this.state.controlOffset+'px');
+            if(this.state.fullScreenEnabled)
             {
-                controlHeight = "hidden";
+                if(!showBar && controlVisible)
+                {
+                    controlBar.style.animation = "UISlideDown 1s forwards";
+                    this.setState({controlVisible:false});
+                }
+            }
+
+            if(showBar && !controlVisible)
+            {
+                controlBar.style.animation = "UISlideUp 1s forwards";
+                this.setState({controlVisible:true});
             }
 
             return(
-                <div>
+                <div className='VideoPage'>
                     <video style={{height: height+"px"}} ref={this.videoRef} className='VideoPlayer' autoPlay>
                         <source src={ encodeURI(videoData.Content_Location)} type='video/mp4'/>
                     </video>
-                    <div style={{visibility: controlHeight}} className='ControlsUI' ref={this.controlRef}>
+                    <div style={{height: this.state.controlHeight+"px"}} className='ControlsUI' ref={this.controlRef}>
                         <VideoControls ProgressBarRef={this.progressBarRef} TimerRef={this.timerRef} UpdateTimeLine={this.UpdateTimeLine} VideoPaused={isPaused} Link={programLink} PlayFunc={this.PlayButton} SeekFunc={this.SeekButton} FulllScreenFunc={this.FullScreenButton} isFullScreen={isFullScreen}/>
                     </div>
                 </div>

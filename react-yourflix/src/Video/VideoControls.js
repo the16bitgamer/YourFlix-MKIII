@@ -54,6 +54,17 @@ class VideoControls extends React.Component
         var playImg = PauseButton;
         var positionSet = "relative";
         var color = "gray";
+
+        const platform = String(navigator.platform);
+        var simplified = false;
+        switch(platform)
+        {
+            case "New Nintendo 3DS":
+            case "PlayStation Vita":
+            case "Nintendo WiiU":
+                simplified = true;
+                break;
+        }
         if(this.state.isFullScreen)
         {
             positionSet = "absolute";
@@ -63,37 +74,66 @@ class VideoControls extends React.Component
         {
             playImg = PlayButton;
         }
-        return(
-            <div className="VideoController" style={{position: positionSet, bottom: "0", left: "0", backgroundColor: color}}>
-                <tr className="VideoTimeBar">
-                    <th className="VideoProgressBar">
-                        <input className="ProgressBar" type="range" min="0" max="100" ref={progressBarRef} onChange={this.UpdatingTimeLine}/>
-                    </th>
-                    <th className="VideoTimeRemain" ref={timerRef}>
-                        00:00/00:00
-                    </th>
-                </tr>
-                <a href={returnPage}>
-                    <button className="BackButton">
-                        <img alt="Back" src={BackArrow}/>
-                    </button>
-                </a>
-                <button className="FullScreen" onClick={isFull}>
-                    <img alt="Full Screen" src={ExpandButton}/>
-                </button>
-                <div className="MiddleBar">
-                    <button className="Skip" onClick={() => seekButt(-10)}>
-                        <p>-10</p>
-                    </button>
-                    <button className="PlayButton" onClick={playButt}>
-                        <img alt="Play" src={playImg}/>
-                    </button>
-                    <button className="Skip" onClick={() => seekButt(+10)}>
-                        +10
-                    </button>
+
+        if(simplified)
+        {
+            return(
+                <div className="VideoController" style={{position: positionSet, bottom: "0", left: "0", backgroundColor: color}}>
+                    <tr className="VideoTimeBar">
+                        <th className="VideoProgressBar">
+                            <input className="ProgressBar" type="range" min="0" max="100" ref={progressBarRef} onChange={this.UpdatingTimeLine}/>
+                        </th>
+                        <th className="VideoTimeRemain" ref={timerRef}>
+                            00:00/00:00
+                        </th>
+                    </tr>
+                    <a href={returnPage}>
+                        <button className="BackButton">
+                            <img alt="Back" src={BackArrow}/>
+                        </button>
+                    </a>
+                    <div className="MiddleBar">
+                        <button className="PlayButton" onClick={playButt}>
+                            <img alt="Play" src={playImg}/>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        else
+        {
+            return(
+                <div className="VideoController" style={{position: positionSet, bottom: "0", left: "0", backgroundColor: color}}>
+                    <tr className="VideoTimeBar">
+                        <th className="VideoProgressBar">
+                            <input className="ProgressBar" type="range" min="0" max="100" ref={progressBarRef} onChange={this.UpdatingTimeLine}/>
+                        </th>
+                        <th className="VideoTimeRemain" ref={timerRef}>
+                            00:00/00:00
+                        </th>
+                    </tr>
+                    <a href={returnPage}>
+                        <button className="BackButton">
+                            <img alt="Back" src={BackArrow}/>
+                        </button>
+                    </a>
+                    <button className="FullScreen" onClick={isFull}>
+                        <img alt="Full Screen" src={ExpandButton}/>
+                    </button>
+                    <div className="MiddleBar">
+                        <button className="Skip" onClick={() => seekButt(-10)}>
+                            <p>-10</p>
+                        </button>
+                        <button className="PlayButton" onClick={playButt}>
+                            <img alt="Play" src={playImg}/>
+                        </button>
+                        <button className="Skip" onClick={() => seekButt(+10)}>
+                            +10
+                        </button>
+                    </div>
+                </div>
+            );
+        }
     }
 }
 

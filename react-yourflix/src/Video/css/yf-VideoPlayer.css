@@ -5,7 +5,36 @@
 	display: block;
 }
 
-.NightMode
+@keyframes UISlideDown
 {
-    background-color: black;
+    from
+    {
+        bottom: var(--offset);
+    }
+    to
+    {
+        bottom: var(--controlHeight);
+    }
+}
+@keyframes UISlideup
+{
+    from
+    {
+        bottom: var(--controlHeight);
+    }
+    to
+    {
+        bottom: var(--offset);
+    }
+}
+
+.ControlsUI
+{
+    position: absolute;
+    left: 0px;
+    bottom: var(--offset);
+    width: 100%;
+    --controlHeight: -100%;
+    --offset: 0px;
+    animation-timing-function: linear;
 }

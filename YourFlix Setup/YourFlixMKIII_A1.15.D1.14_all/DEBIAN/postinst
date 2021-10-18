@@ -1,4 +1,5 @@
 echo "Installing pysql3 for the python script"
 pip3 install pysqlite3
 pip3 install inotify
+pip3 install PyChromecast
 echo "YourFlix has been configured to start using it please put Program folder in the Videos folder in /var/www/html\nPrograms will be added automatically.\n\nTo Learn how to make a correctly formatted Program Please Read Chapter 7 of our install Guide\n\nYou'll also need to enable Apache2 RewriteEngine in /etc/httpd/conf.d\vhosts.conf\n\nAs well Please Enable the auto start service by running\nsudo systemctl daemon-reload\nsudo systemctl start yourflix\n"

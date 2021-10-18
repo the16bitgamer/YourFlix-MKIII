@@ -8,6 +8,7 @@ class VideoPage extends React.Component
 {
     constructor(props)
     {
+        document.body.style.overflow = "hidden";
         super(props);
         let params = new URLSearchParams(document.location.search.substring(1));
         let currentId = parseInt(params.get("id"));
