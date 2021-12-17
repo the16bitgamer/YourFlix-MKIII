@@ -43,6 +43,7 @@
     margin:0;
     width: 100%;
     height: 25px;
+    background-color: #00000000;
     background-image: linear-gradient(to right,#8057e9A7 0%,#8057e9A7 0%, #272727A7 0%, #272727A7 100%);
     border-radius: 10px 10px 10px 10px;
     z-index: 2;
