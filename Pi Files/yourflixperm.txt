@@ -1,0 +1,14 @@
+sudo visudo -f /etc/sudoers.d/yourflixperm
+
+#network permissions
+www-data ALL=NOPASSWD: /usr/sbin/iptables
+www-data ALL=NOPASSWD: /usr/sbin/netfilter-persistent
+www-data ALL=NOPASSWD: /sbin/ifconfig
+www-data ALL=NOPASSWD: /sbin/route
+
+#drive permissions
+www-data ALL=NOPASSWD: /bin/mount
+www-data ALL=NOPASSWD: /bin/umount
+www-data ALL=NOPASSWD: /bin/rm
+www-data ALL=NOPASSWD: /bin/mkdir
+www-data ALL=NOPASSWD: /bin/chown
