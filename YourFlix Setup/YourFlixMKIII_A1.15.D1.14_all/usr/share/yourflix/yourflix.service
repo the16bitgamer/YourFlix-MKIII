@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
+ExecStartPre=/usr/bin/python3 /usr/share/yourflix/yf_SystemCheck.py
 ExecStart=/usr/bin/python3 /usr/share/yourflix/yf_scanner.py
 Restart=always
 

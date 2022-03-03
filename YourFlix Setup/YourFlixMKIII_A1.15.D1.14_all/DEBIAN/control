@@ -4,5 +4,6 @@ Architecture: all
 Essential: no
 Priotity: optional
 Depends: apache2,php,php-sqlite3,python3,python3-pip,sqlite
+#libapache2-mod-python (use to replace php)
 Maintainer: 16 Bit Games
 Description: A LAPS (Linux, Apache2, PHP/Python, SQLite) web streaming server, with automatic database management.
