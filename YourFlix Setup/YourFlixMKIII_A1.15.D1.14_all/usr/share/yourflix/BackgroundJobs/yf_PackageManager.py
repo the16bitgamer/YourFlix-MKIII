@@ -5,7 +5,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from Resources import yf_Defaults as Defaults
+from Resources import yf_LinuxDefaults as Defaults
 from Utilities import yf_Log as Log
 from Utilities import PipManager
 

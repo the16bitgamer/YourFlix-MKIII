@@ -9,8 +9,9 @@ import subprocess
 import importlib.util
 from Utilities import NetworkCheck
 from Utilities import yf_Log as Log
+from Resources import yf_LinuxDefaults as LinuxDefaults
 
-PackageLoc = "./Resources/lib"
+PackageLoc = LinuxDefaults.PyModulesLoc
 
 def InstallPy(PACKAGE_NAME, PACKAGE):
     path = os.path.join(PackageLoc,PACKAGE_NAME)

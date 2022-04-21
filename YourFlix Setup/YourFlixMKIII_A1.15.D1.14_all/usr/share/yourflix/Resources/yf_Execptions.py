@@ -2,3 +2,6 @@
 
 class InstallError(Exception):
     pass
+
+class MissingFileError(Exception):
+    pass

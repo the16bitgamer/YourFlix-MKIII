@@ -12,6 +12,6 @@ def Debug(STRING):
         if(showPackage):
             frame = inspect.stack()[1]
             frameinfo  = getframeinfo(frame[0])
-            print(printString + "\n" + os.path.basename(frameinfo.filename) + " Line(" + str(frameinfo.lineno) + ")")
+            print(printString + "\n" + os.path.basename(frameinfo.filename) + " Line(" + str(frameinfo.lineno) + ")\n")
         else:
             print(printString)

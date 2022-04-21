@@ -1,13 +1,14 @@
 #! /usr/bin/env python
 import sys
 from BackgroundJobs import yf_PackageManager as PM
+from BackgroundJobs import yf_StorageManager as SM
+from BackgroundJobs import yf_ConfigManager as CM
 
-#System Check is used to verify the file and system integrity and install/fixes packages to ensure YourFlix will work correctly
-#Phase 1 Verify Database Integrity and rebuilds database if the Database file is missing (note this does not include programing)
-#Phase 2 Verifies that critical files and python packages are installed and will install them for us if they are not (python has local file stores as a fail safe should've installed during main install)
-#Phase 3 Verifies File integrity (check if all targeted files used by YourFlix have the correct formatting and restores them if a backup exists and backs them up when done)
-#Phase 4 Verifies Mountable Drives (used if database hadn't failed and re-mounts drives if an error occurs from backups)
+#Verification script to ensure fs integrity and db integrity before starting yf
+#This is to solve the 'Mike Problem' of the fs delete itself or database becomes corrupted
+# while in use. This is to make management easier for si/me
 
 if __name__ == '__main__':
-    print("Starting YourFlix Job Manager")
-    PM.VerifyPackageInstalls()
+    CM.LoadConfig()
+    SM.CheckMountedDrives()
+    #PM.VerifyPackageInstalls()
