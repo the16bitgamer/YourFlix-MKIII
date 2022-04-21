@@ -10,13 +10,20 @@ from Utilities import yf_Log as Log
 from Utilities import PipManager
 
 
-def VerifyPackageInstalls(UPDATE = False):
+def VerifyPackageInstalls():
     for package in Defaults.PythonModuals:
         name = package[0]
         fileName = package[1]
         packageName = package[2]
         installed = PipManager.IsInstalledPip(name)
         Log.Debug(name + " " + str(installed))
-        if(not installed and not UPDATE):
+        if(not installed):
             PipManager.InstallPy(fileName, packageName)
 
+
+def UpdatePackages():
+    for package in Defaults.PythonModuals:
+        name = package[0]
+        packageName = package[2]
+        Log.Debug("Checking for updates for: " + name)
+        PipManager.UpdatePy(packageName)

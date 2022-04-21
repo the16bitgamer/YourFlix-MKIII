@@ -21,6 +21,14 @@ def InstallPy(PACKAGE_NAME, PACKAGE):
         Log.Debug("Installing " + PACKAGE + " Locally")
         ans = subprocess.check_call([sys.executable, "-m", "pip", "install", path])
 
+def UpdatePy(PACKAGE):
+    if(NetworkCheck.CheckPypi()):
+        Log.Debug("Updating " + PACKAGE + " via Network")
+        ans = subprocess.check_call([sys.executable, "-m", "pip", "install", PACKAGE, "-U"])
+    else:
+        Log.Debug("No network connection. Cannot Check for " + PACKAGE + " Updates")
+
+
 def IsInstalledPip(PACKAGE_NAME):
     if (importlib.util.find_spec(PACKAGE_NAME)):
         return True
