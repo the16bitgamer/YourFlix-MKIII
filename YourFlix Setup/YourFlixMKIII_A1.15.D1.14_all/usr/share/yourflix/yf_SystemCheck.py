@@ -4,6 +4,7 @@ import sys
 sys.path.insert(0, './Resources')
 sys.path.insert(0, './FileManager')
 sys.path.insert(0, './Utilities')
+sys.path.insert(0, './BackgroundJobs')
 import yf_PackageManager as PM
 
 #System Check is used to verify the file and system integrity and install/fixes packages to ensure YourFlix will work correctly
