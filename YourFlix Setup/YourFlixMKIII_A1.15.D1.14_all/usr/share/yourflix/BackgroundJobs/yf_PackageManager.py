@@ -1,6 +1,10 @@
 #! /usr/bin/env python
-import sys
-sys.path.append("..")
+#Import from Parent DIR
+import sys, os
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
 from Resources import yf_Defaults as Defaults
 from Utilities import yf_Log as Log
 from Utilities import PipManager

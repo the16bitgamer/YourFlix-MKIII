@@ -1,10 +1,14 @@
 #! /usr/bin/env python
+#Import from Parent DIR
+import sys, os
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
 import subprocess
 import importlib.util
-import sys
-import os
-import NetworkCheck
-import yf_Log as Log
+from Utilities import NetworkCheck
+from Utilities import yf_Log as Log
 
 PackageLoc = "./Resources/lib"
 
