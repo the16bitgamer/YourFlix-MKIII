@@ -1,8 +1,9 @@
 #! /usr/bin/env python
 
-ConfigLoc = '/etc/yourflix/yourflix.config'
-DbLoc = '/usr/share/yourflix/yourflix.db'
-HtmlLoc = "/var/www/html"
+Phys_ConfigLoc = '/etc/yourflix/yourflix.config'
+Phys_DbLoc = '/usr/share/yourflix/yourflix.db'
+Phys_HtmlLoc = "/var/www/html"
+MetaFolder = "YF-META"
 
 Packages = ["apache2","python3-pip","sqlite"]
 PythonModuals = [ ["sqlite3","pysqlite3.tar.gz","pysqlite3"],

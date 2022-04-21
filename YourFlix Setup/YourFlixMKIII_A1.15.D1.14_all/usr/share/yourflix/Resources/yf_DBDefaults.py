@@ -1,12 +1,5 @@
 #! /usr/bin/env python
 
-Yf_Config = '/etc/yourflix/yourflix.config'
-
-Yf_DbLoc = '/usr/share/yourflix/yourflix.db'
-YF_Html = "/var/www/html"
-Yf_Dir = "Videos"
-MetaFolder = "YF-META"
-
 Db_Version = 1.14
 
 Db_Channel = 'Channel'
