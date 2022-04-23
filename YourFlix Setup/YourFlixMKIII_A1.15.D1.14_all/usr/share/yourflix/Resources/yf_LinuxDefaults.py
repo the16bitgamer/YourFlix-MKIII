@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-ConfigVersion = 1
+ConfigVersion = 3
 
 Phys_ConfigLoc = '/etc/yourflix/yourflix.config'
 PyModulesLoc = '/etc/yourflix/lib'
@@ -12,7 +12,10 @@ Packages = ["apache2","python3-pip","sqlite"]
 #[module name], [local package file name], [network package name]
 PythonModuals = [ ["sqlite3","pysqlite3.tar.gz","pysqlite3"],
                     ["inotify","inotify.tar.gz","inotify"],
-                    ["blkinfo", "blkinfo.tar.gz", "blkinfo"] ]
+                    ["blkinfo", "blkinfo.tar.gz", "blkinfo"],
+                    ["sh", "sh.tar.gz", "sh"] ]
+
+PluginPyModuales = []
 
 #[Drive ID], [FS], [Mount Loc]
 MountedDrives = []

@@ -9,12 +9,12 @@ import xml.etree.cElementTree as ET
 from Resources import yf_LinuxDefaults as LinuxDefaults
 from Utilities import PlatformCheck as PC
 from Utilities import yf_Log as Log
-from pathlib import Path
+from Utilities import FileFolderTool as FFT
 
 def LoadConfig():
     if(PC.GetPlatform() == "Linux"):
         Log.Debug("Loading Configuration")
-        if(os.path.exists(LinuxDefaults.Phys_ConfigLoc)):
+        if(FFT.PathExist(LinuxDefaults.Phys_ConfigLoc)):
             Log.Debug("Path Exists")
             tree = ET.parse(LinuxDefaults.Phys_ConfigLoc)
             root = tree.getroot()
@@ -33,11 +33,11 @@ def LoadConfig():
                             LinuxDefaults.MetaFolder = loc.text
                         if(loc.tag == "PyModuleLoc"):
                             LinuxDefaults.PyModulesLoc = loc.text
-                if(child.tag == "PyModules"):
+                if(child.tag == "PluginPyModules"):
                     configedModules = []
                     for module in child:
                         configedModules.append(module.text.split(','))
-                    LinuxDefaults.PythonModuals = configedModules
+                    LinuxDefaults.PluginPyModuales = configedModules
                 if(child.tag == "Drives"):
                     configedModules = []
                     for module in child:
@@ -52,14 +52,12 @@ def LoadConfig():
         Log.Debug("Incompatible Platform, please use YourFlix on Linux")
 
 def CreateConfig():
-    parentFolder = os.path.dirname(LinuxDefaults.Phys_ConfigLoc)
-    if(not os.path.exists(parentFolder)):
-        Path(parentFolder).mkdir(parents=True, exist_ok=True)
+    FFT.VerifyParentFolder(LinuxDefaults.Phys_ConfigLoc)
 
     root = ET.Element("YourFlix")
     ET.SubElement(root, "Version").text = str(LinuxDefaults.ConfigVersion)
     fileLoc = ET.SubElement(root, "PhysLoc")
-    pyModules = ET.SubElement(root, "PyModules")
+    pyModules = ET.SubElement(root, "PluginPyModules")
     ET.SubElement(root, "Drives")
 
     ET.SubElement(fileLoc, "Database").text = LinuxDefaults.Phys_DbLoc
@@ -67,7 +65,7 @@ def CreateConfig():
     ET.SubElement(fileLoc, "MetaFolderName").text = LinuxDefaults.MetaFolder
     ET.SubElement(fileLoc, "PyModuleLoc").text = LinuxDefaults.PyModulesLoc
 
-    for module in LinuxDefaults.PythonModuals:
+    for module in LinuxDefaults.PluginPyModuales:
         ET.SubElement(pyModules, "Module").text = ','.join(module)
 
     for drives in LinuxDefaults.MountedDrives:
