@@ -4,8 +4,8 @@ from pathlib import Path
 
 #if the Parent folder doesn't exists create it
 def VerifyParentFolder(PATH):
-    parentFolder = PathExist(PATH)
-    if(not FolderExist(parentFolder)):
+    parentFolder = GetFolderPath(PATH)
+    if(not PathExist(parentFolder)):
         Path(parentFolder).mkdir(parents=True, exist_ok=True)
 
 def PathExist(PATH):

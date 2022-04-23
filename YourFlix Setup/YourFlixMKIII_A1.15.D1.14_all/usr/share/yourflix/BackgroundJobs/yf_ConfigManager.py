@@ -7,6 +7,7 @@ sys.path.append(parentdir)
 
 import xml.etree.cElementTree as ET
 from Resources import yf_LinuxDefaults as LinuxDefaults
+from Resources import yf_DBDefaults as DBDefaults
 from Utilities import PlatformCheck as PC
 from Utilities import yf_Log as Log
 from Utilities import FileFolderTool as FFT
@@ -31,6 +32,7 @@ def LoadConfig():
                             LinuxDefaults.Phys_HtmlLoc = loc.text
                         if(loc.tag == "MetaFolderName"):
                             LinuxDefaults.MetaFolder = loc.text
+                            DBDefault.MetaFolder = "YF-META"
                         if(loc.tag == "PyModuleLoc"):
                             LinuxDefaults.PyModulesLoc = loc.text
                 if(child.tag == "PluginPyModules"):

@@ -1,12 +1,13 @@
 #! /usr/bin/env python
+import sys, os
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
 import sqlite3
+from Utilities import yf_Log as Log
 
-debug = False
 LastId = -1
-
-def DebugLog(MESSAGE):
-    if(debug):
-        print("DbHandler - %s" % MESSAGE)
 
 def FormatItem(ITEM):
    
@@ -47,7 +48,7 @@ def CreateTable(CONNECTION, TABLE = None, VALUES = None):
                 _insertValues += " "
             _insertValues += str(item)
    
-    DebugLog('CREATE TABLE "%s" (%s)' % (TABLE,_insertValues))
+    Log.Debug('CREATE TABLE "%s" (%s)' % (TABLE,_insertValues))
     _pointer.execute("CREATE TABLE '%s' (%s)" % (TABLE,_insertValues))
 
 def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None, ADDCOLUMN = None):
@@ -71,7 +72,7 @@ def AlterTable(CONNECTION, TABLE = None, RENAMECOLUMN = None, ADDCOLUMN = None):
 
     _query = '%s%s%s' % (_table, _renameColumn, _addColumn)
 
-    DebugLog(_query)   
+    Log.Debug(_query)   
     _pointer.execute(_query)
 
 def Select(CONNECTION, SELECT = None, INTO = None, FROM = None, WHERE = None, ORDERBY = None, fetchall = False):
@@ -114,7 +115,7 @@ def Select(CONNECTION, SELECT = None, INTO = None, FROM = None, WHERE = None, OR
     else:
         ORDERBY = ''
     
-    DebugLog('%s%s%s%s' % (SELECT, FROM, WHERE, ORDERBY))  
+    Log.Debug('%s%s%s%s' % (SELECT, FROM, WHERE, ORDERBY))  
     _pointer.execute("%s%s%s%s" % (SELECT, FROM, WHERE, ORDERBY))
   
     if fetchall:
@@ -132,7 +133,7 @@ def Drop(CONNECTION, DATABASE = None):
     if len(DATABASE) == "":
         raise Exception("CreateDb DATABASE cannot be empty")  
   
-    DebugLog('DROP TABLE %s' % DATABASE)  
+    Log.Debug('DROP TABLE %s' % DATABASE)  
     _pointer.execute("DROP TABLE %s" % DATABASE)
 
 def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None, SELECT = None, FROM = None):
@@ -188,7 +189,7 @@ def Insert(CONNECTION, INTO = None, VALUES = None, ROW = None, SELECT = None, FR
     if FROM:
         _from = " FROM %s" % FROM
 
-    DebugLog('INSERT %s%s%s%s%s' % (_into, _insertRows, _insertValues, _select, _from))
+    Log.Debug('INSERT %s%s%s%s%s' % (_into, _insertRows, _insertValues, _select, _from))
     _pointer.execute("INSERT %s%s%s%s%s" % (_into, _insertRows, _insertValues, _select, _from))
   
     global LastId
@@ -212,7 +213,7 @@ def Delete(CONNECTION, FROM = None, WHERE = None):
   
     _pointer = CONNECTION.cursor()
   
-    DebugLog('DELETE FROM "%s" WHERE %s' % (FROM, WHERE))  
+    Log.Debug('DELETE FROM "%s" WHERE %s' % (FROM, WHERE))  
     _pointer.execute("DELETE FROM '%s' WHERE %s" % (FROM, WHERE))
 
 def Update(CONNECTION, DATABASE, SET, WHERE = None):
@@ -238,5 +239,5 @@ def Update(CONNECTION, DATABASE, SET, WHERE = None):
     else:
         WHERE = ""
 
-    DebugLog('%s %s %s' % (DATABASE, SET, WHERE))
+    Log.Debug('%s %s %s' % (DATABASE, SET, WHERE))
     _pointer.execute('%s %s %s' % (DATABASE, SET, WHERE))

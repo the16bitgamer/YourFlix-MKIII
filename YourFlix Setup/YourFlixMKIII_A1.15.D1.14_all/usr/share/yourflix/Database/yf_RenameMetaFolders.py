@@ -1,16 +1,12 @@
 import os
-import yf_Database as dbManager
-import yf_ProgramBuilder as ProgramBuilder
-
-debug = False
-
-def DebugLog(MESSAGE):
-    if(debug):
-        print("RenameMetaFolder - %s" % MESSAGE)
+from Resources import yf_DBDefaults as dbManager
+from Resources import yf_LinuxDefaults as LinuxDefaults
+from Utilities import PlatformCheck as PC
 
 def RenameMeta():
-    _physicalRoot = os.path.join(dbManager.YF_Html, dbManager.Yf_Dir)
-    _webRoot = "/" + dbManager.Yf_Dir
+    _physicalRoot = ""
+    if(PC.GetPlatform() == "Linux"):
+        _physicalRoot = LinuxDefaults.Phys_HtmlLoc
             
     if(os.path.exists(_physicalRoot)):
             

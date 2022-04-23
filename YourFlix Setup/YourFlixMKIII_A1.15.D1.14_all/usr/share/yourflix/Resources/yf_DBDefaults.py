@@ -12,6 +12,8 @@ Db_ContFolder = 'Content_Folder'
 Db_Content = 'Folder_Content'
 Db_YourFlix = 'YourFlix_Db'
 
+MetaFolder = "YF-META"
+
 Current_Program = None
 Current_ContFolder = None
 Current_Content = None
