@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-Db_Version = 1.14
+Db_Version = 2.00
 
 Db_Channel = 'Channel'
 Db_ChProgram = 'Channel_Program'
@@ -11,6 +11,8 @@ Db_File = 'File_Type'
 Db_ContFolder = 'Content_Folder'
 Db_Content = 'Folder_Content'
 Db_YourFlix = 'YourFlix_Db'
+
+Db_Storage = 'StorageDrive'
 
 MetaFolder = "YF-META"
 
