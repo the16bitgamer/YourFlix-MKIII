@@ -117,6 +117,18 @@ def BuildContentTable(CONN):
             ["Content_Name", "TEXT NOT NULL"],
             ["Content_Location", "TEXT UNIQUE NOT NULL"]])
 
+def BuildStorageDriveTable(CONN):
+    Database.CreateTable(CONN,
+        TABLE = dbManager.Db_Storage,
+        VALUES = [["Drive_Id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
+            ["UUID", "TEXT NOT NULL"],
+            ["Drive_Name", "TEXT NOT NULL"],
+            ["FileSystem", "TEXT NOT NULL"],
+            ["Capcity_Avaliable", "INTEGER NOT NULL"],
+            ["Capacity_Used", "INTEGER NOT NULL"],
+            ["Mount_Loc", "TEXT UNIQUE NOT NULL"],
+            ["Is_Download_Target", "TEXT NOT NULL"]])
+
 def BuildDatabase(CONN):
     DropExistingDatabase(CONN)
     BuildYourFlixTable(CONN)
@@ -128,4 +140,4 @@ def BuildDatabase(CONN):
     BuildFileTypeTable(CONN)
     BuildProgramFolderTable(CONN)
     BuildContentTable(CONN)
-    
+    BuildStorageDriveTable(CONN)

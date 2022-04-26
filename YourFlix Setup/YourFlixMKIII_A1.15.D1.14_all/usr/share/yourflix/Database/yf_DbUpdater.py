@@ -62,18 +62,32 @@ def V1R13(CONN):
         TABLE = dbManager.Db_Program,
         ADDCOLUMN = "Program_Last_Updated DATETIME")
 
+def V2R0(CONN):
+    Database.CreateTable(CONN,
+        TABLE = dbManager.Db_Storage,
+        VALUES = [["Drive_Id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
+            ["UUID", "TEXT NOT NULL"],
+            ["Drive_Name", "TEXT NOT NULL"],
+            ["FileSystem", "TEXT NOT NULL"],
+            ["Capcity_Avaliable", "INTEGER NOT NULL"],
+            ["Capacity_Used", "INTEGER NOT NULL"],
+            ["Mount_Loc", "TEXT UNIQUE NOT NULL"],
+            ["Is_Download_Target", "TEXT NOT NULL"]])
+
 def UpdateDatabase(CONN, VERSION):
     dbVersion = VERSION
 
-    if(DB_VERSION < 1):
+    if(dbVersion < 1):
         V1R0(CONN)
         dbVersion = dbManager.Db_Version
-    if(DB_VERSION < 1.11):
+    if(dbVersion < 1.11):
         V1R11(CONN)
-    if(DB_VERSION < 1.12):
+    if(dbVersion < 1.12):
         V1R12(CONN)    
-    if(DB_VERSION < 1.13):
+    if(dbVersion < 1.13):
         V1R13(CONN)
+    if(dbVersion < 2):
+        V2R0(CONN)
 
     Database.Update(CONN,
         dbManager.Db_YourFlix,
